@@ -9,6 +9,7 @@ import { RecordComponentInstanceContextsWrapper } from '@/object-record/componen
 import { getRecordIndexIdFromObjectNamePluralAndViewId } from '@/object-record/utils/getRecordIndexIdFromObjectNamePluralAndViewId';
 import { useRecoilComponentValue } from '@/ui/utilities/state/component-state/hooks/useRecoilComponentValue';
 import { useRecoilValue } from 'recoil';
+import { ViewComponentInstanceContext } from '@/views/states/contexts/ViewComponentInstanceContext';
 
 type CommandMenuContainerProps = {
   children: React.ReactNode;
@@ -40,6 +41,9 @@ export const CommandMenuContainer = ({
 
   return (
     <RecordComponentInstanceContextsWrapper componentInstanceId={recordIndexId}>
+      <ViewComponentInstanceContext.Provider
+        value={{ instanceId: recordIndexId }}
+      >
       <ContextStoreComponentInstanceContext.Provider
         value={{ instanceId: COMMAND_MENU_COMPONENT_INSTANCE_ID }}
       >
@@ -49,6 +53,7 @@ export const CommandMenuContainer = ({
           <AgentChatProvider>{children}</AgentChatProvider>
         </ActionMenuComponentInstanceContext.Provider>
       </ContextStoreComponentInstanceContext.Provider>
+      </ViewComponentInstanceContext.Provider>
     </RecordComponentInstanceContextsWrapper>
   );
 };

@@ -3,6 +3,7 @@ import { useIsMobile } from '@/ui/utilities/responsive/hooks/useIsMobile';
 import styled from '@emotion/styled';
 import { Fragment, type ReactNode } from 'react';
 import { Link } from 'react-router-dom';
+import { getPageHeaderTextColor } from '@/ui/theme/utils/themeUtils';
 
 export type BreadcrumbProps = {
   className?: string;
@@ -30,7 +31,7 @@ const StyledLink = styled(Link)`
 `;
 
 const StyledText = styled.span`
-  color: ${({ theme }) => theme.font.color.primary};
+  color: ${getPageHeaderTextColor()};
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;

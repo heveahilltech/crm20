@@ -32,7 +32,7 @@ const StyledAppsContainer = styled.div`
 
 const StyledText = styled.div`
   color: ${({ theme }) => theme.font.color.primary};
-  font-family: 'Inter';
+  font-family: 'Lexend', sans-serif;
   font-size: ${({ theme }) => theme.font.size.lg};
   font-weight: ${({ theme }) => theme.font.weight.semiBold};
   padding: ${({ theme }) => theme.spacing(6)} 0px;
@@ -108,8 +108,8 @@ export const Authorize = () => {
       <StyledCardWrapper>
         <StyledAppsContainer>
           <img
-            src="/images/integrations/twenty-logo.svg"
-            alt="twenty-icon"
+            src="/images/integrations/Vena-ai-logo.svg"
+            alt="Vena-ai-icon"
             height={40}
             width={40}
           />
