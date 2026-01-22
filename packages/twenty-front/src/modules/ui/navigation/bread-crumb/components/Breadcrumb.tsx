@@ -12,7 +12,7 @@ export type BreadcrumbProps = {
 
 const StyledWrapper = styled.nav`
   align-items: center;
-  color: ${({ theme }) => theme.font.color.tertiary};
+  color: ${({ theme }) => getPageHeaderTextColor()};
   display: grid;
   font-size: ${({ theme }) => theme.font.size.md};
   grid-auto-flow: column;
@@ -31,7 +31,7 @@ const StyledLink = styled(Link)`
 `;
 
 const StyledText = styled.span`
-  color: ${getPageHeaderTextColor()};
+  color: ${({ theme }) => getPageHeaderTextColor()};
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;

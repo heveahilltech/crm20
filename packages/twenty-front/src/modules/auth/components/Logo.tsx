@@ -6,6 +6,7 @@ import { Avatar } from 'twenty-ui/display';
 import { UndecoratedLink } from 'twenty-ui/navigation';
 import { REACT_APP_SERVER_BASE_URL } from '~/config';
 import { useRedirectToDefaultDomain } from '~/modules/domain-manager/hooks/useRedirectToDefaultDomain';
+import { VENA_AI_LOGO } from '@/ui/navigation/navigation-drawer/constants/DefaultWorkspaceLogo';
 
 type LogoProps = {
   primaryLogo?: string | null;
@@ -57,8 +58,7 @@ export const Logo = ({
   onClick,
 }: LogoProps) => {
   const { redirectToDefaultDomain } = useRedirectToDefaultDomain();
-  const defaultPrimaryLogoUrl = `${window.location.origin}/images/icons/android/android-launchericon-192-192.png`;
-
+  const defaultPrimaryLogoUrl = `${window.location.origin}${VENA_AI_LOGO}`;
   const primaryLogoUrl = getImageAbsoluteURI({
     imageUrl: primaryLogo ?? defaultPrimaryLogoUrl,
     baseUrl: REACT_APP_SERVER_BASE_URL,
