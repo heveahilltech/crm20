@@ -15,32 +15,61 @@ import { WORKFLOW_DIAGRAM_STEP_NODE_BASE_CLICK_OUTSIDE_ID } from '@/workflow/wor
 import { useTheme } from '@emotion/react';
 
 import styled from '@emotion/styled';
-import { motion } from 'framer-motion';
-import { useRef } from 'react';
-import { useRecoilCallback } from 'recoil';
+import { AnimatePresence, motion } from 'framer-motion';
+import { useCallback, useRef, useState } from 'react';
+import { useRecoilCallback, useRecoilValue } from 'recoil';
 import { LINK_CHIP_CLICK_OUTSIDE_ID } from 'twenty-ui/components';
 import { useIsMobile } from 'twenty-ui/utilities';
+import { COMMAND_MENU_SIDE_PANEL_WIDTH } from '@/command-menu/constants/CommandMenuSidePanelWidth';
+import { isCommandMenuOpenedState } from '@/command-menu/states/isCommandMenuOpenedState';
+import { ModalContainerContext } from '@/ui/layout/modal/contexts/ModalContainerContext';
+import { MOBILE_VIEWPORT } from 'twenty-ui/theme';
+
+const StyledBackdrop = styled(motion.div)`
+  align-items: center;
+  background: ${({ theme }) => theme.background.overlayPrimary || 'rgba(0, 0, 0, 0.6)'};
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  height: 100dvh;
+  justify-content: center;
+  left: 0;
+  position: fixed;
+  top: 0;
+  width: 100vw;
+  z-index: ${RootStackingContextZIndices.RootModalBackDrop};
+  user-select: none;
+  pointer-events: auto;
+`;
 
 const StyledCommandMenu = styled(motion.div)`
-  background: ${({ theme }) => theme.background.primary};
-  border-left: 1px solid ${({ theme }) => theme.border.color.medium};
-  box-shadow: ${({ theme }) => theme.boxShadow.strong};
+   background: ${({ theme }) => theme.background.primary};
+  border: 1px solid ${({ theme }) => theme.border.color.medium};
+  border-radius: ${({ theme }) => theme.border.radius.md};
+  box-shadow: ${({ theme }) => theme.boxShadow.superHeavy};
   font-family: ${({ theme }) => theme.font.family};
-  height: 100%;
+  height: auto;
+  max-height: 90dvh;
   overflow: hidden;
   padding: 0;
-  position: fixed;
-  right: 0%;
-  top: 0%;
-  z-index: ${RootStackingContextZIndices.CommandMenu};
+  position: relative;
+  width: ${COMMAND_MENU_SIDE_PANEL_WIDTH}px;
+  z-index: ${RootStackingContextZIndices.RootModal};
   display: flex;
   flex-direction: column;
+ @media (max-width: ${MOBILE_VIEWPORT}px) {
+    width: 100vw;
+    height: 100dvh;
+    max-height: 100dvh;
+    border-radius: 0;
+  }
 `;
 
 export const CommandMenuOpenContainer = ({
   children,
 }: React.PropsWithChildren) => {
   const isMobile = useIsMobile();
+  const isCommandMenuOpened = useRecoilValue(isCommandMenuOpenedState);
 
   const targetVariantForAnimation: CommandMenuAnimationVariant = isMobile
     ? 'fullScreen'
@@ -51,22 +80,31 @@ export const CommandMenuOpenContainer = ({
   const { closeCommandMenu } = useCommandMenu();
 
   const commandMenuRef = useRef<HTMLDivElement>(null);
+  const [modalContainer, setModalContainer] = useState<HTMLDivElement | null>(
+    null,
+  );
+
+  const handleModalContainerRef = useCallback(
+    (element: HTMLDivElement | null) => {
+      setModalContainer(element);
+    },
+    [],
+  );
 
   const handleClickOutside = useRecoilCallback(
-    ({ snapshot }) =>
-      (event: MouseEvent | TouchEvent) => {
-        const currentFocusId = snapshot
-          .getLoadable(currentFocusIdSelector)
-          .getValue();
+  ({ snapshot }) =>
+    () => {
+      const currentFocusId = snapshot
+        .getLoadable(currentFocusIdSelector)
+        .getValue();
 
-        if (currentFocusId === SIDE_PANEL_FOCUS_ID) {
-          event.stopImmediatePropagation();
-          event.preventDefault();
-          closeCommandMenu();
-        }
-      },
-    [closeCommandMenu],
-  );
+      if (currentFocusId === SIDE_PANEL_FOCUS_ID) {
+        
+        closeCommandMenu();
+      }
+    },
+  [closeCommandMenu],
+);
 
   useListenClickOutside({
     refs: [commandMenuRef],
@@ -83,18 +121,61 @@ export const CommandMenuOpenContainer = ({
     ],
   });
 
+  const handleBackdropClick = (e: React.MouseEvent) => {
+    // Only close if clicking directly on the backdrop, not on the modal content
+    if (e.target === e.currentTarget) {
+      handleClickOutside();
+    }
+  };
+
+  const stopEventPropagation = (e: React.MouseEvent) => {
+    e.stopPropagation();
+  };
+
+  if (!isCommandMenuOpened) {
+    return null;
+  }
+
   return (
-    <StyledCommandMenu
-      data-testid="command-menu"
-      data-click-outside-id={COMMAND_MENU_CLICK_OUTSIDE_ID}
-      ref={commandMenuRef}
-      animate={targetVariantForAnimation}
-      initial="closed"
-      exit="closed"
-      variants={COMMAND_MENU_ANIMATION_VARIANTS}
-      transition={{ duration: theme.animation.duration.normal }}
-    >
-      {children}
-    </StyledCommandMenu>
+    <AnimatePresence>
+      <StyledBackdrop
+        key="command-menu-backdrop"
+        data-testid="command-menu-backdrop"
+        data-click-outside-id={COMMAND_MENU_CLICK_OUTSIDE_ID}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: theme.animation.duration.normal }}
+        onClick={handleBackdropClick}
+      >
+        <StyledCommandMenu
+          key="command-menu"
+          data-testid="command-menu"
+          ref={commandMenuRef}
+          initial="closed"
+          animate={targetVariantForAnimation}
+          exit="closed"
+          variants={COMMAND_MENU_ANIMATION_VARIANTS}
+          transition={{ duration: theme.animation.duration.normal }}
+          onClick={stopEventPropagation}
+        >
+          <div
+            ref={handleModalContainerRef}
+            style={{
+              height: '100%',
+              left: 0,
+              pointerEvents: 'none',
+              position: 'absolute',
+              top: 0,
+              width: '100%',
+              zIndex: 1,
+            }}
+          />
+          <ModalContainerContext.Provider value={{ container: modalContainer }}>
+            {children}
+          </ModalContainerContext.Provider>
+        </StyledCommandMenu>
+      </StyledBackdrop>
+    </AnimatePresence>
   );
 };

@@ -2,6 +2,7 @@ import styled from '@emotion/styled';
 import { type ReactNode } from 'react';
 
 import { PagePanel } from './PagePanel';
+import { pageBodyPreset } from '@/ui/theme/utils/themeUtils';
 
 type PageBodyProps = {
   children: ReactNode;
@@ -9,17 +10,7 @@ type PageBodyProps = {
 };
 
 const StyledMainContainer = styled.div`
-  background: ${({ theme }) => theme.background.noisy};
-  box-sizing: border-box;
-  display: flex;
-  flex: 1 1 auto;
-  flex-direction: row;
-  gap: ${({ theme }) => theme.spacing(2)};
-  min-height: 0;
-  padding-bottom: ${({ theme }) => theme.spacing(3)};
-  padding-right: ${({ theme }) => theme.spacing(3)};
-  padding-left: 0;
-  width: 100%;
+  ${({ theme }) => pageBodyPreset(theme)}
 `;
 
 type LeftContainerProps = {

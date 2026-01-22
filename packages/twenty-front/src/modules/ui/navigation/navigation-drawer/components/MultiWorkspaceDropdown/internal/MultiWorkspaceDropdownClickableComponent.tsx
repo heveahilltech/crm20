@@ -10,6 +10,14 @@ import { useRecoilValue } from 'recoil';
 import { useTheme } from '@emotion/react';
 import { isNavigationDrawerExpandedState } from '@/ui/navigation/states/isNavigationDrawerExpanded';
 import { Avatar } from 'twenty-ui/display';
+import styled from '@emotion/styled';
+
+const StyledLogo = styled.img`
+  height: 20px;
+  width: auto;
+  object-fit: contain;
+  display: block;
+`;
 
 export const MultiWorkspaceDropdownClickableComponent = () => {
   const currentWorkspace = useRecoilValue(currentWorkspaceState);
@@ -23,10 +31,7 @@ export const MultiWorkspaceDropdownClickableComponent = () => {
       data-testid="workspace-dropdown"
       isNavigationDrawerExpanded={isNavigationDrawerExpanded}
     >
-      <Avatar
-        placeholder={currentWorkspace?.displayName || ''}
-        avatarUrl={currentWorkspace?.logo ?? DEFAULT_WORKSPACE_LOGO}
-      />
+     <StyledLogo src="/images/Vena-ai-logo.png" alt="Vena AI Logo" />
       <NavigationDrawerAnimatedCollapseWrapper>
         <StyledLabel>{currentWorkspace?.displayName ?? ''}</StyledLabel>
       </NavigationDrawerAnimatedCollapseWrapper>

@@ -7,14 +7,15 @@ import { tableWidthResizeIsActiveState } from '@/object-record/record-table/stat
 import { ResizablePanelEdge } from '@/ui/layout/resizable-panel/components/ResizablePanelEdge';
 import { NAVIGATION_DRAWER_COLLAPSED_WIDTH } from '@/ui/layout/resizable-panel/constants/NavigationDrawerCollapsedWidth';
 import { NAVIGATION_DRAWER_CONSTRAINTS } from '@/ui/layout/resizable-panel/constants/NavigationDrawerConstraints';
-import { useIsMobile } from '@/ui/utilities/responsive/hooks/useIsMobile';
-import { MOBILE_VIEWPORT } from 'twenty-ui/theme';
+import { NavigationDrawerWidthEffect } from '@/ui/navigation/components/NavigationDrawerWidthEffect';
 import { isNavigationDrawerExpandedState } from '@/ui/navigation/states/isNavigationDrawerExpanded';
 import {
   NAVIGATION_DRAWER_WIDTH_VAR,
   navigationDrawerWidthState,
 } from '@/ui/navigation/states/navigationDrawerWidthState';
-import { NavigationDrawerWidthEffect } from '@/ui/navigation/components/NavigationDrawerWidthEffect';
+import { navigationDrawerContainerPreset } from '@/ui/theme/utils/themeUtils';
+import { useIsMobile } from '@/ui/utilities/responsive/hooks/useIsMobile';
+import { MOBILE_VIEWPORT } from 'twenty-ui/theme';
 import { NavigationDrawerBackButton } from './NavigationDrawerBackButton';
 import { NavigationDrawerHeader } from './NavigationDrawerHeader';
 
@@ -47,23 +48,9 @@ const StyledContainer = styled.div<{
   isSettings?: boolean;
   isMobile?: boolean;
 }>`
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  width: var(${NAVIGATION_DRAWER_WIDTH_VAR});
-  gap: ${({ theme }) => theme.spacing(3)};
-  height: 100%;
-  padding: ${({ theme, isSettings, isMobile }) =>
-    isSettings
-      ? isMobile
-        ? theme.spacing(3, 0, 0, 8)
-        : theme.spacing(3, 0, 4, 0)
-      : theme.spacing(3, 0, 4, 2)};
-  @media (max-width: ${MOBILE_VIEWPORT}px) {
-    width: 100%;
-    padding-left: ${({ theme }) => theme.spacing(5)};
-    padding-right: ${({ theme }) => theme.spacing(5)};
-  }
+  ${({ theme, isSettings, isMobile }) =>
+    navigationDrawerContainerPreset(theme, isSettings, isMobile)}
+    isSettings ? '100%' : NAV_DRAWER_WIDTHS.menu.desktop.expanded + 'px'};
 `;
 
 export const NavigationDrawer = ({

@@ -1,24 +1,16 @@
+import { openAPIReferenceState } from '@/settings/playground/states/openAPIReference';
 import { THEME_COMMON } from 'twenty-ui/theme';
 export const COMMAND_MENU_ANIMATION_VARIANTS = {
   fullScreen: {
-    x: '0%',
-    width: '100%',
-    height: '100%',
-    bottom: '0',
-    top: '0',
+    opacity: 1,
+    scale: 1,
   },
   normal: {
-    x: '0%',
-    width: THEME_COMMON.rightDrawerWidth,
-    height: '100%',
-    bottom: '0',
-    top: '0',
+    opacity: 1,
+    scale: 1,
   },
   closed: {
-    x: '100%',
-    width: THEME_COMMON.rightDrawerWidth,
-    height: '100%',
-    bottom: '0',
-    top: 'auto',
+    opacity: 0,
+    scale: 0.95,
   },
 };

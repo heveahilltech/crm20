@@ -12,6 +12,7 @@ import { SignInAppNavigationDrawerMock } from '@/sign-in-background-mock/compone
 import { SignInBackgroundMockPage } from '@/sign-in-background-mock/components/SignInBackgroundMockPage';
 import { useShowFullscreen } from '@/ui/layout/fullscreen/hooks/useShowFullscreen';
 import { useShowAuthModal } from '@/ui/layout/hooks/useShowAuthModal';
+import { NAV_DRAWER_WIDTHS } from '@/ui/navigation/navigation-drawer/constants/NavDrawerWidths';
 import { NAVIGATION_DRAWER_CONSTRAINTS } from '@/ui/layout/resizable-panel/constants/NavigationDrawerConstraints';
 import { useIsMobile } from '@/ui/utilities/responsive/hooks/useIsMobile';
 import { Global, css, useTheme } from '@emotion/react';
@@ -19,20 +20,14 @@ import styled from '@emotion/styled';
 import { AnimatePresence, LayoutGroup, motion } from 'framer-motion';
 import { Outlet } from 'react-router-dom';
 import { useScreenSize } from 'twenty-ui/utilities';
+import { useRecoilValue } from 'recoil';
+import { isCommandMenuOpenedState } from '@/command-menu/states/isCommandMenuOpenedState';
+import { CommandMenuOpenContainer } from '@/command-menu/components/CommandMenuOpenContainer';
+import { CommandMenuRouter } from '@/command-menu/components/CommandMenuRouter';
+import { defaultLayoutPreset } from '@/ui/theme/utils/themeUtils';
 
 const StyledLayout = styled.div`
-  background: ${({ theme }) => theme.background.noisy};
-  display: flex;
-  flex-direction: column;
-  height: 100dvh;
-  position: relative;
-  scrollbar-color: ${({ theme }) => theme.border.color.medium} transparent;
-  scrollbar-width: 4px;
-  width: 100%;
-
-  *::-webkit-scrollbar-thumb {
-    border-radius: ${({ theme }) => theme.border.radius.sm};
-  }
+  ${({ theme }) => defaultLayoutPreset(theme)}
 `;
 
 const StyledPageContainer = styled(motion.div)`
@@ -63,6 +58,7 @@ export const DefaultLayout = () => {
   const windowsWidth = useScreenSize().width;
   const showAuthModal = useShowAuthModal();
   const useShowFullScreen = useShowFullscreen();
+  const isCommandMenuOpened = useRecoilValue(isCommandMenuOpenedState);
 
   return (
     <>
@@ -82,7 +78,7 @@ export const DefaultLayout = () => {
                 isSettingsPage && !isMobile && !useShowFullScreen
                   ? (windowsWidth -
                       (OBJECT_SETTINGS_WIDTH +
-                        NAVIGATION_DRAWER_CONSTRAINTS.default +
+                        NAV_DRAWER_WIDTHS.menu.desktop.expanded +
                         76)) /
                     2
                   : 0,
@@ -119,6 +115,11 @@ export const DefaultLayout = () => {
             )}
           </StyledPageContainer>
           {isMobile && !showAuthModal && <MobileNavigationBar />}
+            {isCommandMenuOpened && (
+            <CommandMenuOpenContainer>
+              <CommandMenuRouter />
+            </CommandMenuOpenContainer>
+          )}
         </AppErrorBoundary>
       </StyledLayout>
     </>

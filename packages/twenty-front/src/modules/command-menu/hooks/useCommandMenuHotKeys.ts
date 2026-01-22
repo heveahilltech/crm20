@@ -18,6 +18,7 @@ import { isNonEmptyString } from '@sniptt/guards';
 import { useRecoilValue } from 'recoil';
 import { Key } from 'ts-key-enum';
 import { FeatureFlagKey } from '~/generated/graphql';
+import { isCommandMenuOpenedState } from '@/command-menu/states/isCommandMenuOpenedState';
 
 export const useCommandMenuHotKeys = () => {
   const { toggleCommandMenu } = useCommandMenu();
@@ -43,6 +44,8 @@ export const useCommandMenuHotKeys = () => {
     COMMAND_MENU_COMPONENT_INSTANCE_ID,
   );
 
+  const isCommandMenuOpened = useRecoilValue(isCommandMenuOpenedState);
+
   useGlobalHotkeys({
     keys: ['ctrl+k', 'meta+k'],
     callback: () => {
@@ -51,6 +54,18 @@ export const useCommandMenuHotKeys = () => {
     },
     containsModifier: true,
     dependencies: [closeKeyboardShortcutMenu, toggleCommandMenu],
+  });
+  
+// Global Esc handler to close modal when command menu is open
+  useGlobalHotkeys({
+    keys: [Key.Escape],
+    callback: () => {
+      if (isCommandMenuOpened) {
+        goBackFromCommandMenu();
+      }
+    },
+    containsModifier: false,
+    dependencies: [isCommandMenuOpened, goBackFromCommandMenu],
   });
 
   useGlobalHotkeys({

@@ -1,2 +1,4 @@
 export const DEFAULT_WORKSPACE_LOGO =
-  'https://twentyhq.github.io/placeholder-images/workspaces/twenty-logo.png';
+  '/images/Vena.png';
+
+export const VENA_AI_LOGO = '/images/Vena-ai-logo.png';
