@@ -37,7 +37,7 @@ const StyledBackdrop = styled(motion.div)`
   position: fixed;
   top: 0;
   width: 100vw;
-  z-index: ${RootStackingContextZIndices.RootModalBackDrop};
+  z-index: ${RootStackingContextZIndices.CommandMenu};
   user-select: none;
   pointer-events: auto;
 `;
@@ -54,7 +54,7 @@ const StyledCommandMenu = styled(motion.div)`
   padding: 0;
   position: relative;
   width: ${COMMAND_MENU_SIDE_PANEL_WIDTH}px;
-  z-index: ${RootStackingContextZIndices.RootModal};
+  z-index: ${RootStackingContextZIndices.CommandMenu};
   display: flex;
   flex-direction: column;
  @media (max-width: ${MOBILE_VIEWPORT}px) {
@@ -99,7 +99,7 @@ export const CommandMenuOpenContainer = ({
         .getValue();
 
       if (currentFocusId === SIDE_PANEL_FOCUS_ID) {
-        
+
         closeCommandMenu();
       }
     },

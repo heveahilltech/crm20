@@ -10,8 +10,6 @@ import styled from '@emotion/styled';
 import { motion } from 'framer-motion';
 import { useRecoilValue } from 'recoil';
 import { isDefined } from 'twenty-shared/utils';
-import React from 'react';
-import { CommandMenuPages } from '@/command-menu/types/CommandMenuPages';
 
 const StyledCommandMenuContent = styled.div`
   flex: 1;
@@ -22,31 +20,13 @@ export const CommandMenuRouter = () => {
   const commandMenuPage = useRecoilValue(commandMenuPageState);
   const commandMenuPageInfo = useRecoilValue(commandMenuPageInfoState);
 
-   const theme = useTheme();
+  const commandMenuPageComponent = isDefined(commandMenuPage) ? (
+    COMMAND_MENU_PAGES_CONFIG.get(commandMenuPage)
+  ) : (
+    <></>
+  );
 
-  // Ensure we have a valid page, default to Root if not set
-  const pageToRender = isDefined(commandMenuPage)
-    ? commandMenuPage
-    : CommandMenuPages.Root;
-
-  const commandMenuPageComponent = COMMAND_MENU_PAGES_CONFIG.get(pageToRender);
-
-  if (!commandMenuPageComponent) {
-    return (
-      <CommandMenuContainer>
-        <CommandMenuPageComponentInstanceContext.Provider
-          value={{ instanceId: commandMenuPageInfo.instanceId || 'default' }}
-        >
-          <CommandMenuTopBar />
-          <StyledCommandMenuContent>
-            <div style={{ padding: '20px', textAlign: 'center' }}>
-              Page not found: {pageToRender}
-            </div>
-          </StyledCommandMenuContent>
-        </CommandMenuPageComponentInstanceContext.Provider>
-      </CommandMenuContainer>
-    );
-  }
+  const theme = useTheme();
 
   return (
     <CommandMenuContainer>
@@ -70,9 +50,7 @@ export const CommandMenuRouter = () => {
             displayType="listItem"
             actionMenuType="command-menu"
           >
-            <React.Fragment key={pageToRender}>
-              {commandMenuPageComponent}
-            </React.Fragment>
+            {commandMenuPageComponent}
           </ActionMenuContextProvider>
         </StyledCommandMenuContent>
       </CommandMenuPageComponentInstanceContext.Provider>

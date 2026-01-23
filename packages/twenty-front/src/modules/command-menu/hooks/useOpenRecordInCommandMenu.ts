@@ -25,6 +25,7 @@ import { useRecoilCallback } from 'recoil';
 import { isDefined } from 'twenty-shared/utils';
 import { useIcons } from 'twenty-ui/display';
 import { v4 } from 'uuid';
+import { isCommandMenuOpenedState } from '@/command-menu/states/isCommandMenuOpenedState';
 
 export const useOpenRecordInCommandMenu = () => {
   const theme = useTheme();
@@ -47,6 +48,13 @@ export const useOpenRecordInCommandMenu = () => {
         isNewRecord?: boolean;
         resetNavigationStack?: boolean;
       }) => {
+        const isCommandMenuOpened = snapshot
+          .getLoadable(isCommandMenuOpenedState)
+          .getValue();
+
+        // Only check for duplicate records if command menu is currently open
+        // If closed, always allow opening (user might want to reopen after closing)
+        if (isCommandMenuOpened) {
         const navigationStack = getSnapshotValue(
           snapshot,
           commandMenuNavigationStackState,
@@ -62,8 +70,10 @@ export const useOpenRecordInCommandMenu = () => {
             }),
           );
 
-          if (currentRecordId === recordId) {
-            return;
+            // Only prevent if the same record is already open AND command menu is open
+            if (currentRecordId === recordId) {
+              return;
+            }
           }
         }
 
