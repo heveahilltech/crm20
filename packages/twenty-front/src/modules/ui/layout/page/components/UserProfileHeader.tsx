@@ -23,7 +23,7 @@ const StyledUserProfileHeader = styled.div`
 
 const StyledLeftSection = styled.div`
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   gap: ${({ theme }) => theme.spacing(0.5)};
   align-items: flex-start;
 `;
@@ -49,17 +49,10 @@ const StyledUserDetails = styled.div`
   gap: ${({ theme }) => theme.spacing(0.5)};
 `;
 
-const StyledWelcomeText = styled.div`
-  color: ${({ theme }) => getInvertedTextColor(theme)};
-  font-size: ${({ theme }) => theme.font.size.xs};
-  font-weight: ${({ theme }) => theme.font.weight.regular};
-
-`;
-
 const StyledWorkspaceName = styled.div`
   color: ${({ theme }) => getInvertedTextColor(theme)};
   font-size: ${({ theme }) => theme.font.size.lg};
-  font-weight: ${({ theme }) => theme.font.weight.semiBold};
+  font-weight: ${({ theme }) => theme.font.weight.regular};
   letter-spacing: -0.01em;
   line-height: 1.3;
   margin-top: ${({ theme }) => theme.spacing(0.25)};
@@ -122,8 +115,7 @@ export const UserProfileHeader = () => {
   return (
     <StyledUserProfileHeader>
         <StyledLeftSection>
-            <StyledWelcomeText>{`Welcome to,`}</StyledWelcomeText>
-            <StyledWorkspaceName>{workspaceName}</StyledWorkspaceName>
+            <StyledWorkspaceName>Welcome to, {workspaceName}</StyledWorkspaceName>
         </StyledLeftSection>
         <StyledRightSection>
             <StyledUserInfo>
