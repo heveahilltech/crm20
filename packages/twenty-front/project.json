@@ -14,7 +14,7 @@
         "outputPath": "{projectRoot}/build"
       },
       "dependsOn": [
-        "^build"
+        "^build", "lingui:compile"
       ]
     },
     "build:sourcemaps": {
@@ -25,7 +25,7 @@
         "outputPath": "{projectRoot}/build"
       },
       "dependsOn": [
-        "^build"
+        "^build","lingui:compile"
       ]
     },
     "serve": {
