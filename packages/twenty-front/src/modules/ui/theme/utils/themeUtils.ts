@@ -416,7 +416,7 @@ export const userProfileHeaderPreset = (theme: ExtendedTheme) => css`
   margin-left: ${theme.spacing(3)};
   margin-right: ${theme.spacing(3)};
   margin-top: ${theme.spacing(2)};
-
+  margin-bottom: ${theme.spacing(1)};
 `;
 
 /**
