@@ -122,7 +122,7 @@ export const UserProfileHeader = () => {
   return (
     <StyledUserProfileHeader>
         <StyledLeftSection>
-            <StyledWelcomeText>{t`Welcome to,`}</StyledWelcomeText>
+            <StyledWelcomeText>{`Welcome to,`}</StyledWelcomeText>
             <StyledWorkspaceName>{workspaceName}</StyledWorkspaceName>
         </StyledLeftSection>
         <StyledRightSection>
