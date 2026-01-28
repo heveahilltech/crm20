@@ -32,25 +32,17 @@ const bootstrap = async () => {
     snapshot: process.env.NODE_ENV === NodeEnvironment.DEVELOPMENT,
     ...(process.env.SSL_KEY_PATH && process.env.SSL_CERT_PATH
       ? {
-        httpsOptions: {
-          key: fs.readFileSync(process.env.SSL_KEY_PATH),
-          cert: fs.readFileSync(process.env.SSL_CERT_PATH),
-        },
-      }
+          httpsOptions: {
+            key: fs.readFileSync(process.env.SSL_KEY_PATH),
+            cert: fs.readFileSync(process.env.SSL_CERT_PATH),
+          },
+        }
       : {}),
   });
   const logger = app.get(LoggerService);
   const twentyConfigService = app.get(TwentyConfigService);
 
-  app.enableCors({
-    origin: [
-      'http://localhost:3000',
-      'https://voxring.ai',
-      'https://app.voxring.ai',
-      'https://voxring-frontend-staging.up.railway.app',
-    ],
-    credentials: true,
-  })
+  
   app.use(session(getSessionStorageOptions(twentyConfigService)));
 
   // Apply class-validator container so that we can use injection in validators
