@@ -32,22 +32,45 @@ const bootstrap = async () => {
     snapshot: process.env.NODE_ENV === NodeEnvironment.DEVELOPMENT,
     ...(process.env.SSL_KEY_PATH && process.env.SSL_CERT_PATH
       ? {
-          httpsOptions: {
-            key: fs.readFileSync(process.env.SSL_KEY_PATH),
-            cert: fs.readFileSync(process.env.SSL_CERT_PATH),
-          },
-        }
+        httpsOptions: {
+          key: fs.readFileSync(process.env.SSL_KEY_PATH),
+          cert: fs.readFileSync(process.env.SSL_CERT_PATH),
+        },
+      }
       : {}),
   });
   const logger = app.get(LoggerService);
   const twentyConfigService = app.get(TwentyConfigService);
 
-  
+
   app.use(session(getSessionStorageOptions(twentyConfigService)));
 
   // Apply class-validator container so that we can use injection in validators
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
 
+  app.enableCors({
+    origin: (origin, callback) => {
+      // allow non-browser requests (like curl, server-to-server)
+      if (!origin) return callback(null, true)
+
+      const allowedExact = new Set([
+        'http://localhost:3000',
+        'https://voxring.ai',
+        'https://app.voxring.ai',
+        'https://voxring-frontend-staging.up.railway.app',
+      ])
+
+      if (allowedExact.has(origin)) return callback(null, true)
+
+      // allow any subdomain of voxring.ai
+      if (/^https:\/\/([a-z0-9-]+\.)*voxring\.ai$/i.test(origin)) {
+        return callback(null, true)
+      }
+
+      return callback(new Error('Not allowed by CORS'))
+    },
+    credentials: true,
+  })
   // Use our logger
   app.useLogger(logger);
 
