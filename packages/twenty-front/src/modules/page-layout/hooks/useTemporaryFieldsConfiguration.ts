@@ -27,7 +27,17 @@ export const useTemporaryFieldsConfiguration = (
         field.type !== FieldMetadataType.RICH_TEXT_V2,
     );
 
-    const order = fieldOrderByObject?.[objectNameSingular];
+    const order =
+      fieldOrderByObject?.[objectNameSingular] ??
+      fieldOrderByObject?.[objectNameSingular.toLowerCase()];
+    const debug =
+      typeof import.meta !== 'undefined' &&
+      (import.meta as unknown as { env?: { VITE_DEBUG_FIELD_ORDER?: string } })
+        ?.env?.VITE_DEBUG_FIELD_ORDER === 'true';
+    if (debug) {
+      const keys = fieldOrderByObject ? Object.keys(fieldOrderByObject) : [];
+      console.log('[field-order] objectNameSingular=', objectNameSingular, '| order found=', !!order, '| available keys=', keys.slice(0, 8).join(', '));
+    }
     if (order?.length) {
       fieldsToDisplay = [...fieldsToDisplay].sort((a, b) => {
         const ia = order.indexOf(a.name);

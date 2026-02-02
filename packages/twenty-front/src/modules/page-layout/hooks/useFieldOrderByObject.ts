@@ -20,13 +20,33 @@ function fetchFieldOrder(): Promise<Record<string, string[]> | null> {
       (import.meta as unknown as { env?: { VITE_FIELD_ORDER_URL?: string } })
         ?.env?.VITE_FIELD_ORDER_URL) ||
     '/field-order.json';
+    const debug =
+    typeof import.meta !== 'undefined' &&
+    (import.meta as unknown as { env?: { VITE_DEBUG_FIELD_ORDER?: string } })?.env
+      ?.VITE_DEBUG_FIELD_ORDER === 'true';
   const promise = fetch(url)
-    .then((res) => (res.ok ? res.json() : null))
-    .catch(() => null)
+    .then((res) => {
+      if (debug) {
+        console.log(
+          '[field-order] fetch',
+          url,
+          res.ok ? 'OK' : `HTTP ${res.status}`,
+        );
+      }
+      return res.ok ? res.json() : null;
+    })
+    .catch((err) => {
+      if (debug) console.warn('[field-order] fetch failed', err);
+      return null;
+    })
     .then((data): Record<string, string[]> | null => {
       const result =
         data && typeof data === 'object' ? (data as Record<string, string[]>) : null;
       fieldOrderCache = result;
+      if (debug) {
+        const keys = result ? Object.keys(result) : [];
+        console.log('[field-order] loaded', result ? keys.length : 0, 'objects:', keys.slice(0, 5).join(', '), keys.length > 5 ? '...' : '');
+      }
       return result;
     });
   fieldOrderPromise = promise;
