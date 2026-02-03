@@ -12,10 +12,11 @@ import { useIsMobile } from '@/ui/utilities/responsive/hooks/useIsMobile';
 import styled from '@emotion/styled';
 import { useLingui } from '@lingui/react/macro';
 import { useRecoilValue } from 'recoil';
-import { Avatar } from 'twenty-ui/display';
 import { IconButton } from 'twenty-ui/input';
-import { IconPower, IconMoon, IconSun } from 'twenty-ui/display';
+import { Avatar, IconPower, IconMoon, IconSun } from 'twenty-ui/display';
 import { currentWorkspaceState } from '@/auth/states/currentWorkspaceState';
+import { NavigationDrawerCollapseButton } from '@/ui/navigation/navigation-drawer/components/NavigationDrawerCollapseButton';
+import { isNavigationDrawerExpandedState } from '@/ui/navigation/states/isNavigationDrawerExpanded';
 
 const StyledUserProfileHeader = styled.div`
   ${({ theme }) => userProfileHeaderPreset(theme)}
@@ -85,6 +86,9 @@ export const UserProfileHeader = () => {
   const currentWorkspaceMember = useRecoilValue(currentWorkspaceMemberState);
   const currentWorkspace = useRecoilValue(currentWorkspaceState);
   const isMobile = useIsMobile();
+  const isNavigationDrawerExpanded = useRecoilValue(
+    isNavigationDrawerExpandedState,
+  );
   const { colorScheme, setColorScheme } = useColorScheme();
   const systemColorScheme = useSystemColorScheme();
 
@@ -115,6 +119,9 @@ export const UserProfileHeader = () => {
   return (
     <StyledUserProfileHeader>
         <StyledLeftSection>
+            {!isMobile && !isNavigationDrawerExpanded && (
+              <NavigationDrawerCollapseButton direction="right" />
+            )}
             <StyledWorkspaceName>Welcome to, {workspaceName}</StyledWorkspaceName>
         </StyledLeftSection>
         <StyledRightSection>

@@ -11,6 +11,7 @@ import styled from '@emotion/styled';
 import { t } from '@lingui/core/macro';
 import { isDefined } from 'twenty-shared/utils';
 import { useIcons } from 'twenty-ui/display';
+import { getPageHeaderTextColor } from '@/ui/theme/utils/themeUtils';
 
 const StyledTitleWithSelectedRecords = styled.div`
   display: flex;
@@ -19,12 +20,12 @@ const StyledTitleWithSelectedRecords = styled.div`
 `;
 
 const StyledTitle = styled.div`
-  color: ${({ theme }) => theme.font.color.primary};
+  color: ${getPageHeaderTextColor()};
   padding-right: ${({ theme }) => theme.spacing(0.5)};
 `;
 
 const StyledSelectedRecordsCount = styled.div`
-  color: ${({ theme }) => theme.font.color.tertiary};
+  color: ${getPageHeaderTextColor()};
   padding-left: ${({ theme }) => theme.spacing(0.5)};
 `;
 
