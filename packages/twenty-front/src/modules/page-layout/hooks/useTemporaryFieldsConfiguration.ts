@@ -47,6 +47,7 @@ export const useTemporaryFieldsConfiguration = (
         if (ib === -1) return -1;
         return ia - ib;
       });
+      
       if (debug) {
         console.log('[field-order] sorted first 6:', fieldsToDisplay.slice(0, 6).map((f) => f.name));
       }

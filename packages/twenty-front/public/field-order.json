@@ -1,15 +1,114 @@
 {
-  "location": ["effectiveDate", "termDate", "locationCode", "description", "timezone", "emails", "defaultOperatingHours"],
-  "offering": ["effectiveDate", "termDate", "offeringCode", "durationMinutes", "bufferBeforeMinutes", "bufferAfterMinutes", "cancellationHoursDuration"],
-  "phoneNumber": ["phonePrimaryPhoneNumber", "phonePrimaryPhoneCountryCode", "phonePrimaryPhoneCallingCode", "phoneAdditionalPhones", "phoneLabel", "location"],
-  "workingHoursRule": ["effectiveDate", "termDate", "dayOfWeek", "startTimeLocal", "endTimeLocal", "maxConcurrentCapacity", "availabilitySchedule"],
-  "resource": ["effectiveDate", "termDate", "resourceCode", "resourceType", "description", "defaultTimezone"],
-  "resourceOfferingCapability": ["effectiveDate", "termDate", "isPrimary", "proficiencyLevel", "offering", "resource"],
-  "availabilitySchedule": ["effectiveDate", "termDate", "scheduleName"],
-  "availabilityException": ["startUtc", "endUtc", "exceptionType", "reason", "isRecurring", "recurrenceRule", "availabilitySchedule"],
-  "appointment": ["description", "reason", "appointmentStatus", "startUtc", "endUtc", "appointmentTimezone", "internalNotes", "confirmationStatus", "confirmedAt", "reminderPreference", "reminderSentAt", "reminderCount", "agentSessionId", "agentTranscript", "cancelledAt", "cancelledBy", "cancellationReason"],
-  "appointmentHistory": ["historyAction", "changedByName", "oldValue", "newValue", "changeReason", "appointment"],
-  "customer": ["personId"],
-  "person": ["dateOfBirth", "gender", "personType", "specializations", "credentials", "preferredLanguage", "communicationPreferences", "languages"],
-  "personIdentifier": ["identifierType", "identifierValue", "isPrimary", "identifierMetadata", "person"]
+    "location": [
+        "effectiveDate",
+        "termDate",
+        "locationCode",
+        "description",
+        "timezone",
+        "emails",
+        "defaultOperatingHours"
+    ],
+    "offering": [
+        "effectiveDate",
+        "termDate",
+        "offeringCode",
+        "durationMinutes",
+        "bufferBeforeMinutes",
+        "bufferAfterMinutes",
+        "cancellationHoursDuration"
+    ],
+    "phoneNumber": [
+        "phonePrimaryPhoneNumber",
+        "phonePrimaryPhoneCountryCode",
+        "phonePrimaryPhoneCallingCode",
+        "phoneAdditionalPhones",
+        "phoneLabel",
+        "location"
+    ],
+    "workingHoursRule": [
+        "effectiveDate",
+        "termDate",
+        "dayOfWeek",
+        "startTimeLocal",
+        "endTimeLocal",
+        "maxConcurrentCapacity",
+        "availabilitySchedule"
+    ],
+    "resource": [
+        "effectiveDate",
+        "termDate",
+        "resourceCode",
+        "resourceType",
+        "description",
+        "defaultTimezone"
+    ],
+    "resourceOfferingCapability": [
+        "effectiveDate",
+        "termDate",
+        "isPrimary",
+        "proficiencyLevel",
+        "offering",
+        "resource"
+    ],
+    "availabilitySchedule": [
+        "effectiveDate",
+        "termDate",
+        "scheduleName"
+    ],
+    "availabilityException": [
+        "startUtc",
+        "endUtc",
+        "exceptionType",
+        "reason",
+        "isRecurring",
+        "recurrenceRule",
+        "availabilitySchedule"
+    ],
+    "appointment": [
+        "description",
+        "reason",
+        "appointmentStatus",
+        "startUtc",
+        "endUtc",
+        "appointmentTimezone",
+        "internalNotes",
+        "confirmationStatus",
+        "confirmedAt",
+        "reminderPreference",
+        "reminderSentAt",
+        "reminderCount",
+        "agentSessionId",
+        "agentTranscript",
+        "cancelledAt",
+        "cancelledBy",
+        "cancellationReason"
+    ],
+    "appointmentHistory": [
+        "historyAction",
+        "changedByName",
+        "oldValue",
+        "newValue",
+        "changeReason",
+        "appointment"
+    ],
+    "customer": [
+        "personId"
+    ],
+    "person": [
+        "dateOfBirth",
+        "gender",
+        "personType",
+        "specializations",
+        "credentials",
+        "preferredLanguage",
+        "communicationPreferences",
+        "languages"
+    ],
+    "personIdentifier": [
+        "identifierType",
+        "identifierValue",
+        "isPrimary",
+        "identifierMetadata",
+        "person"
+    ]
 }

@@ -20,7 +20,7 @@ function fetchFieldOrder(): Promise<Record<string, string[]> | null> {
       (import.meta as unknown as { env?: { VITE_FIELD_ORDER_URL?: string } })
         ?.env?.VITE_FIELD_ORDER_URL) ||
     '/field-order.json';
-    const debug =
+  const debug =
     typeof import.meta !== 'undefined' &&
     (import.meta as unknown as { env?: { VITE_DEBUG_FIELD_ORDER?: string } })?.env
       ?.VITE_DEBUG_FIELD_ORDER === 'true';
