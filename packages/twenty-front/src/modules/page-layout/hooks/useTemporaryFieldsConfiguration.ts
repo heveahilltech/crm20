@@ -13,6 +13,7 @@ export const useTemporaryFieldsConfiguration = (
   const { objectMetadataItem } = useObjectMetadataItem({
     objectNameSingular,
   });
+
   const fieldOrderByObject = useFieldOrderByObject();
 
   const configuration = useMemo<FieldsConfiguration | null>(() => {
@@ -27,31 +28,41 @@ export const useTemporaryFieldsConfiguration = (
         field.type !== FieldMetadataType.RICH_TEXT_V2,
     );
 
-    const order =
+    const order=
       fieldOrderByObject?.[objectNameSingular] ??
       fieldOrderByObject?.[objectNameSingular.toLowerCase()];
     const debug =
       typeof import.meta !== 'undefined' &&
-      (import.meta as unknown as { env?: { VITE_DEBUG_FIELD_ORDER?: string } })
-        ?.env?.VITE_DEBUG_FIELD_ORDER === 'true';
-    if (debug) {
-      const keys = fieldOrderByObject ? Object.keys(fieldOrderByObject) : [];
-      console.log('[field-order] objectNameSingular=', objectNameSingular, '| order found=', !!order, '| available keys=', keys.slice(0, 8).join(', '));
-    }
+      (import.meta as unknown as { env?: { VITE_DEBUG_FIELD_ORDER?: string } })?.env
+        ?.VITE_DEBUG_FIELD_ORDER === 'true';
+      if (debug) {
+        const keys = fieldOrderByObject ? Object.keys(fieldOrderByObject) : [];
+        console.log(
+          '[field-order] objectNameSingular=',
+          objectNameSingular,
+          '| order found=', !!order,'| available keys=', keys.slice(0, 8).join(', '));
+      }
     if (order?.length) {
       fieldsToDisplay = [...fieldsToDisplay].sort((a, b) => {
-        const ia = order.indexOf(a.name);
-        const ib = order.indexOf(b.name);
-        if (ia === -1 && ib === -1) return 0;
-        if (ia === -1) return 1;
-        if (ib === -1) return -1;
-        return ia - ib;
+        const indexA = order.indexOf(a.name);
+        const indexB = order.indexOf(b.name);
+        if (indexA === -1 && indexB === -1) return 0;
+        if (indexA === -1) return 1;
+        if (indexB === -1) return -1;
+        return indexA - indexB;
       });
-      
       if (debug) {
-        console.log('[field-order] sorted first 6:', fieldsToDisplay.slice(0, 6).map((f) => f.name));
+        console.log(
+          '[field-order] ordered fields:',
+          fieldsToDisplay.map((f) => f.name).slice(0, 10).join(', '),
+        );
       }
     }
+
+    const fields = fieldsToDisplay.map((field, index) => ({
+      fieldMetadataId: field.id,
+      position: index,
+    }));
 
     if (fieldsToDisplay.length === 0) {
       return null;

@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
  * Used to display record-show fields in schema order when the file is provided (e.g. from
  * twenty-workspace-automation config/field-order-by-object.json copied to public/field-order.json).
  */
+
 let fieldOrderCache: Record<string, string[]> | null | undefined = undefined;
 let fieldOrderPromise: Promise<Record<string, string[]> | null> | null = null;
 
