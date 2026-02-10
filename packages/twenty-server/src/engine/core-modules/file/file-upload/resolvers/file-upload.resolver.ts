@@ -24,7 +24,9 @@ import { streamToBuffer } from 'src/utils/stream-to-buffer';
 export class FileUploadResolver {
   constructor(private readonly fileUploadService: FileUploadService) {}
 
-  @Mutation(() => SignedFileDTO)
+  @Mutation(() => SignedFileDTO, {
+    deprecationReason: 'Use uploadFilesFieldFile instead',
+  })
   @UseGuards(SettingsPermissionGuard(PermissionFlagType.UPLOAD_FILE))
   async uploadFile(
     @AuthWorkspace() { id: workspaceId }: WorkspaceEntity,

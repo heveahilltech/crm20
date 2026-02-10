@@ -1,5 +1,14 @@
 import { UseGuards, UseInterceptors } from '@nestjs/common';
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import {
+  Args,
+  Mutation,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql';
+
+import { isDefined } from 'twenty-shared/utils';
 
 import { UUIDScalarType } from 'src/engine/api/graphql/workspace-schema-builder/graphql-types/scalars';
 import { FeatureFlagKey } from 'src/engine/core-modules/feature-flag/enums/feature-flag-key.enum';
@@ -16,18 +25,36 @@ import { CommandMenuItemDTO } from 'src/engine/metadata-modules/command-menu-ite
 import { CreateCommandMenuItemInput } from 'src/engine/metadata-modules/command-menu-item/dtos/create-command-menu-item.input';
 import { UpdateCommandMenuItemInput } from 'src/engine/metadata-modules/command-menu-item/dtos/update-command-menu-item.input';
 import { CommandMenuItemGraphqlApiExceptionInterceptor } from 'src/engine/metadata-modules/command-menu-item/interceptors/command-menu-item-graphql-api-exception.interceptor';
-import { WorkspaceMigrationBuilderGraphqlApiExceptionInterceptor } from 'src/engine/workspace-manager/workspace-migration/interceptors/workspace-migration-builder-graphql-api-exception.interceptor';
+import { FrontComponentDTO } from 'src/engine/metadata-modules/front-component/dtos/front-component.dto';
+import { FrontComponentService } from 'src/engine/metadata-modules/front-component/front-component.service';
+import { WorkspaceMigrationGraphqlApiExceptionInterceptor } from 'src/engine/workspace-manager/workspace-migration/interceptors/workspace-migration-graphql-api-exception.interceptor';
 
 @UseGuards(WorkspaceAuthGuard, FeatureFlagGuard)
 @UseInterceptors(
-  WorkspaceMigrationBuilderGraphqlApiExceptionInterceptor,
+  WorkspaceMigrationGraphqlApiExceptionInterceptor,
   CommandMenuItemGraphqlApiExceptionInterceptor,
 )
 @Resolver(() => CommandMenuItemDTO)
 export class CommandMenuItemResolver {
   constructor(
     private readonly commandMenuItemService: CommandMenuItemService,
+    private readonly frontComponentService: FrontComponentService,
   ) {}
+
+  @ResolveField(() => FrontComponentDTO, { nullable: true })
+  async frontComponent(
+    @Parent() commandMenuItem: CommandMenuItemDTO,
+    @AuthWorkspace() workspace: WorkspaceEntity,
+  ) {
+    if (!isDefined(commandMenuItem.frontComponentId)) {
+      return null;
+    }
+
+    return this.frontComponentService.findById(
+      commandMenuItem.frontComponentId,
+      workspace.id,
+    );
+  }
 
   @Query(() => [CommandMenuItemDTO])
   @UseGuards(NoPermissionGuard)

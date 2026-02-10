@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
 
-import axios, { type AxiosRequestConfig } from 'axios';
+import { type AxiosRequestConfig, isAxiosError } from 'axios';
 import { isDefined } from 'twenty-shared/utils';
 import { parseDataFromContentType } from 'twenty-shared/workflow';
 
+import { SecureHttpClientService } from 'src/engine/core-modules/tool/services/secure-http-client.service';
 import { HttpRequestInputZodSchema } from 'src/engine/core-modules/tool/tools/http-tool/http-tool.schema';
 import { type HttpRequestInput } from 'src/engine/core-modules/tool/tools/http-tool/types/http-request-input.type';
 import { type ToolInput } from 'src/engine/core-modules/tool/types/tool-input.type';
@@ -12,8 +13,6 @@ import {
   type Tool,
   type ToolExecutionContext,
 } from 'src/engine/core-modules/tool/types/tool.type';
-import { getSecureAdapter } from 'src/engine/core-modules/tool/utils/get-secure-axios-adapter.util';
-import { TwentyConfigService } from 'src/engine/core-modules/twenty-config/twenty-config.service';
 
 @Injectable()
 export class HttpTool implements Tool {
@@ -21,7 +20,9 @@ export class HttpTool implements Tool {
     'Make an HTTP request to any URL with configurable method, headers, and body.';
   inputSchema = HttpRequestInputZodSchema;
 
-  constructor(private readonly twentyConfigService: TwentyConfigService) {}
+  constructor(
+    private readonly secureHttpClientService: SecureHttpClientService,
+  ) {}
 
   async execute(
     parameters: ToolInput,
@@ -47,16 +48,7 @@ export class HttpTool implements Tool {
         }
       }
 
-      const isSafeModeEnabled = this.twentyConfigService.get(
-        'HTTP_TOOL_SAFE_MODE_ENABLED',
-      );
-
-      const axiosClient = isSafeModeEnabled
-        ? axios.create({
-            adapter: getSecureAdapter(),
-          })
-        : axios.create();
-
+      const axiosClient = this.secureHttpClientService.getHttpClient();
       const response = await axiosClient(axiosConfig);
 
       return {
@@ -68,7 +60,7 @@ export class HttpTool implements Tool {
         headers: response.headers as Record<string, string>,
       };
     } catch (error) {
-      if (axios.isAxiosError(error)) {
+      if (isAxiosError(error)) {
         return {
           success: false,
           message: `HTTP ${method} request to ${url} failed`,

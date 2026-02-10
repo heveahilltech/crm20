@@ -65,15 +65,44 @@ describe('LineChartDataService', () => {
           useValue: {
             getOrRecomputeManyOrAllFlatEntityMaps: jest.fn().mockResolvedValue({
               flatObjectMetadataMaps: {
-                byId: { [objectMetadataId]: mockObjectMetadata },
+                byUniversalIdentifier: {
+                  'test-object-universal-id': {
+                    ...mockObjectMetadata,
+                    universalIdentifier: 'test-object-universal-id',
+                  },
+                },
+                universalIdentifierById: {
+                  [objectMetadataId]: 'test-object-universal-id',
+                },
+                universalIdentifiersByApplicationId: {},
               },
               flatFieldMetadataMaps: {
-                byId: {
-                  [mockGroupByFieldX.id]: mockGroupByFieldX,
-                  [mockGroupByFieldXText.id]: mockGroupByFieldXText,
-                  [mockGroupByFieldY.id]: mockGroupByFieldY,
-                  [mockAggregateField.id]: mockAggregateField,
+                byUniversalIdentifier: {
+                  'group-by-field-x-universal-id': {
+                    ...mockGroupByFieldX,
+                    universalIdentifier: 'group-by-field-x-universal-id',
+                  },
+                  'group-by-field-x-text-universal-id': {
+                    ...mockGroupByFieldXText,
+                    universalIdentifier: 'group-by-field-x-text-universal-id',
+                  },
+                  'group-by-field-y-universal-id': {
+                    ...mockGroupByFieldY,
+                    universalIdentifier: 'group-by-field-y-universal-id',
+                  },
+                  'aggregate-field-universal-id': {
+                    ...mockAggregateField,
+                    universalIdentifier: 'aggregate-field-universal-id',
+                  },
                 },
+                universalIdentifierById: {
+                  [mockGroupByFieldX.id]: 'group-by-field-x-universal-id',
+                  [mockGroupByFieldXText.id]:
+                    'group-by-field-x-text-universal-id',
+                  [mockGroupByFieldY.id]: 'group-by-field-y-universal-id',
+                  [mockAggregateField.id]: 'aggregate-field-universal-id',
+                },
+                universalIdentifiersByApplicationId: {},
               },
             }),
           },
@@ -316,14 +345,14 @@ describe('LineChartDataService', () => {
         authContext: mockAuthContext,
       });
 
-      const stageA = result.series.find((s) => s.id === 'Stage A');
+      const stageA = result.series.find((s) => s.label === 'Stage A');
 
       expect(stageA?.data).toHaveLength(3);
       expect(stageA?.data[0].y).toBe(100);
       expect(stageA?.data[1].y).toBe(200);
       expect(stageA?.data[2].y).toBe(0);
 
-      const stageB = result.series.find((s) => s.id === 'Stage B');
+      const stageB = result.series.find((s) => s.label === 'Stage B');
 
       expect(stageB?.data).toHaveLength(3);
       expect(stageB?.data[0].y).toBe(150);
@@ -349,8 +378,8 @@ describe('LineChartDataService', () => {
         authContext: mockAuthContext,
       });
 
-      const seriesA = result.series.find((s) => s.id === 'A');
-      const seriesB = result.series.find((s) => s.id === 'B');
+      const seriesA = result.series.find((s) => s.label === 'A');
+      const seriesB = result.series.find((s) => s.label === 'B');
 
       expect(seriesA?.data[0].y).toBe(10);
       expect(seriesA?.data[1].y).toBe(30);
@@ -380,8 +409,8 @@ describe('LineChartDataService', () => {
         authContext: mockAuthContext,
       });
 
-      const seriesA = result.series.find((s) => s.id === 'A');
-      const seriesB = result.series.find((s) => s.id === 'B');
+      const seriesA = result.series.find((s) => s.label === 'A');
+      const seriesB = result.series.find((s) => s.label === 'B');
 
       expect(seriesA).toBeDefined();
       expect(seriesB).toBeDefined();

@@ -1,85 +1,60 @@
-import { type ApplicationManifest } from 'twenty-shared/application';
-import { collectApplicationIds, validateApplication } from './entities/application';
-import { collectFrontComponentIds, validateFrontComponents } from './entities/front-component';
-import { collectFunctionIds, validateFunctions } from './entities/function';
-import { collectObjectExtensionIds, validateObjectExtensions } from './entities/object-extension';
-import { collectObjectIds, validateObjects } from './entities/object';
-import { collectRoleIds, validateRoles } from './entities/role';
-import {
-  type ValidationError,
-  type ValidationResult,
-  type ValidationWarning,
-} from './manifest.types';
+import { type Manifest } from 'twenty-shared/application';
+import { isNonEmptyArray } from 'twenty-shared/utils';
 
-const collectAllIds = (
-  manifest: Omit<ApplicationManifest, 'sources'>,
-): Array<{ id: string; location: string }> => {
-  return [
-    ...collectApplicationIds(manifest.application),
-    ...collectObjectIds(manifest.objects ?? []),
-    ...collectObjectExtensionIds(manifest.objectExtensions ?? []),
-    ...collectFunctionIds(manifest.serverlessFunctions ?? []),
-    ...collectRoleIds(manifest.roles ?? []),
-    ...collectFrontComponentIds(manifest.frontComponents ?? []),
-  ];
+const extractDuplicates = (values: string[]): string[] => {
+  const seen = new Set<string>();
+  const duplicates = new Set<string>();
+
+  for (const value of values) {
+    if (seen.has(value)) {
+      duplicates.add(value);
+    } else {
+      seen.add(value);
+    }
+  }
+
+  return Array.from(duplicates);
 };
 
-const findDuplicates = (
-  ids: Array<{ id: string; location: string }>,
-): Array<{ id: string; locations: string[] }> => {
-  const seen = new Map<string, string[]>();
+const findUniversalIdentifiers = (obj: object): string[] => {
+  const universalIdentifiers: string[] = [];
 
-  for (const { id, location } of ids) {
-    const locations = seen.get(id) ?? [];
-    locations.push(location);
-    seen.set(id, locations);
+  if (!obj) {
+    return [];
   }
 
-  return Array.from(seen.entries())
-    .filter(([_, locations]) => locations.length > 1)
-    .map(([id, locations]) => ({ id, locations }));
+  for (const [key, val] of Object.entries(obj)) {
+    if (key === 'universalIdentifier' && typeof val === 'string') {
+      universalIdentifiers.push(val);
+    }
+    if (typeof val === 'object') {
+      universalIdentifiers.push(...findUniversalIdentifiers(val));
+    }
+  }
+
+  return universalIdentifiers;
 };
+export const manifestValidate = (manifest: Manifest) => {
+  const errors: string[] = [];
+  const warnings: string[] = [];
 
-export const validateManifest = (
-  manifest: Omit<ApplicationManifest, 'sources'>,
-): ValidationResult => {
-  const errors: ValidationError[] = [];
-  const warnings: ValidationWarning[] = [];
+  const duplicates = extractDuplicates(findUniversalIdentifiers(manifest));
 
-  validateApplication(manifest.application, errors);
-  validateObjects(manifest.objects ?? [], errors);
-  validateObjectExtensions(manifest.objectExtensions ?? [], errors);
-  validateFunctions(manifest.serverlessFunctions ?? [], errors);
-  validateRoles(manifest.roles ?? [], errors);
-  validateFrontComponents(manifest.frontComponents ?? [], errors);
-
-  const allIds = collectAllIds(manifest);
-  const duplicates = findDuplicates(allIds);
-  for (const dup of duplicates) {
-    errors.push({
-      path: dup.locations.join(', '),
-      message: `Duplicate universalIdentifier: ${dup.id}`,
-    });
+  if (duplicates.length > 0) {
+    errors.push(`Duplicate universal identifiers: ${duplicates.join(', ')}`);
   }
 
-  if (!manifest.objects || manifest.objects.length === 0) {
-    warnings.push({
-      message: 'No objects defined in src/app/objects/',
-    });
+  if (!isNonEmptyArray(manifest.objects)) {
+    warnings.push('No object defined');
   }
 
-  if (
-    !manifest.serverlessFunctions ||
-    manifest.serverlessFunctions.length === 0
-  ) {
-    warnings.push({
-      message: 'No functions defined in src/app/functions/',
-    });
+  if (!isNonEmptyArray(manifest.logicFunctions)) {
+    warnings.push('No logic function defined');
   }
 
-  return {
-    isValid: errors.length === 0,
-    errors,
-    warnings,
-  };
+  if (!isNonEmptyArray(manifest.frontComponents)) {
+    warnings.push('No front component defined');
+  }
+
+  return { errors, warnings, isValid: errors.length === 0 };
 };

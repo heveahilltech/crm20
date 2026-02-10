@@ -8,6 +8,7 @@ import {
 } from 'twenty-shared/utils';
 
 import { type AuthContext } from 'src/engine/core-modules/auth/types/auth-context.type';
+import { findFlatEntityByIdInFlatEntityMaps } from 'src/engine/metadata-modules/flat-entity/utils/find-flat-entity-by-id-in-flat-entity-maps.util';
 import { WorkspaceManyOrAllFlatEntityMapsCacheService } from 'src/engine/metadata-modules/flat-entity/services/workspace-many-or-all-flat-entity-maps-cache.service';
 import { FlatFieldMetadata } from 'src/engine/metadata-modules/flat-field-metadata/types/flat-field-metadata.type';
 import { LineChartConfigurationDTO } from 'src/engine/metadata-modules/page-layout-widget/dtos/line-chart-configuration.dto';
@@ -36,6 +37,7 @@ import { processOneDimensionalResults } from 'src/modules/dashboard/chart-data/u
 import { processTwoDimensionalResults } from 'src/modules/dashboard/chart-data/utils/process-two-dimensional-results.util';
 import { sortChartDataIfNeeded } from 'src/modules/dashboard/chart-data/utils/sort-chart-data-if-needed.util';
 import { sortSecondaryAxisData } from 'src/modules/dashboard/chart-data/utils/sort-secondary-axis-data.util';
+import { buildLineChartSeriesIdPrefix } from 'src/modules/dashboard/chart-data/utils/build-line-chart-series-id-prefix.util';
 
 type GetLineChartDataParams = {
   workspaceId: string;
@@ -76,7 +78,10 @@ export class LineChartDataService {
         );
       }
 
-      const flatObjectMetadata = flatObjectMetadataMaps.byId[objectMetadataId];
+      const flatObjectMetadata = findFlatEntityByIdInFlatEntityMaps({
+        flatEntityId: objectMetadataId,
+        flatEntityMaps: flatObjectMetadataMaps,
+      });
 
       if (!isDefined(flatObjectMetadata)) {
         throw new ChartDataException(
@@ -90,12 +95,12 @@ export class LineChartDataService {
 
       const primaryAxisGroupByField = getFieldMetadata(
         configuration.primaryAxisGroupByFieldMetadataId,
-        flatFieldMetadataMaps.byId,
+        flatFieldMetadataMaps,
       );
 
       const aggregateField = getFieldMetadata(
         configuration.aggregateFieldMetadataId,
-        flatFieldMetadataMaps.byId,
+        flatFieldMetadataMaps,
       );
 
       const isTwoDimensional = isDefined(
@@ -107,7 +112,7 @@ export class LineChartDataService {
       if (isTwoDimensional) {
         secondaryAxisGroupByField = getFieldMetadata(
           configuration.secondaryAxisGroupByFieldMetadataId!,
-          flatFieldMetadataMaps.byId,
+          flatFieldMetadataMaps,
         );
       }
 
@@ -131,11 +136,11 @@ export class LineChartDataService {
 
       const objectIdByNameSingular: Record<string, string> = {};
 
-      for (const objectId in flatObjectMetadataMaps.byId) {
-        const objMetadata = flatObjectMetadataMaps.byId[objectId];
-
+      for (const objMetadata of Object.values(
+        flatObjectMetadataMaps.byUniversalIdentifier,
+      )) {
         if (isDefined(objMetadata)) {
-          objectIdByNameSingular[objMetadata.nameSingular] = objectId;
+          objectIdByNameSingular[objMetadata.nameSingular] = objMetadata.id;
         }
       }
 
@@ -164,6 +169,11 @@ export class LineChartDataService {
         secondaryAxisOrderBy: configuration.secondaryAxisOrderBy,
       });
 
+      const seriesIdPrefix = buildLineChartSeriesIdPrefix(
+        objectMetadataId,
+        configuration,
+      );
+
       if (isTwoDimensional && isDefined(secondaryAxisGroupByField)) {
         return this.transformToTwoDimensionalLineChartData({
           rawResults,
@@ -173,6 +183,7 @@ export class LineChartDataService {
           configuration,
           userTimezone,
           firstDayOfTheWeek,
+          seriesIdPrefix,
         });
       }
 
@@ -183,6 +194,7 @@ export class LineChartDataService {
         configuration,
         userTimezone,
         firstDayOfTheWeek,
+        seriesIdPrefix,
       });
     } catch (error) {
       if (error instanceof ChartDataException) {
@@ -206,6 +218,7 @@ export class LineChartDataService {
     configuration,
     userTimezone,
     firstDayOfTheWeek,
+    seriesIdPrefix,
   }: {
     rawResults: GroupByRawResult[];
     primaryAxisGroupByField: FlatFieldMetadata;
@@ -213,6 +226,7 @@ export class LineChartDataService {
     configuration: LineChartConfigurationDTO;
     userTimezone: string;
     firstDayOfTheWeek: CalendarStartDay;
+    seriesIdPrefix: string;
   }): LineChartDataOutputDTO {
     const filteredResults = configuration.omitNullValues
       ? rawResults.filter(
@@ -299,7 +313,7 @@ export class LineChartDataService {
 
     const series = [
       {
-        id: aggregateField.name,
+        id: `${seriesIdPrefix}${aggregateField.name}`,
         label: aggregateField.label,
         data: dataPoints,
       },
@@ -329,6 +343,7 @@ export class LineChartDataService {
     configuration,
     userTimezone,
     firstDayOfTheWeek,
+    seriesIdPrefix,
   }: {
     rawResults: GroupByRawResult[];
     primaryAxisGroupByField: FlatFieldMetadata;
@@ -337,6 +352,7 @@ export class LineChartDataService {
     configuration: LineChartConfigurationDTO;
     userTimezone: string;
     firstDayOfTheWeek: CalendarStartDay;
+    seriesIdPrefix: string;
   }): LineChartDataOutputDTO {
     const filteredResults = configuration.omitNullValues
       ? rawResults.filter(
@@ -491,6 +507,7 @@ export class LineChartDataService {
 
     const series = limitedSeriesIds.map((seriesId) => {
       const xToYMap = seriesMap.get(seriesId) ?? new Map();
+      const prefixedSeriesId = `${seriesIdPrefix}${seriesId}`;
 
       let dataPoints = filteredXValues.map((xValue) => ({
         x: xValue,
@@ -502,7 +519,7 @@ export class LineChartDataService {
       }
 
       return {
-        id: seriesId,
+        id: prefixedSeriesId,
         label: seriesId,
         data: dataPoints,
       };
@@ -521,6 +538,14 @@ export class LineChartDataService {
       ...formattedToRawLookup,
       ...secondaryFormattedToRawLookup,
     ]);
+
+    for (const seriesId of limitedSeriesIds) {
+      const rawValue = secondaryFormattedToRawLookup.get(seriesId);
+
+      if (isDefined(rawValue)) {
+        mergedLookup.set(`${seriesIdPrefix}${seriesId}`, rawValue);
+      }
+    }
 
     return {
       series,

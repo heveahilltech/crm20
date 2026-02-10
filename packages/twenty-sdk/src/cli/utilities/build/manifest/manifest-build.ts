@@ -1,48 +1,56 @@
-import { findPathFile } from '@/cli/utilities/file/utils/file-find';
-import { parseJsoncFile } from '@/cli/utilities/file/utils/file-jsonc';
-import chalk from 'chalk';
+import {
+  type EntityFilePaths,
+  extractDefineEntity,
+  ManifestEntityKey,
+  TARGET_FUNCTION_TO_ENTITY_KEY_MAPPING,
+} from '@/cli/utilities/build/manifest/manifest-extract-config';
+import { extractManifestFromFile } from '@/cli/utilities/build/manifest/manifest-extract-config-from-file';
+import {
+  type ApplicationConfig,
+  type FrontComponentConfig,
+  type LogicFunctionConfig,
+} from '@/sdk';
 import { glob } from 'fast-glob';
 import * as fs from 'fs-extra';
-import path, { relative, sep } from 'path';
-import { type ApplicationManifest } from 'twenty-shared/application';
+import { readFile } from 'fs-extra';
+import { basename, extname, relative, sep } from 'path';
+import {
+  type ApplicationManifest,
+  type AssetManifest,
+  ASSETS_DIR,
+  type FieldManifest,
+  type FrontComponentManifest,
+  type LogicFunctionManifest,
+  type Manifest,
+  type ObjectManifest,
+  type RoleManifest,
+} from 'twenty-shared/application';
 import { type Sources } from 'twenty-shared/types';
-import { OUTPUT_DIR } from '../common/constants';
-import { buildApplication } from './entities/application';
-import { buildFrontComponents } from './entities/front-component';
-import { buildFunctions } from './entities/function';
-import { buildObjects } from './entities/object';
-import { buildObjectExtensions } from './entities/object-extension';
-import { buildRoles } from './entities/role';
-import { displayEntitySummary, displayErrors, displayWarnings } from './manifest-display';
-import { validateManifest } from './manifest-validate';
-import { ManifestValidationError } from './manifest.types';
+import { assertUnreachable } from 'twenty-shared/utils';
 
-const validateFolderStructure = async (appPath: string): Promise<void> => {
-  const appFolder = path.join(appPath, 'src', 'app');
-
-  if (!(await fs.pathExists(appFolder))) {
-    throw new Error(
-      `Missing src/app/ folder in ${appPath}.\n` +
-        'Create it with: mkdir -p src/app',
-    );
-  }
-
-  const configFile = path.join(appPath, 'src', 'app', 'application.config.ts');
-  if (!(await fs.pathExists(configFile))) {
-    throw new Error('Missing src/app/application.config.ts');
-  }
-};
-
-const loadSources = async (appPath: string): Promise<Sources> => {
-  const sources: Sources = {};
-
-  const tsFiles = await glob(['src/**/*.ts', 'generated/**/*.ts'], {
+const loadSources = async (appPath: string): Promise<string[]> => {
+  return await glob(['**/*.ts', '**/*.tsx'], {
     cwd: appPath,
     absolute: true,
-    ignore: ['**/node_modules/**', '**/*.d.ts', '**/dist/**'],
+    ignore: ['**/node_modules/**', '**/*.d.ts', '**/dist/**', '**/.twenty/**'],
+    onlyFiles: true,
   });
+};
 
-  for (const filepath of tsFiles) {
+const loadAssets = async (appPath: string) => {
+  return await glob([`${ASSETS_DIR}/**/*`], {
+    cwd: appPath,
+    onlyFiles: true,
+  });
+};
+
+const computeSources = async (
+  appPath: string,
+  sourceFilePaths: string[],
+): Promise<Sources> => {
+  const sources: Sources = {};
+
+  for (const filepath of sourceFilePaths) {
     const relPath = relative(appPath, filepath);
     const parts = relPath.split(sep);
     const content = await fs.readFile(filepath, 'utf8');
@@ -62,116 +70,188 @@ const loadSources = async (appPath: string): Promise<Sources> => {
   return sources;
 };
 
-const writeManifestToOutput = async (
+export const buildManifest = async (
   appPath: string,
-  manifest: ApplicationManifest,
-): Promise<void> => {
-  try {
-    const outputDir = path.join(appPath, OUTPUT_DIR);
-    await fs.ensureDir(outputDir);
+): Promise<{
+  manifest: Manifest | null;
+  filePaths: EntityFilePaths;
+  errors: string[];
+}> => {
+  const filePaths = await loadSources(appPath);
+  const errors: string[] = [];
 
-    const manifestPath = path.join(outputDir, 'manifest.json');
-    await fs.writeJSON(manifestPath, manifest, { spaces: 2 });
+  let application: ApplicationManifest | undefined;
+  const objects: ObjectManifest[] = [];
+  const fields: FieldManifest[] = [];
+  const roles: RoleManifest[] = [];
+  const logicFunctions: LogicFunctionManifest[] = [];
+  const frontComponents: FrontComponentManifest[] = [];
+  const publicAssets: AssetManifest[] = [];
 
-    console.log(chalk.green(`  ✓ Manifest written to ${manifestPath}`));
-  } catch (error) {
-    console.error(
-      chalk.red('  ✗ Failed to write manifest:'),
-      error instanceof Error ? error.message : error,
-    );
+  const applicationFilePaths: string[] = [];
+  const objectsFilePaths: string[] = [];
+  const fieldsFilePaths: string[] = [];
+  const rolesFilePaths: string[] = [];
+  const logicFunctionsFilePaths: string[] = [];
+  const frontComponentsFilePaths: string[] = [];
+  const publicAssetsFilePaths: string[] = [];
+
+  for (const filePath of filePaths) {
+    const fileContent = await readFile(filePath, 'utf-8');
+    const relativePath = relative(appPath, filePath);
+
+    const targetFunctionName = extractDefineEntity(fileContent);
+
+    if (!targetFunctionName) {
+      continue;
+    }
+
+    const entity = TARGET_FUNCTION_TO_ENTITY_KEY_MAPPING[targetFunctionName];
+
+    switch (entity) {
+      case ManifestEntityKey.Application: {
+        const extract = await extractManifestFromFile<ApplicationConfig>({
+          appPath,
+          filePath,
+        });
+
+        application = {
+          ...extract.config,
+          yarnLockChecksum: null,
+          packageJsonChecksum: null,
+        };
+        errors.push(...extract.errors);
+        applicationFilePaths.push(relativePath);
+        break;
+      }
+      case ManifestEntityKey.Objects: {
+        const extract = await extractManifestFromFile<ObjectManifest>({
+          appPath,
+          filePath,
+        });
+        objects.push(extract.config);
+        errors.push(...extract.errors);
+        objectsFilePaths.push(relativePath);
+        break;
+      }
+      case ManifestEntityKey.Fields: {
+        const extract = await extractManifestFromFile<FieldManifest>({
+          appPath,
+          filePath,
+        });
+        fields.push(extract.config);
+        errors.push(...extract.errors);
+        fieldsFilePaths.push(relativePath);
+        break;
+      }
+      case ManifestEntityKey.Roles: {
+        const extract = await extractManifestFromFile<RoleManifest>({
+          appPath,
+          filePath,
+        });
+        roles.push(extract.config);
+        errors.push(...extract.errors);
+        rolesFilePaths.push(relativePath);
+        break;
+      }
+      case ManifestEntityKey.LogicFunctions: {
+        const extract = await extractManifestFromFile<LogicFunctionConfig>({
+          appPath,
+          filePath,
+        });
+
+        errors.push(...extract.errors);
+
+        const { handler: _, ...rest } = extract.config;
+
+        const relativeFilePath = relative(appPath, filePath);
+
+        const config: LogicFunctionManifest = {
+          ...rest,
+          handlerName: 'default.config.handler',
+          sourceHandlerPath: relativeFilePath,
+          builtHandlerPath: relativeFilePath.replace(/\.tsx?$/, '.mjs'),
+          builtHandlerChecksum: '[default-checksum]',
+        };
+
+        logicFunctions.push(config);
+        logicFunctionsFilePaths.push(relativePath);
+        break;
+      }
+      case ManifestEntityKey.FrontComponents: {
+        const extract = await extractManifestFromFile<FrontComponentConfig>({
+          appPath,
+          filePath,
+        });
+
+        errors.push(...extract.errors);
+
+        const { component, ...rest } = extract.config;
+
+        const relativeFilePath = relative(appPath, filePath);
+
+        const config: FrontComponentManifest = {
+          ...rest,
+          componentName: component.name,
+          sourceComponentPath: relativeFilePath,
+          builtComponentPath: relativeFilePath.replace(/\.tsx?$/, '.mjs'),
+          builtComponentChecksum: '',
+        };
+
+        frontComponents.push(config);
+        frontComponentsFilePaths.push(relativePath);
+        break;
+      }
+      case ManifestEntityKey.PublicAssets: {
+        // Public assets are handled below
+        break;
+      }
+      default: {
+        assertUnreachable(entity);
+      }
+    }
   }
-};
 
-export type RunManifestBuildOptions = {
-  display?: boolean;
-  writeOutput?: boolean;
-};
+  const assetFiles = await loadAssets(appPath);
 
-export const runManifestBuild = async (
-  appPath: string,
-  options: RunManifestBuildOptions = {},
-): Promise<ApplicationManifest | null> => {
-  const { display = true, writeOutput = true } = options;
-
-  if (display) {
-    console.log(chalk.blue('🔄 Building manifest...'));
-  }
-
-  try {
-    await validateFolderStructure(appPath);
-
-    const packageJson = await parseJsoncFile(
-      await findPathFile(appPath, 'package.json'),
-    );
-
-    const [
-      application,
-      objectManifests,
-      objectExtensionManifests,
-      functionManifests,
-      frontComponentManifests,
-      roleManifests,
-      sources,
-    ] = await Promise.all([
-      buildApplication(appPath),
-      buildObjects(appPath),
-      buildObjectExtensions(appPath),
-      buildFunctions(appPath),
-      buildFrontComponents(appPath),
-      buildRoles(appPath),
-      loadSources(appPath),
-    ]);
-
-    const manifest: ApplicationManifest = {
-      application,
-      objects: objectManifests,
-      objectExtensions:
-        objectExtensionManifests.length > 0 ? objectExtensionManifests : undefined,
-      serverlessFunctions: functionManifests,
-      frontComponents:
-        frontComponentManifests.length > 0 ? frontComponentManifests : undefined,
-      roles: roleManifests,
-      sources,
-      packageJson,
-    };
-
-    const validation = validateManifest({
-      application,
-      objects: objectManifests,
-      objectExtensions: objectExtensionManifests,
-      serverlessFunctions: functionManifests,
-      frontComponents: frontComponentManifests,
-      roles: roleManifests,
-      packageJson,
+  for (const assetFile of assetFiles) {
+    publicAssets.push({
+      filePath: assetFile,
+      fileName: basename(assetFile),
+      fileType: extname(assetFile).replace(/^\./, ''),
+      checksum: null,
     });
-
-    if (!validation.isValid) {
-      throw new ManifestValidationError(validation.errors);
-    }
-
-    if (display) {
-      displayEntitySummary(manifest);
-      if (validation.warnings.length > 0) {
-        displayWarnings(validation.warnings);
-      }
-    }
-
-    if (writeOutput) {
-      await writeManifestToOutput(appPath, manifest);
-    }
-
-    return manifest;
-  } catch (error) {
-    if (display) {
-      if (error instanceof ManifestValidationError) {
-        displayErrors(error);
-      } else {
-        console.error(
-          chalk.red('  ✗ Build failed:'),
-          error instanceof Error ? error.message : error,
-        );
-      }
-    }
-    return null;
+    publicAssetsFilePaths.push(relative(appPath, assetFile));
   }
+
+  if (!application) {
+    errors.push(
+      'Cannot build application, please export default defineApplication() to define an application',
+    );
+  }
+
+  const manifest = !application
+    ? null
+    : {
+        application,
+        objects,
+        fields,
+        roles,
+        logicFunctions,
+        frontComponents,
+        publicAssets,
+        sources: await computeSources(appPath, filePaths),
+      };
+
+  const entityFilePaths: EntityFilePaths = {
+    application: applicationFilePaths,
+    objects: objectsFilePaths,
+    fields: fieldsFilePaths,
+    roles: rolesFilePaths,
+    logicFunctions: logicFunctionsFilePaths,
+    frontComponents: frontComponentsFilePaths,
+    publicAssets: publicAssetsFilePaths,
+  };
+
+  return { manifest, filePaths: entityFilePaths, errors };
 };

@@ -18,13 +18,14 @@ import { CreatePageLayoutInput } from 'src/engine/metadata-modules/page-layout/d
 import { UpdatePageLayoutWithTabsInput } from 'src/engine/metadata-modules/page-layout/dtos/inputs/update-page-layout-with-tabs.input';
 import { UpdatePageLayoutInput } from 'src/engine/metadata-modules/page-layout/dtos/inputs/update-page-layout.input';
 import { PageLayoutDTO } from 'src/engine/metadata-modules/page-layout/dtos/page-layout.dto';
+import { PageLayoutType } from 'src/engine/metadata-modules/page-layout/enums/page-layout-type.enum';
 import { PageLayoutUpdateService } from 'src/engine/metadata-modules/page-layout/services/page-layout-update.service';
 import { PageLayoutService } from 'src/engine/metadata-modules/page-layout/services/page-layout.service';
 import { PageLayoutGraphqlApiExceptionFilter } from 'src/engine/metadata-modules/page-layout/utils/page-layout-graphql-api-exception.filter';
-import { WorkspaceMigrationBuilderGraphqlApiExceptionInterceptor } from 'src/engine/workspace-manager/workspace-migration/interceptors/workspace-migration-builder-graphql-api-exception.interceptor';
+import { WorkspaceMigrationGraphqlApiExceptionInterceptor } from 'src/engine/workspace-manager/workspace-migration/interceptors/workspace-migration-graphql-api-exception.interceptor';
 
 @Resolver(() => PageLayoutDTO)
-@UseInterceptors(WorkspaceMigrationBuilderGraphqlApiExceptionInterceptor)
+@UseInterceptors(WorkspaceMigrationGraphqlApiExceptionInterceptor)
 @UseFilters(PageLayoutGraphqlApiExceptionFilter)
 @UseGuards(WorkspaceAuthGuard)
 @UsePipes(ResolverValidationPipe)
@@ -40,11 +41,16 @@ export class PageLayoutResolver {
     @AuthWorkspace() workspace: WorkspaceEntity,
     @Args('objectMetadataId', { type: () => String, nullable: true })
     objectMetadataId?: string,
+    @Args('pageLayoutType', { type: () => PageLayoutType, nullable: true })
+    pageLayoutType?: PageLayoutType,
   ): Promise<PageLayoutDTO[]> {
-    if (objectMetadataId) {
-      return this.pageLayoutService.findByObjectMetadataId({
+    if (objectMetadataId || pageLayoutType) {
+      return this.pageLayoutService.findBy({
         workspaceId: workspace.id,
-        objectMetadataId,
+        filter: {
+          objectMetadataId,
+          pageLayoutType,
+        },
       });
     }
 

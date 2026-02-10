@@ -4,79 +4,70 @@ import { type FieldsConfiguration } from '@/page-layout/types/FieldsConfiguratio
 import { useLingui } from '@lingui/react/macro';
 import { useMemo } from 'react';
 import { isDefined } from 'twenty-shared/utils';
-import { FieldMetadataType } from '~/generated-metadata/graphql';
-
-// Custom field order configuration
-const CUSTOM_FIELD_ORDER: Record<string, string[]> = {
-  "location": ["effectiveDate", "termDate", "locationCode", "description", "timezone", "emails", "defaultOperatingHours"],
-  "offering": ["effectiveDate", "termDate", "offeringCode", "durationMinutes", "bufferBeforeMinutes", "bufferAfterMinutes", "cancellationHoursDuration"],
-  "phoneNumber": ["phonePrimaryPhoneNumber", "phonePrimaryPhoneCountryCode", "phonePrimaryPhoneCallingCode", "phoneAdditionalPhones", "phoneLabel", "location"],
-  "workingHoursRule": ["effectiveDate", "termDate", "dayOfWeek", "startTimeLocal", "endTimeLocal", "maxConcurrentCapacity", "availabilitySchedule"],
-  "resource": ["effectiveDate", "termDate", "resourceCode", "resourceType", "description", "defaultTimezone"],
-  "resourceOfferingCapability": ["effectiveDate", "termDate", "isPrimary", "proficiencyLevel", "offering", "resource"],
-  "availabilitySchedule": ["effectiveDate", "termDate", "scheduleName"],
-  "availabilityException": ["startUtc", "endUtc", "exceptionType", "reason", "isRecurring", "recurrenceRule", "availabilitySchedule"],
-  "appointment": ["description", "reason", "appointmentStatus", "startUtc", "endUtc", "appointmentTimezone", "internalNotes", "confirmationStatus", "confirmedAt", "reminderPreference", "reminderSentAt", "reminderCount", "agentSessionId", "agentTranscript", "cancelledAt", "cancelledBy", "cancellationReason"],
-  "appointmentHistory": ["historyAction", "changedByName", "oldValue", "newValue", "changeReason", "appointment"],
-  "customer": ["personId"],
-  "person": ["dateOfBirth", "gender", "personType", "specializations", "credentials", "preferredLanguage", "communicationPreferences", "languages"],
-  "personIdentifier": ["identifierType", "identifierValue", "isPrimary", "identifierMetadata", "person"]
-};
 
 export const useTemporaryFieldsConfiguration = (
   objectNameSingular: string,
-): FieldsConfiguration | null => {
+): FieldsConfiguration => {
   const { t } = useLingui();
   const { objectMetadataItem } = useObjectMetadataItem({
     objectNameSingular,
   });
 
-  const configuration = useMemo<FieldsConfiguration | null>(() => {
+  const configuration = useMemo<FieldsConfiguration>(() => {
     if (!isDefined(objectMetadataItem)) {
-      return null;
+      throw new Error('Object metadata item is not defined');
     }
 
-    let fieldsToDisplay = objectMetadataItem.fields.filter(
-      (field) =>
-        field.type !== FieldMetadataType.RELATION &&
-        field.type !== FieldMetadataType.MORPH_RELATION &&
-        field.type !== FieldMetadataType.RICH_TEXT_V2,
-    );
+    const fieldsToDisplay = objectMetadataItem.fields;
 
-    // Get custom order for this object type
-    const customOrder = CUSTOM_FIELD_ORDER[objectNameSingular];
-    
-    // First, create intermediate array with positions for sorting
-    const fieldsWithPositions = fieldsToDisplay.map((field) => {
-      let position: number;
-      
-      if (customOrder) {
-        // Use custom order if defined for this object
-        const customPosition = customOrder.indexOf(field.name);
-        position = customPosition !== -1 ? customPosition : 999; // Put unspecified fields at end
+    if (fieldsToDisplay.length === 0) {
+      throw new Error('No fields to display');
+    }
+
+    const generalFields: Array<{ fieldMetadataId: string; position: number }> =
+      [];
+    const otherFields: Array<{ fieldMetadataId: string; position: number }> =
+      [];
+
+    let generalPosition = 0;
+    let otherPosition = 0;
+
+    fieldsToDisplay.forEach((field) => {
+      if (field.isCustom === true) {
+        otherFields.push({
+          fieldMetadataId: field.id,
+          position: otherPosition++,
+        });
       } else {
-        // Fall back to default order
-        position = fieldsToDisplay.indexOf(field);
+        generalFields.push({
+          fieldMetadataId: field.id,
+          position: generalPosition++,
+        });
       }
-      
-      return {
-        fieldMetadataId: field.id,
-        fieldName: field.name,
-        position,
-      };
     });
 
-    // Sort by position
-    fieldsWithPositions.sort((a, b) => a.position - b.position);
-    // Create final fields array with sequential positions
-    const fields = fieldsWithPositions.map((field, index) => ({
-      fieldMetadataId: field.fieldMetadataId,
-      position: index,
-    }));
+    const sections = [];
 
+    if (generalFields.length > 0) {
+      sections.push({
+        id: `${objectNameSingular}-section-general`,
+        title: t`General`,
+        position: 0,
+        fields: generalFields,
+      });
+    }
 
-    if (fields.length === 0) {
-      return null;
+    if (otherFields.length > 0) {
+      sections.push({
+        id: `${objectNameSingular}-section-other`,
+        title: t`Other`,
+        position: 1,
+        fields: otherFields,
+      });
+    }
+
+    if (sections.length === 0) {
+      throw new Error('No sections to display');
     }
 
     return {

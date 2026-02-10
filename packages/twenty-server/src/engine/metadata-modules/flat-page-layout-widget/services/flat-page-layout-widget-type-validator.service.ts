@@ -3,13 +3,14 @@ import { Injectable } from '@nestjs/common';
 import { msg } from '@lingui/core/macro';
 import { isDefined } from 'twenty-shared/utils';
 
-import { FlatEntityPropertiesUpdates } from 'src/engine/metadata-modules/flat-entity/types/flat-entity-properties-updates.type';
 import {
   type FlatPageLayoutWidgetTypeValidatorForCreation,
   type FlatPageLayoutWidgetTypeValidatorForUpdate,
 } from 'src/engine/metadata-modules/flat-page-layout-widget/types/flat-page-layout-widget-type-validator.type';
 import { type FlatPageLayoutWidgetValidationError } from 'src/engine/metadata-modules/flat-page-layout-widget/types/flat-page-layout-widget-validation-error.type';
 import { rejectWidgetType } from 'src/engine/metadata-modules/flat-page-layout-widget/validators/utils/reject-widget-type.util';
+import { validateFrontComponentFlatPageLayoutWidgetForCreation } from 'src/engine/metadata-modules/flat-page-layout-widget/validators/utils/validate-front-component-flat-page-layout-widget-for-creation.util';
+import { validateFrontComponentFlatPageLayoutWidgetForUpdate } from 'src/engine/metadata-modules/flat-page-layout-widget/validators/utils/validate-front-component-flat-page-layout-widget-for-update.util';
 import { validateGraphFlatPageLayoutWidgetForCreation } from 'src/engine/metadata-modules/flat-page-layout-widget/validators/utils/validate-graph-flat-page-layout-widget-for-creation.util';
 import { validateGraphFlatPageLayoutWidgetForUpdate } from 'src/engine/metadata-modules/flat-page-layout-widget/validators/utils/validate-graph-flat-page-layout-widget-for-update.util';
 import { validateIframeFlatPageLayoutWidgetForCreation } from 'src/engine/metadata-modules/flat-page-layout-widget/validators/utils/validate-iframe-flat-page-layout-widget-for-creation.util';
@@ -18,19 +19,20 @@ import { validateStandaloneRichTextFlatPageLayoutWidgetForCreation } from 'src/e
 import { validateStandaloneRichTextFlatPageLayoutWidgetForUpdate } from 'src/engine/metadata-modules/flat-page-layout-widget/validators/utils/validate-standalone-rich-text-flat-page-layout-widget-for-update.util';
 import { WidgetType } from 'src/engine/metadata-modules/page-layout-widget/enums/widget-type.enum';
 import { PageLayoutWidgetExceptionCode } from 'src/engine/metadata-modules/page-layout-widget/exceptions/page-layout-widget.exception';
-import { FlatEntityValidationArgs } from 'src/engine/workspace-manager/workspace-migration/workspace-migration-builder/types/flat-entity-validation-args.type';
+import { UniversalFlatEntityUpdate } from 'src/engine/workspace-manager/workspace-migration/universal-flat-entity/types/universal-flat-entity-update.type';
+import { UniversalFlatEntityValidationArgs } from 'src/engine/workspace-manager/workspace-migration/workspace-migration-builder/types/universal-flat-entity-validation-args.type';
 
 export type GenericValidateFlatPageLayoutWidgetTypeSpecificitiesArgs =
-  FlatEntityValidationArgs<'pageLayoutWidget'> & {
-    updates?: FlatEntityPropertiesUpdates<'pageLayoutWidget'>;
+  UniversalFlatEntityValidationArgs<'pageLayoutWidget'> & {
+    update?: UniversalFlatEntityUpdate<'pageLayoutWidget'>;
   };
 
 export type ValidateFlatPageLayoutWidgetTypeSpecificitiesForCreationArgs =
-  FlatEntityValidationArgs<'pageLayoutWidget'>;
+  UniversalFlatEntityValidationArgs<'pageLayoutWidget'>;
 
 export type ValidateFlatPageLayoutWidgetTypeSpecificitiesForUpdateArgs =
-  FlatEntityValidationArgs<'pageLayoutWidget'> & {
-    updates: FlatEntityPropertiesUpdates<'pageLayoutWidget'>;
+  UniversalFlatEntityValidationArgs<'pageLayoutWidget'> & {
+    update: UniversalFlatEntityUpdate<'pageLayoutWidget'>;
   };
 
 @Injectable()
@@ -58,6 +60,7 @@ export class FlatPageLayoutWidgetTypeValidatorService {
       GRAPH: validateGraphFlatPageLayoutWidgetForCreation,
       STANDALONE_RICH_TEXT:
         validateStandaloneRichTextFlatPageLayoutWidgetForCreation,
+      FRONT_COMPONENT: validateFrontComponentFlatPageLayoutWidgetForCreation,
       TIMELINE: rejectWidgetType(
         WidgetType.TIMELINE,
         'Widget type TIMELINE is not supported yet.',
@@ -131,6 +134,7 @@ export class FlatPageLayoutWidgetTypeValidatorService {
       GRAPH: validateGraphFlatPageLayoutWidgetForUpdate,
       STANDALONE_RICH_TEXT:
         validateStandaloneRichTextFlatPageLayoutWidgetForUpdate,
+      FRONT_COMPONENT: validateFrontComponentFlatPageLayoutWidgetForUpdate,
       TIMELINE: rejectWidgetType(
         WidgetType.TIMELINE,
         'Widget type TIMELINE is not supported yet.',

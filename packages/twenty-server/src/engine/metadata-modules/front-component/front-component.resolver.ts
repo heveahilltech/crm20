@@ -9,16 +9,17 @@ import { AuthWorkspace } from 'src/engine/decorators/auth/auth-workspace.decorat
 import { NoPermissionGuard } from 'src/engine/guards/no-permission.guard';
 import { SettingsPermissionGuard } from 'src/engine/guards/settings-permission.guard';
 import { WorkspaceAuthGuard } from 'src/engine/guards/workspace-auth.guard';
+import { fromFlatFrontComponentToFrontComponentDto } from 'src/engine/metadata-modules/flat-front-component/utils/from-flat-front-component-to-front-component-dto.util';
 import { CreateFrontComponentInput } from 'src/engine/metadata-modules/front-component/dtos/create-front-component.input';
 import { FrontComponentDTO } from 'src/engine/metadata-modules/front-component/dtos/front-component.dto';
 import { UpdateFrontComponentInput } from 'src/engine/metadata-modules/front-component/dtos/update-front-component.input';
 import { FrontComponentService } from 'src/engine/metadata-modules/front-component/front-component.service';
 import { FrontComponentGraphqlApiExceptionInterceptor } from 'src/engine/metadata-modules/front-component/interceptors/front-component-graphql-api-exception.interceptor';
-import { WorkspaceMigrationBuilderGraphqlApiExceptionInterceptor } from 'src/engine/workspace-manager/workspace-migration/interceptors/workspace-migration-builder-graphql-api-exception.interceptor';
+import { WorkspaceMigrationGraphqlApiExceptionInterceptor } from 'src/engine/workspace-manager/workspace-migration/interceptors/workspace-migration-graphql-api-exception.interceptor';
 
 @UseGuards(WorkspaceAuthGuard)
 @UseInterceptors(
-  WorkspaceMigrationBuilderGraphqlApiExceptionInterceptor,
+  WorkspaceMigrationGraphqlApiExceptionInterceptor,
   FrontComponentGraphqlApiExceptionInterceptor,
 )
 @Resolver(() => FrontComponentDTO)
@@ -48,7 +49,12 @@ export class FrontComponentResolver {
     @Args('input') input: CreateFrontComponentInput,
     @AuthWorkspace() workspace: WorkspaceEntity,
   ): Promise<FrontComponentDTO> {
-    return await this.frontComponentService.create(input, workspace.id);
+    const flatFrontComponent = await this.frontComponentService.createOne({
+      input,
+      workspaceId: workspace.id,
+    });
+
+    return fromFlatFrontComponentToFrontComponentDto(flatFrontComponent);
   }
 
   @Mutation(() => FrontComponentDTO)
@@ -57,7 +63,13 @@ export class FrontComponentResolver {
     @Args('input') input: UpdateFrontComponentInput,
     @AuthWorkspace() workspace: WorkspaceEntity,
   ): Promise<FrontComponentDTO> {
-    return await this.frontComponentService.update(input, workspace.id);
+    const flatFrontComponent = await this.frontComponentService.updateOne({
+      id: input.id,
+      update: input.update,
+      workspaceId: workspace.id,
+    });
+
+    return fromFlatFrontComponentToFrontComponentDto(flatFrontComponent);
   }
 
   @Mutation(() => FrontComponentDTO)
@@ -66,6 +78,11 @@ export class FrontComponentResolver {
     @Args('id', { type: () => UUIDScalarType }) id: string,
     @AuthWorkspace() workspace: WorkspaceEntity,
   ): Promise<FrontComponentDTO> {
-    return await this.frontComponentService.delete(id, workspace.id);
+    const flatFrontComponent = await this.frontComponentService.destroyOne({
+      id,
+      workspaceId: workspace.id,
+    });
+
+    return fromFlatFrontComponentToFrontComponentDto(flatFrontComponent);
   }
 }

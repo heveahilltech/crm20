@@ -9,17 +9,21 @@ import {
   FieldContext,
   type GenericFieldContextType,
 } from '@/object-record/record-field/ui/contexts/FieldContext';
+import { getFileCategoryFromExtension } from '@/object-record/record-field/ui/utils/getFileCategoryFromExtension';
 import { SettingsTextInput } from '@/ui/input/components/SettingsTextInput';
+import { useIsFeatureEnabled } from '@/workspace/hooks/useIsFeatureEnabled';
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 import { useState } from 'react';
-import { isDefined } from 'twenty-shared/utils';
+import { assertIsDefinedOrThrow, isDefined } from 'twenty-shared/utils';
 
 import { FileIcon } from '@/file/components/FileIcon';
 import { useHasPermissionFlag } from '@/settings/roles/hooks/useHasPermissionFlag';
+import { t } from '@lingui/core/macro';
 import { IconCalendar, OverflowingTextWithTooltip } from 'twenty-ui/display';
 import { isNavigationModifierPressed } from 'twenty-ui/utilities';
 import { PermissionFlagType } from '~/generated-metadata/graphql';
+import { FeatureFlagKey } from '~/generated/graphql';
 import { formatToHumanReadableDate } from '~/utils/date-utils';
 import { getFileNameAndExtension } from '~/utils/file/getFileNameAndExtension';
 
@@ -82,6 +86,10 @@ export const AttachmentRow = ({
   const theme = useTheme();
   const [isEditing, setIsEditing] = useState(false);
 
+  const isFilesFieldMigrated = useIsFeatureEnabled(
+    FeatureFlagKey.IS_FILES_FIELD_MIGRATED,
+  );
+
   const hasDownloadPermission = useHasPermissionFlag(
     PermissionFlagType.DOWNLOAD_FILE,
   );
@@ -92,6 +100,16 @@ export const AttachmentRow = ({
   const [attachmentFileName, setAttachmentFileName] =
     useState(originalFileName);
 
+  const fileCategory = isFilesFieldMigrated
+    ? getFileCategoryFromExtension(attachment.file?.[0]?.extension)
+    : attachment.fileCategory;
+
+  const fileUrl = isFilesFieldMigrated
+    ? attachment.file?.[0]?.url
+    : attachment.fullPath;
+
+  assertIsDefinedOrThrow(fileUrl, new Error(t`File URL is not defined`));
+
   const { destroyOneRecord: destroyOneAttachment } = useDestroyOneRecord({
     objectNameSingular: CoreObjectNameSingular.Attachment,
   });
@@ -100,9 +118,7 @@ export const AttachmentRow = ({
     destroyOneAttachment(attachment.id);
   };
 
-  const { updateOneRecord: updateOneAttachment } = useUpdateOneRecord({
-    objectNameSingular: CoreObjectNameSingular.Attachment,
-  });
+  const { updateOneRecord } = useUpdateOneRecord();
 
   const handleRename = () => {
     setIsEditing(true);
@@ -113,9 +129,22 @@ export const AttachmentRow = ({
 
     const newFileName = `${attachmentFileName}${attachmentFileExtension}`;
 
-    updateOneAttachment({
+    updateOneRecord({
+      objectNameSingular: CoreObjectNameSingular.Attachment,
       idToUpdate: attachment.id,
-      updateOneRecordInput: { name: newFileName },
+      updateOneRecordInput: {
+        name: newFileName,
+        ...(isFilesFieldMigrated && isDefined(attachment.file?.[0]?.fileId)
+          ? {
+              file: [
+                {
+                  fileId: attachment.file?.[0]?.fileId,
+                  label: newFileName,
+                },
+              ],
+            }
+          : {}),
+      },
     });
   };
 
@@ -134,10 +163,7 @@ export const AttachmentRow = ({
   };
 
   const handleDownload = () => {
-    downloadFile(
-      attachment.fullPath,
-      `${attachmentFileName}${attachmentFileExtension}`,
-    );
+    downloadFile(fileUrl, `${attachmentFileName}${attachmentFileExtension}`);
   };
 
   const handleOpenDocument = (e: React.MouseEvent) => {
@@ -163,7 +189,7 @@ export const AttachmentRow = ({
     >
       <ActivityRow disabled>
         <StyledLeftContent>
-          <FileIcon fileCategory={attachment.fileCategory} />
+          <FileIcon fileCategory={fileCategory} />
           {isEditing ? (
             <SettingsTextInput
               instanceId={`attachment-${attachment.id}-name`}
@@ -177,7 +203,7 @@ export const AttachmentRow = ({
             <StyledLinkContainer>
               <StyledLink
                 onClick={handleOpenDocument}
-                href={attachment.fullPath}
+                href={fileUrl}
                 target="_blank"
                 rel="noopener noreferrer"
               >

@@ -9,6 +9,7 @@ import { ApiKeyModule } from 'src/engine/core-modules/api-key/api-key.module';
 import { AppTokenModule } from 'src/engine/core-modules/app-token/app-token.module';
 import { ApplicationSyncModule } from 'src/engine/core-modules/application/application-sync.module';
 import { ApplicationModule } from 'src/engine/core-modules/application/application.module';
+import { EnvironmentModule } from 'src/engine/core-modules/environment/environment.module';
 import { ApprovedAccessDomainModule } from 'src/engine/core-modules/approved-access-domain/approved-access-domain.module';
 import { AuthModule } from 'src/engine/core-modules/auth/auth.module';
 import { BillingWebhookModule } from 'src/engine/core-modules/billing-webhook/billing-webhook.module';
@@ -27,7 +28,6 @@ import { ExceptionHandlerModule } from 'src/engine/core-modules/exception-handle
 import { exceptionHandlerModuleFactory } from 'src/engine/core-modules/exception-handler/exception-handler.module-factory';
 import { FeatureFlagModule } from 'src/engine/core-modules/feature-flag/feature-flag.module';
 import { FileStorageModule } from 'src/engine/core-modules/file-storage/file-storage.module';
-import { FileStorageService } from 'src/engine/core-modules/file-storage/file-storage.service';
 import { GeoMapModule } from 'src/engine/core-modules/geo-map/geo-map-module';
 import { HealthModule } from 'src/engine/core-modules/health/health.module';
 import { ImapSmtpCaldavModule } from 'src/engine/core-modules/imap-smtp-caldav-connection/imap-smtp-caldav-connection.module';
@@ -46,14 +46,14 @@ import { PublicDomainModule } from 'src/engine/core-modules/public-domain/public
 import { RedisClientModule } from 'src/engine/core-modules/redis-client/redis-client.module';
 import { RedisClientService } from 'src/engine/core-modules/redis-client/redis-client.service';
 import { SearchModule } from 'src/engine/core-modules/search/search.module';
-import { serverlessModuleFactory } from 'src/engine/core-modules/serverless/serverless-module.factory';
-import { ServerlessModule } from 'src/engine/core-modules/serverless/serverless.module';
+import { logicFunctionModuleFactory } from 'src/engine/core-modules/logic-function/logic-function-drivers/factories/logic-function-module.factory';
+import { LogicFunctionModule } from 'src/engine/core-modules/logic-function/logic-function.module';
 import { WorkspaceSSOModule } from 'src/engine/core-modules/sso/sso.module';
 import { TelemetryModule } from 'src/engine/core-modules/telemetry/telemetry.module';
 import { TwentyConfigModule } from 'src/engine/core-modules/twenty-config/twenty-config.module';
 import { TwentyConfigService } from 'src/engine/core-modules/twenty-config/twenty-config.service';
 import { UserModule } from 'src/engine/core-modules/user/user.module';
-import { WebhookModule } from 'src/engine/core-modules/webhook/webhook.module';
+import { WebhookModule } from 'src/engine/metadata-modules/webhook/webhook.module';
 import { WorkflowApiModule } from 'src/engine/core-modules/workflow/workflow-api.module';
 import { WorkspaceInvitationModule } from 'src/engine/core-modules/workspace-invitation/workspace-invitation.module';
 import { WorkspaceModule } from 'src/engine/core-modules/workspace/workspace.module';
@@ -68,13 +68,17 @@ import { TrashCleanupModule } from 'src/engine/trash-cleanup/trash-cleanup.modul
 import { WorkspaceEventEmitterModule } from 'src/engine/workspace-event-emitter/workspace-event-emitter.module';
 import { ChannelSyncModule } from 'src/modules/connected-account/channel-sync/channel-sync.module';
 import { DashboardModule } from 'src/modules/dashboard/dashboard.module';
+import { ApplicationLayerModule } from 'src/engine/core-modules/application-layer/application-layer.module';
+import { LogicFunctionResourceService } from 'src/engine/core-modules/logic-function/logic-function-resource/logic-function-resource.service';
 
 import { AuditModule } from './audit/audit.module';
 import { ClientConfigModule } from './client-config/client-config.module';
+import { EventLogsModule } from './event-logs/event-logs.module';
 import { FileModule } from './file/file.module';
 
 @Module({
   imports: [
+    EnvironmentModule,
     TwentyConfigModule.forRoot(),
     HealthModule,
     AuditModule,
@@ -87,6 +91,7 @@ import { FileModule } from './file/file.module';
     RowLevelPermissionModule,
     OpenApiModule,
     ApplicationModule,
+    ApplicationLayerModule,
     ApplicationSyncModule,
     AppTokenModule,
     TimelineMessagingModule,
@@ -139,9 +144,9 @@ import { FileModule } from './file/file.module';
     CacheStorageModule,
     AiModelsModule,
     AiBillingModule,
-    ServerlessModule.forRootAsync({
-      useFactory: serverlessModuleFactory,
-      inject: [TwentyConfigService, FileStorageService],
+    LogicFunctionModule.forRootAsync({
+      useFactory: logicFunctionModuleFactory,
+      inject: [TwentyConfigService, LogicFunctionResourceService],
     }),
     CodeInterpreterModule.forRootAsync({
       useFactory: codeInterpreterModuleFactory,
@@ -156,6 +161,7 @@ import { FileModule } from './file/file.module';
     TrashCleanupModule,
     DashboardModule,
     RowLevelPermissionModule,
+    EventLogsModule,
   ],
   exports: [
     AuditModule,

@@ -1,7 +1,6 @@
 import { useNavigatePageLayoutCommandMenu } from '@/command-menu/pages/page-layout/hooks/useNavigatePageLayoutCommandMenu';
 import { CommandMenuPages } from '@/command-menu/types/CommandMenuPages';
 import { PageLayoutLeftPanel } from '@/page-layout/components/PageLayoutLeftPanel';
-import { PageLayoutTabHeader } from '@/page-layout/components/PageLayoutTabHeader';
 import { PageLayoutTabList } from '@/page-layout/components/PageLayoutTabList';
 import { PageLayoutTabListEffect } from '@/page-layout/components/PageLayoutTabListEffect';
 import { PAGE_LAYOUT_LEFT_PANEL_CONTAINER_WIDTH } from '@/page-layout/constants/PageLayoutLeftPanelContainerWidth';
@@ -15,14 +14,15 @@ import { getScrollWrapperInstanceIdFromPageLayoutId } from '@/page-layout/utils/
 import { getTabListInstanceIdFromPageLayoutId } from '@/page-layout/utils/getTabListInstanceIdFromPageLayoutId';
 import { getTabsByDisplayMode } from '@/page-layout/utils/getTabsByDisplayMode';
 import { getTabsWithVisibleWidgets } from '@/page-layout/utils/getTabsWithVisibleWidgets';
+import { shouldEnableTabEditingFeatures } from '@/page-layout/utils/shouldEnableTabEditingFeatures';
 import { sortTabsByPosition } from '@/page-layout/utils/sortTabsByPosition';
 import { useLayoutRenderingContext } from '@/ui/layout/contexts/LayoutRenderingContext';
 import { activeTabIdComponentState } from '@/ui/layout/tab-list/states/activeTabIdComponentState';
 import { ScrollWrapper } from '@/ui/utilities/scroll/components/ScrollWrapper';
 import { useRecoilComponentValue } from '@/ui/utilities/state/component-state/hooks/useRecoilComponentValue';
 import { useSetRecoilComponentState } from '@/ui/utilities/state/component-state/hooks/useSetRecoilComponentState';
-import { t } from '@lingui/core/macro';
 import styled from '@emotion/styled';
+import { t } from '@lingui/core/macro';
 import { isDefined } from 'twenty-shared/utils';
 import { useIsMobile } from 'twenty-ui/utilities';
 
@@ -67,22 +67,28 @@ export const PageLayoutRendererContent = () => {
   );
   const { navigatePageLayoutCommandMenu } = useNavigatePageLayoutCommandMenu();
 
-  const handleAddTab = isPageLayoutInEditMode
-    ? () => {
-        const newTabId = createPageLayoutTab(t`Untitled`);
-        setTabSettingsOpenTabId(newTabId);
-        navigatePageLayoutCommandMenu({
-          commandMenuPage: CommandMenuPages.PageLayoutTabSettings,
-          focusTitleInput: true,
-        });
-      }
-    : undefined;
-
   const isMobile = useIsMobile();
 
   if (!isDefined(currentPageLayout)) {
     return null;
   }
+
+  const handleAddTab =
+    isPageLayoutInEditMode &&
+    shouldEnableTabEditingFeatures(currentPageLayout.type)
+      ? () => {
+          const newTabId = createPageLayoutTab(t`Untitled`);
+          setTabSettingsOpenTabId(newTabId);
+          navigatePageLayoutCommandMenu({
+            commandMenuPage: CommandMenuPages.PageLayoutTabSettings,
+            focusTitleInput: true,
+          });
+        }
+      : undefined;
+
+  const canEnableTabEditing =
+    isPageLayoutInEditMode &&
+    shouldEnableTabEditingFeatures(currentPageLayout.type);
 
   const tabsWithVisibleWidgets = getTabsWithVisibleWidgets({
     tabs: currentPageLayout.tabs,
@@ -114,8 +120,8 @@ export const PageLayoutRendererContent = () => {
         <PageLayoutTabListEffect
           tabs={sortedTabs}
           componentInstanceId={tabListInstanceId}
-          defaultTabIdToFocusOnMobileAndSidePanel={
-            currentPageLayout.defaultTabIdToFocusOnMobileAndSidePanel
+          defaultTabToFocusOnMobileAndSidePanelId={
+            currentPageLayout.defaultTabToFocusOnMobileAndSidePanelId
           }
         />
         {(sortedTabs.length > 1 || isPageLayoutInEditMode) && (
@@ -124,12 +130,11 @@ export const PageLayoutRendererContent = () => {
             behaveAsLinks={!isInRightDrawer && !isPageLayoutInEditMode}
             componentInstanceId={tabListInstanceId}
             onAddTab={handleAddTab}
-            isReorderEnabled={isPageLayoutInEditMode}
-            onReorder={isPageLayoutInEditMode ? reorderTabs : undefined}
+            isReorderEnabled={canEnableTabEditing}
+            onReorder={canEnableTabEditing ? reorderTabs : undefined}
+            pageLayoutType={currentPageLayout.type}
           />
         )}
-
-        <PageLayoutTabHeader />
 
         <StyledScrollWrapper
           componentInstanceId={getScrollWrapperInstanceIdFromPageLayoutId(

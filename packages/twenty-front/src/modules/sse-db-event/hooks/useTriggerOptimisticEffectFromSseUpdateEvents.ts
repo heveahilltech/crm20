@@ -5,10 +5,12 @@ import { type ObjectMetadataItem } from '@/object-metadata/types/ObjectMetadataI
 import { getObjectTypename } from '@/object-record/cache/utils/getObjectTypename';
 import { getRecordFromCache } from '@/object-record/cache/utils/getRecordFromCache';
 import { getRecordNodeFromRecord } from '@/object-record/cache/utils/getRecordNodeFromRecord';
-import { generateDepthRecordGqlFieldsFromObject } from '@/object-record/graphql/record-gql-fields/utils/generateDepthRecordGqlFieldsFromObject';
+import { updateRecordFromCache } from '@/object-record/cache/utils/updateRecordFromCache';
+import { generateDepthRecordGqlFieldsFromRecord } from '@/object-record/graphql/record-gql-fields/utils/generateDepthRecordGqlFieldsFromRecord';
 import { useObjectPermissions } from '@/object-record/hooks/useObjectPermissions';
 import { useRefetchAggregateQueriesForObjectMetadataItem } from '@/object-record/hooks/useRefetchAggregateQueriesForObjectMetadataItem';
 import { useUpsertRecordsInStore } from '@/object-record/record-store/hooks/useUpsertRecordsInStore';
+import { computeOptimisticRecordFromInput } from '@/object-record/utils/computeOptimisticRecordFromInput';
 import { useCallback } from 'react';
 import { isDefined, isNonEmptyArray } from 'twenty-shared/utils';
 import {
@@ -32,12 +34,6 @@ export const useTriggerOptimisticEffectFromSseUpdateEvents = () => {
       objectRecordEvents: ObjectRecordEvent[];
       objectMetadataItem: ObjectMetadataItem;
     }) => {
-      const recordGqlFields = generateDepthRecordGqlFieldsFromObject({
-        objectMetadataItem,
-        objectMetadataItems,
-        depth: 1,
-      });
-
       const updateEvents = objectRecordEvents.filter((objectRecordEvent) => {
         return objectRecordEvent.action === DatabaseEventAction.UPDATED;
       });
@@ -50,6 +46,26 @@ export const useTriggerOptimisticEffectFromSseUpdateEvents = () => {
         }
 
         upsertRecordsInStore({ partialRecords: [updatedRecord] });
+
+        const computedOptimisticRecord = {
+          ...computeOptimisticRecordFromInput({
+            cache: apolloCoreClient.cache,
+            objectMetadataItem,
+            objectMetadataItems,
+            recordInput: updatedRecord,
+            objectPermissionsByObjectMetadataId,
+            currentWorkspaceMember: null,
+          }),
+          id: updatedRecord.id,
+          __typename: getObjectTypename(objectMetadataItem.nameSingular),
+        };
+
+        const recordGqlFields = generateDepthRecordGqlFieldsFromRecord({
+          objectMetadataItem,
+          objectMetadataItems,
+          record: computedOptimisticRecord,
+          depth: 0,
+        });
 
         const cachedRecord = getRecordFromCache({
           cache: apolloCoreClient.cache,
@@ -68,11 +84,21 @@ export const useTriggerOptimisticEffectFromSseUpdateEvents = () => {
           computeReferences: false,
         });
 
-        const computedOptimisticRecord = {
-          ...updatedRecord,
-          id: updatedRecord.id,
-          __typename: getObjectTypename(objectMetadataItem.nameSingular),
-        };
+        if (
+          !isDefined(cachedRecord) ||
+          !isDefined(cachedRecordWithConnection)
+        ) {
+          continue;
+        }
+
+        updateRecordFromCache({
+          objectMetadataItems,
+          objectMetadataItem,
+          cache: apolloCoreClient.cache,
+          record: computedOptimisticRecord,
+          recordGqlFields,
+          objectPermissionsByObjectMetadataId,
+        });
 
         const computedOptimisticRecordWithConnection = getRecordNodeFromRecord({
           record: computedOptimisticRecord,
@@ -81,10 +107,7 @@ export const useTriggerOptimisticEffectFromSseUpdateEvents = () => {
           recordGqlFields,
         });
 
-        if (
-          !isDefined(cachedRecordWithConnection) ||
-          !isDefined(computedOptimisticRecordWithConnection)
-        ) {
+        if (!isDefined(computedOptimisticRecordWithConnection)) {
           continue;
         }
 

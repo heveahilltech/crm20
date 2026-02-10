@@ -5,29 +5,29 @@ import { type AllFlatEntityMaps } from 'src/engine/metadata-modules/flat-entity/
 import { type AllFlatEntityTypesByMetadataName } from 'src/engine/metadata-modules/flat-entity/types/all-flat-entity-types-by-metadata-name';
 import { addFlatEntityToFlatEntityAndRelatedEntityMapsThroughMutationOrThrow } from 'src/engine/metadata-modules/flat-entity/utils/add-flat-entity-to-flat-entity-and-related-entity-maps-through-mutation-or-throw.util';
 
-type CreateAction<TMetadataName extends AllMetadataName> =
-  AllFlatEntityTypesByMetadataName[TMetadataName]['actions']['create'];
+type FlatCreateAction<TMetadataName extends AllMetadataName> =
+  AllFlatEntityTypesByMetadataName[TMetadataName]['flatActions']['create'];
 
 export type OptimisticallyApplyCreateActionOnAllFlatEntityMapsArgs<
   TMetadataName extends AllMetadataName,
 > = {
-  action: CreateAction<TMetadataName>;
+  flatAction: FlatCreateAction<TMetadataName>;
   allFlatEntityMaps: AllFlatEntityMaps;
 };
 
 export const optimisticallyApplyCreateActionOnAllFlatEntityMaps = <
   TMetadataName extends AllMetadataName,
 >({
-  action,
+  flatAction,
   allFlatEntityMaps,
 }: OptimisticallyApplyCreateActionOnAllFlatEntityMapsArgs<TMetadataName>): AllFlatEntityMaps => {
-  switch (action.metadataName) {
+  switch (flatAction.metadataName) {
     case 'fieldMetadata': {
-      action.flatFieldMetadatas.forEach((flatEntity) =>
+      flatAction.flatFieldMetadatas.forEach((flatEntity) =>
         addFlatEntityToFlatEntityAndRelatedEntityMapsThroughMutationOrThrow({
           flatEntity,
           flatEntityAndRelatedMapsToMutate: allFlatEntityMaps,
-          metadataName: action.metadataName,
+          metadataName: flatAction.metadataName,
         }),
       );
 
@@ -35,12 +35,12 @@ export const optimisticallyApplyCreateActionOnAllFlatEntityMaps = <
     }
     case 'objectMetadata': {
       addFlatEntityToFlatEntityAndRelatedEntityMapsThroughMutationOrThrow({
-        flatEntity: action.flatEntity,
+        flatEntity: flatAction.flatEntity,
         flatEntityAndRelatedMapsToMutate: allFlatEntityMaps,
-        metadataName: action.metadataName,
+        metadataName: flatAction.metadataName,
       });
 
-      action.flatFieldMetadatas.forEach((flatField) =>
+      flatAction.flatFieldMetadatas.forEach((flatField) =>
         addFlatEntityToFlatEntityAndRelatedEntityMapsThroughMutationOrThrow({
           flatEntity: flatField,
           flatEntityAndRelatedMapsToMutate: allFlatEntityMaps,
@@ -57,10 +57,7 @@ export const optimisticallyApplyCreateActionOnAllFlatEntityMaps = <
     case 'rowLevelPermissionPredicateGroup':
     case 'viewFilterGroup':
     case 'index':
-    case 'serverlessFunction':
-    case 'cronTrigger':
-    case 'databaseEventTrigger':
-    case 'routeTrigger':
+    case 'logicFunction':
     case 'viewFilter':
     case 'role':
     case 'roleTarget':
@@ -70,17 +67,19 @@ export const optimisticallyApplyCreateActionOnAllFlatEntityMaps = <
     case 'pageLayoutWidget':
     case 'pageLayoutTab':
     case 'commandMenuItem':
-    case 'frontComponent': {
+    case 'frontComponent':
+    case 'navigationMenuItem':
+    case 'webhook': {
       addFlatEntityToFlatEntityAndRelatedEntityMapsThroughMutationOrThrow({
-        flatEntity: action.flatEntity,
+        flatEntity: flatAction.flatEntity,
         flatEntityAndRelatedMapsToMutate: allFlatEntityMaps,
-        metadataName: action.metadataName,
+        metadataName: flatAction.metadataName,
       });
 
       return allFlatEntityMaps;
     }
     default: {
-      assertUnreachable(action);
+      assertUnreachable(flatAction);
     }
   }
 };

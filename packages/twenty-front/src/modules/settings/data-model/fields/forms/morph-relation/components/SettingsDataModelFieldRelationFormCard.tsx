@@ -40,6 +40,14 @@ export const SettingsDataModelFieldRelationFormCard = ({
 
   const { objectMetadataItems } = useObjectMetadataItems();
 
+  const sourceObjectMetadataItem = objectMetadataItems.find(
+    (item) => item.nameSingular === objectNameSingular,
+  );
+
+  if (!sourceObjectMetadataItem) {
+    throw new Error('Object not found.');
+  }
+
   const relationObjectMetadataIds: string[] = watch(
     'morphRelationObjectMetadataIds',
     [],
@@ -76,6 +84,7 @@ export const SettingsDataModelFieldRelationFormCard = ({
               type: FieldMetadataType.RELATION,
               settings: {
                 relationType,
+                joinColumnName: 'previewJoinColumnId',
               },
             }}
             shrink
@@ -99,6 +108,7 @@ export const SettingsDataModelFieldRelationFormCard = ({
               type: FieldMetadataType.RELATION,
               settings: {
                 relationType: oppositeRelationType,
+                joinColumnName: 'previewJoinColumnId',
               },
             }}
             shrink
@@ -116,6 +126,7 @@ export const SettingsDataModelFieldRelationFormCard = ({
         <>
           <SettingsDataModelFieldRelationForm
             existingFieldMetadataId={existingFieldMetadataId}
+            sourceObjectMetadataId={sourceObjectMetadataItem?.id}
             disabled={disabled}
           />
           {isJunctionRelationsEnabled && (
