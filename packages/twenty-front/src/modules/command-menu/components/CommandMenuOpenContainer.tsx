@@ -17,7 +17,7 @@ import { useTheme } from '@emotion/react';
 
 import styled from '@emotion/styled';
 import { AnimatePresence, motion } from 'framer-motion';
-import { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import { useRecoilCallback, useRecoilValue } from 'recoil';
 import { LINK_CHIP_CLICK_OUTSIDE_ID } from 'twenty-ui/components';
 import { useIsMobile } from 'twenty-ui/utilities';
@@ -49,7 +49,7 @@ const StyledCommandMenu = styled(motion.div)`
   border-radius: ${({ theme }) => theme.border.radius.md};
   box-shadow: ${({ theme }) => theme.boxShadow.superHeavy};
   font-family: ${({ theme }) => theme.font.family};
-  height: auto;
+  height: 90dvh;
   max-height: 90dvh;
   overflow: hidden;
   padding: 0;
@@ -58,6 +58,7 @@ const StyledCommandMenu = styled(motion.div)`
   z-index: ${RootStackingContextZIndices.CommandMenu};
   display: flex;
   flex-direction: column;
+  min-height: 0;
  @media (max-width: ${MOBILE_VIEWPORT}px) {
     width: 100vw;
     height: 100dvh;
@@ -65,7 +66,13 @@ const StyledCommandMenu = styled(motion.div)`
     border-radius: 0;
   }
 `;
-
+ const StyledCommandMenuContentWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+`;
 export const CommandMenuOpenContainer = ({
   children,
 }: React.PropsWithChildren) => {

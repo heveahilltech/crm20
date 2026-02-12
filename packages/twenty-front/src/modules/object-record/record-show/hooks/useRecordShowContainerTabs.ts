@@ -104,8 +104,14 @@ export const useRecordShowContainerTabs = (
         };
       })
       // When isInRightDrawer === true, we merge first and second tab into first tab
+       // Exception: WorkflowRun needs both Home (Fields) and Flow tabs visible
       .reduce<SingleTabProps[]>((acc, tab, index, array) => {
-        if (isInRightDrawer && array.length > 1) {
+        const shouldMergeTabs =
+          isInRightDrawer &&
+          array.length > 1 &&
+          targetObjectNameSingular !== CoreObjectNameSingular.WorkflowRun;
+
+        if (shouldMergeTabs) {
           if (index === 0) {
             return [
               ...acc,

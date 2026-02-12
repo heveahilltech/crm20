@@ -3,6 +3,20 @@ import { type RecordLayout } from '@/object-record/record-show/types/RecordLayou
 
 export const WORKFLOW_RUN_RECORD_LAYOUT: RecordLayout = {
   tabs: {
+    fields: {
+      title: 'Home',
+      icon: 'IconList',
+      position: 100,
+      cards: [{ type: CardType.FieldCard }],
+      hide: {
+        ifMobile: false,
+        ifDesktop: true,
+        ifInRightDrawer: false,
+        ifFeaturesDisabled: [],
+        ifRequiredObjectsInactive: [],
+        ifRelationsMissing: [],
+      },
+    },
     workflowRun: {
       title: 'Flow',
       position: 101,
