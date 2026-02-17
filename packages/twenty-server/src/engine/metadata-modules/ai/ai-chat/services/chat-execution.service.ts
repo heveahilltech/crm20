@@ -14,7 +14,7 @@ import {
   type UITools,
 } from 'ai';
 import { AppPath } from 'twenty-shared/types';
-import { getAppPath, isDefined } from 'twenty-shared/utils';
+import { getAppPath } from 'twenty-shared/utils';
 
 import { type CodeExecutionStreamEmitter } from 'src/engine/core-modules/tool-provider/interfaces/tool-provider.interface';
 
@@ -247,8 +247,6 @@ export class ChatExecutionService {
         workspace,
         browsingContext.objectNameSingular,
         browsingContext.recordId,
-        browsingContext.pageLayoutId,
-        browsingContext.activeTabId,
       );
     }
 
@@ -263,8 +261,6 @@ export class ChatExecutionService {
     workspace: WorkspaceEntity,
     objectNameSingular: string,
     recordId: string,
-    pageLayoutId?: string,
-    activeTabId?: string | null,
   ): string {
     const resourceUrl = this.workspaceDomainsService.buildWorkspaceURL({
       workspace,
@@ -274,17 +270,7 @@ export class ChatExecutionService {
       }),
     });
 
-    let context = `The user is viewing a ${objectNameSingular} record (ID: ${recordId}, URL: ${resourceUrl}). Use tools to fetch record details if needed.`;
-
-    if (isDefined(pageLayoutId)) {
-      context += `\nPage layout ID: ${pageLayoutId}.`;
-    }
-
-    if (isDefined(activeTabId)) {
-      context += `\nActive tab ID: ${activeTabId}.`;
-    }
-
-    return context;
+    return `The user is viewing a ${objectNameSingular} record (ID: ${recordId}, URL: ${resourceUrl}). Use tools to fetch record details if needed.`;
   }
 
   private buildListViewContext(browsingContext: {

@@ -1,21 +1,12 @@
 import { promises as fs } from 'fs';
-import { resolve, join } from 'path';
 
-import { ASSET_PATH } from 'src/constants/assets-path';
-
-const EXECUTOR_FILE_PATH = resolve(
-  __dirname,
-  join(
-    ASSET_PATH,
-    `engine/core-modules/logic-function/logic-function-drivers/constants/executor`,
-  ),
-);
+import { getExecutorFilePath } from 'src/engine/core-modules/logic-function/logic-function-drivers/utils/get-executor-file-path';
 
 export const copyExecutor = async (buildDirectory: string) => {
   await fs.mkdir(buildDirectory, {
     recursive: true,
   });
-  await fs.cp(EXECUTOR_FILE_PATH, buildDirectory, {
+  await fs.cp(getExecutorFilePath(), buildDirectory, {
     recursive: true,
   });
 };

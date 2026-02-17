@@ -11,7 +11,7 @@ import { isDefined } from 'twenty-shared/utils';
 import {
   type UpdateCoreViewGroupMutationVariables,
   useUpdateCoreViewGroupMutation,
-} from '~/generated-metadata/graphql';
+} from '~/generated/graphql';
 
 export const usePerformViewGroupAPIPersist = () => {
   const { triggerViewGroupOptimisticEffect } =

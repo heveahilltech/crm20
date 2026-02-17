@@ -1,7 +1,3 @@
-import { t } from '@lingui/core/macro';
-import { useRecoilCallback } from 'recoil';
-import { isDefined } from 'twenty-shared/utils';
-
 import { type BrowsingContext } from '@/ai/types/BrowsingContext';
 import { MAIN_CONTEXT_STORE_INSTANCE_ID } from '@/context-store/constants/MainContextStoreInstanceId';
 import { contextStoreCurrentObjectMetadataItemIdComponentState } from '@/context-store/states/contextStoreCurrentObjectMetadataItemIdComponentState';
@@ -11,10 +7,9 @@ import { contextStoreFiltersComponentState } from '@/context-store/states/contex
 import { contextStoreTargetedRecordsRuleComponentState } from '@/context-store/states/contextStoreTargetedRecordsRuleComponentState';
 import { ContextStoreViewType } from '@/context-store/types/ContextStoreViewType';
 import { objectMetadataItemsState } from '@/object-metadata/states/objectMetadataItemsState';
-import { recordStoreFamilySelector } from '@/object-record/record-store/states/selectors/recordStoreFamilySelector';
-import { getTabListInstanceIdFromPageLayoutId } from '@/page-layout/utils/getTabListInstanceIdFromPageLayoutId';
-import { activeTabIdComponentState } from '@/ui/layout/tab-list/states/activeTabIdComponentState';
 import { coreViewFromViewIdFamilySelector } from '@/views/states/selectors/coreViewFromViewIdFamilySelector';
+import { t } from '@lingui/core/macro';
+import { useRecoilCallback } from 'recoil';
 
 export const useGetBrowsingContext = () => {
   const getBrowsingContext = useRecoilCallback(
@@ -66,40 +61,11 @@ export const useGetBrowsingContext = () => {
             return null;
           }
 
-          const recordContext: BrowsingContext = {
+          return {
             type: 'recordPage',
             objectNameSingular: objectMetadataItem.nameSingular,
             recordId: targetedRecordsRule.selectedRecordIds[0],
           };
-
-          const pageLayoutId = snapshot
-            .getLoadable(
-              recordStoreFamilySelector<string | null | undefined>({
-                recordId: targetedRecordsRule.selectedRecordIds[0],
-                fieldName: 'pageLayoutId',
-              }),
-            )
-            .getValue();
-
-          if (isDefined(pageLayoutId)) {
-            const tabListInstanceId =
-              getTabListInstanceIdFromPageLayoutId(pageLayoutId);
-            const activeTabId = snapshot
-              .getLoadable(
-                activeTabIdComponentState.atomFamily({
-                  instanceId: tabListInstanceId,
-                }),
-              )
-              .getValue();
-
-            return {
-              ...recordContext,
-              pageLayoutId,
-              activeTabId,
-            };
-          }
-
-          return recordContext;
         }
 
         if (

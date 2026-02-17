@@ -49,7 +49,7 @@ export const WorkflowMessage = ({
   return (
     <StyledMessageContainer>
       <FormFieldInputContainer>
-        <FormFieldInputRowContainer multiline maxHeight={145}>
+        <FormFieldInputRowContainer multiline maxHeight={124}>
           <FormFieldInputInnerContainer
             formFieldInputInstanceId="workflow-message"
             hasRightElement={false}

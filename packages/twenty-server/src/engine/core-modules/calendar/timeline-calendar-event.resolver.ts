@@ -1,5 +1,5 @@
 import { UseGuards } from '@nestjs/common';
-import { Args, ArgsType, Field, Int, Query } from '@nestjs/graphql';
+import { Args, ArgsType, Field, Int, Query, Resolver } from '@nestjs/graphql';
 
 import { Max } from 'class-validator';
 
@@ -9,7 +9,6 @@ import { TimelineCalendarEventsWithTotalDTO } from 'src/engine/core-modules/cale
 import { TimelineCalendarEventService } from 'src/engine/core-modules/calendar/timeline-calendar-event.service';
 import { AuthWorkspace } from 'src/engine/decorators/auth/auth-workspace.decorator';
 import { AuthWorkspaceMemberId } from 'src/engine/decorators/auth/auth-workspace-member-id.decorator';
-import { CoreResolver } from 'src/engine/api/graphql/graphql-config/decorators/core-resolver.decorator';
 import { CustomPermissionGuard } from 'src/engine/guards/custom-permission.guard';
 import { WorkspaceAuthGuard } from 'src/engine/guards/workspace-auth.guard';
 import { WorkspaceEntity } from 'src/engine/core-modules/workspace/workspace.entity';
@@ -54,7 +53,7 @@ class GetTimelineCalendarEventsFromOpportunityIdArgs {
 }
 
 @UseGuards(WorkspaceAuthGuard, CustomPermissionGuard)
-@CoreResolver(() => TimelineCalendarEventsWithTotalDTO)
+@Resolver(() => TimelineCalendarEventsWithTotalDTO)
 export class TimelineCalendarEventResolver {
   constructor(
     private readonly timelineCalendarEventService: TimelineCalendarEventService,

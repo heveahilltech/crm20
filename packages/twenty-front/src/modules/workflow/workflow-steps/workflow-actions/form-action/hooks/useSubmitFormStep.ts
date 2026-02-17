@@ -7,7 +7,7 @@ import {
   type SubmitFormStepInput,
   type SubmitFormStepMutation,
   type SubmitFormStepMutationVariables,
-} from '~/generated/graphql';
+} from '~/generated-metadata/graphql';
 
 export const useSubmitFormStep = () => {
   const apolloCoreClient = useApolloCoreClient();

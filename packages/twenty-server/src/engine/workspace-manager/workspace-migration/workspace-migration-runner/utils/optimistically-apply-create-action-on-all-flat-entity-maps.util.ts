@@ -1,18 +1,26 @@
+import { type AllMetadataName } from 'twenty-shared/metadata';
 import { assertUnreachable } from 'twenty-shared/utils';
 
 import { type AllFlatEntityMaps } from 'src/engine/metadata-modules/flat-entity/types/all-flat-entity-maps.type';
+import { type AllFlatEntityTypesByMetadataName } from 'src/engine/metadata-modules/flat-entity/types/all-flat-entity-types-by-metadata-name';
 import { addFlatEntityToFlatEntityAndRelatedEntityMapsThroughMutationOrThrow } from 'src/engine/metadata-modules/flat-entity/utils/add-flat-entity-to-flat-entity-and-related-entity-maps-through-mutation-or-throw.util';
-import { type AllFlatWorkspaceMigrationAction } from 'src/engine/workspace-manager/workspace-migration/workspace-migration-builder/types/workspace-migration-action-common';
 
-export type OptimisticallyApplyCreateActionOnAllFlatEntityMapsArgs = {
-  flatAction: AllFlatWorkspaceMigrationAction<'create'>;
+type FlatCreateAction<TMetadataName extends AllMetadataName> =
+  AllFlatEntityTypesByMetadataName[TMetadataName]['flatActions']['create'];
+
+export type OptimisticallyApplyCreateActionOnAllFlatEntityMapsArgs<
+  TMetadataName extends AllMetadataName,
+> = {
+  flatAction: FlatCreateAction<TMetadataName>;
   allFlatEntityMaps: AllFlatEntityMaps;
 };
 
-export const optimisticallyApplyCreateActionOnAllFlatEntityMaps = ({
+export const optimisticallyApplyCreateActionOnAllFlatEntityMaps = <
+  TMetadataName extends AllMetadataName,
+>({
   flatAction,
   allFlatEntityMaps,
-}: OptimisticallyApplyCreateActionOnAllFlatEntityMapsArgs): AllFlatEntityMaps => {
+}: OptimisticallyApplyCreateActionOnAllFlatEntityMapsArgs<TMetadataName>): AllFlatEntityMaps => {
   switch (flatAction.metadataName) {
     case 'fieldMetadata': {
       flatAction.flatFieldMetadatas.forEach((flatEntity) =>

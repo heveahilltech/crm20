@@ -1,14 +1,9 @@
 import { Injectable } from '@nestjs/common';
 
-import { v4 } from 'uuid';
-
 import { WorkspaceMigrationRunnerActionHandler } from 'src/engine/workspace-manager/workspace-migration/workspace-migration-runner/interfaces/workspace-migration-runner-action-handler-service.interface';
 
 import { WebhookEntity } from 'src/engine/metadata-modules/webhook/entities/webhook.entity';
-import {
-  FlatCreateWebhookAction,
-  UniversalCreateWebhookAction,
-} from 'src/engine/workspace-manager/workspace-migration/workspace-migration-builder/builders/webhook/types/workspace-migration-webhook-action.type';
+import { FlatCreateWebhookAction } from 'src/engine/workspace-manager/workspace-migration/workspace-migration-builder/builders/webhook/types/workspace-migration-webhook-action.type';
 import {
   WorkspaceMigrationActionRunnerArgs,
   WorkspaceMigrationActionRunnerContext,
@@ -23,20 +18,10 @@ export class CreateWebhookActionHandlerService extends WorkspaceMigrationRunnerA
     super();
   }
 
-  override async transpileUniversalActionToFlatAction({
-    action,
-    flatApplication,
-    workspaceId,
-  }: WorkspaceMigrationActionRunnerArgs<UniversalCreateWebhookAction>): Promise<FlatCreateWebhookAction> {
-    return {
-      ...action,
-      flatEntity: {
-        ...action.flatEntity,
-        applicationId: flatApplication.id,
-        id: action.id ?? v4(),
-        workspaceId,
-      },
-    };
+  override async transpileUniversalActionToFlatAction(
+    context: WorkspaceMigrationActionRunnerArgs<FlatCreateWebhookAction>,
+  ): Promise<FlatCreateWebhookAction> {
+    return context.action;
   }
 
   async executeForMetadata(

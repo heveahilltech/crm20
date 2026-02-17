@@ -2,7 +2,6 @@ import { isDefined, isEmptyObject } from 'twenty-shared/utils';
 import { z } from 'zod';
 
 import { type WidgetType } from 'src/engine/metadata-modules/page-layout-widget/enums/widget-type.enum';
-import { type AllPageLayoutWidgetConfiguration } from 'src/engine/metadata-modules/page-layout-widget/types/all-page-layout-widget-configuration.type';
 import {
   gridPositionSchema,
   widgetConfigurationSchemaWithoutDefaults,
@@ -50,7 +49,7 @@ Only provide fields you want to change - others remain unchanged.`,
       columnSpan: number;
     };
     objectMetadataId?: string;
-    configuration?: AllPageLayoutWidgetConfiguration;
+    configuration?: Record<string, unknown>;
   }) => {
     try {
       const { widgetId, ...updates } = parameters;

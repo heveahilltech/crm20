@@ -47,17 +47,14 @@ export class SamlAuthStrategy extends PassportStrategy(
                 identityProvider &&
                 this.sSOService.isSAMLIdentityProvider(identityProvider)
               ) {
-                // IdP metadata XML typically has whitespace-formatted certificates
-                const sanitizedCertificate =
-                  identityProvider.certificate.replace(/\s/g, '');
-
                 const config: SamlConfig = {
                   entryPoint: identityProvider.ssoURL,
                   issuer: this.sSOService.buildIssuerURL(identityProvider),
                   callbackUrl:
                     this.sSOService.buildCallbackUrl(identityProvider),
-                  idpCert: sanitizedCertificate,
-                  wantAssertionsSigned: true,
+                  idpCert: identityProvider.certificate,
+                  // TODO: Improve the feature by sign the response
+                  wantAssertionsSigned: false,
                   wantAuthnResponseSigned: false,
                   disableRequestedAuthnContext: true,
                   signatureAlgorithm: 'sha256',

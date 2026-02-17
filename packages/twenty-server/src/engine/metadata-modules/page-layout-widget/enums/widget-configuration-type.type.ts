@@ -27,12 +27,6 @@ export enum WidgetConfigurationType {
   WORKFLOW_RUN = 'WORKFLOW_RUN',
   FRONT_COMPONENT = 'FRONT_COMPONENT',
 }
-export type AllGraphWidgetConfigurationType =
-  | WidgetConfigurationType.AGGREGATE_CHART
-  | WidgetConfigurationType.GAUGE_CHART
-  | WidgetConfigurationType.PIE_CHART
-  | WidgetConfigurationType.BAR_CHART
-  | WidgetConfigurationType.LINE_CHART;
 
 registerEnumType(WidgetConfigurationType, {
   name: 'WidgetConfigurationType',

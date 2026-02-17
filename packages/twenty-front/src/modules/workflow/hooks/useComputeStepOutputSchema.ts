@@ -5,7 +5,7 @@ import {
   type ComputeStepOutputSchemaInput,
   type ComputeStepOutputSchemaMutation,
   type ComputeStepOutputSchemaMutationVariables,
-} from '~/generated/graphql';
+} from '~/generated-metadata/graphql';
 
 export const useComputeStepOutputSchema = () => {
   const apolloCoreClient = useApolloCoreClient();

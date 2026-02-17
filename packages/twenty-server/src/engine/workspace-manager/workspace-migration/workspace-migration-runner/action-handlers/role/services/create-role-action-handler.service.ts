@@ -1,14 +1,9 @@
 import { Injectable } from '@nestjs/common';
 
-import { v4 } from 'uuid';
-
 import { WorkspaceMigrationRunnerActionHandler } from 'src/engine/workspace-manager/workspace-migration/workspace-migration-runner/interfaces/workspace-migration-runner-action-handler-service.interface';
 
 import { RoleEntity } from 'src/engine/metadata-modules/role/role.entity';
-import {
-  FlatCreateRoleAction,
-  UniversalCreateRoleAction,
-} from 'src/engine/workspace-manager/workspace-migration/workspace-migration-builder/builders/role/types/workspace-migration-role-action.type';
+import { FlatCreateRoleAction } from 'src/engine/workspace-manager/workspace-migration/workspace-migration-builder/builders/role/types/workspace-migration-role-action.type';
 import {
   WorkspaceMigrationActionRunnerArgs,
   WorkspaceMigrationActionRunnerContext,
@@ -23,26 +18,10 @@ export class CreateRoleActionHandlerService extends WorkspaceMigrationRunnerActi
     super();
   }
 
-  override async transpileUniversalActionToFlatAction({
-    action,
-    flatApplication,
-    workspaceId,
-  }: WorkspaceMigrationActionRunnerArgs<UniversalCreateRoleAction>): Promise<FlatCreateRoleAction> {
-    return {
-      ...action,
-      flatEntity: {
-        ...action.flatEntity,
-        applicationId: flatApplication.id,
-        id: action.id ?? v4(),
-        workspaceId,
-        roleTargetIds: [],
-        rowLevelPermissionPredicateIds: [],
-        rowLevelPermissionPredicateGroupIds: [],
-        objectPermissionIds: [],
-        permissionFlagIds: [],
-        fieldPermissionIds: [],
-      },
-    };
+  override async transpileUniversalActionToFlatAction(
+    context: WorkspaceMigrationActionRunnerArgs<FlatCreateRoleAction>,
+  ): Promise<FlatCreateRoleAction> {
+    return context.action;
   }
 
   async executeForMetadata(

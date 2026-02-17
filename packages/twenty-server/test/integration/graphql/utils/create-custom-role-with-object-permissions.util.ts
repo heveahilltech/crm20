@@ -1,4 +1,5 @@
 import gql from 'graphql-tag';
+import { makeGraphqlAPIRequest } from 'test/integration/graphql/utils/make-graphql-api-request.util';
 import { makeMetadataAPIRequest } from 'test/integration/metadata/suites/utils/make-metadata-api-request.util';
 
 export const createCustomRoleWithObjectPermissions = async (options: {
@@ -30,7 +31,7 @@ export const createCustomRoleWithObjectPermissions = async (options: {
       `,
   };
 
-  const response = await makeMetadataAPIRequest(createRoleOperation);
+  const response = await makeGraphqlAPIRequest(createRoleOperation);
 
   expect(response.body.errors).toBeUndefined();
   expect(response.body.data.createOneRole).toBeDefined();
@@ -140,7 +141,7 @@ export const createCustomRoleWithObjectPermissions = async (options: {
       },
     };
 
-    await makeMetadataAPIRequest(upsertObjectPermissionsOperation);
+    await makeGraphqlAPIRequest(upsertObjectPermissionsOperation);
   }
 
   return {

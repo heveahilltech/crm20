@@ -44,7 +44,7 @@ describe('ClickHouse Event Registration (integration)', () => {
     };
 
     const response = await request(`http://localhost:${APP_PORT}`)
-      .post('/metadata')
+      .post('/graphql')
       .send({
         query: mutation,
         variables,

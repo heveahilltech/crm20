@@ -5,7 +5,7 @@ import {
   type CreateWorkflowVersionStepInput,
   type CreateWorkflowVersionStepMutation,
   type CreateWorkflowVersionStepMutationVariables,
-} from '~/generated/graphql';
+} from '~/generated-metadata/graphql';
 import { useUpdateWorkflowVersionCache } from '@/workflow/workflow-steps/hooks/useUpdateWorkflowVersionCache';
 import { flowComponentState } from '@/workflow/states/flowComponentState';
 import { useSetRecoilComponentState } from '@/ui/utilities/state/component-state/hooks/useSetRecoilComponentState';

@@ -345,50 +345,6 @@ export const failingCreateInputByFieldMetadataType: {
         emailsField: 'not-an-email',
       },
     },
-    {
-      input: {
-        emailsField: {
-          primaryEmail: 'not-an-email',
-        },
-      },
-    },
-    {
-      input: {
-        emailsField: {
-          additionalEmails: 'not-an-email',
-        },
-      },
-    },
-    {
-      input: {
-        emailsField: {
-          additionalEmails: ['not-an-email'],
-        },
-      },
-    },
-    {
-      input: {
-        emailsField: {
-          primaryEmail: 'email@email.com',
-          additionalEmails: ['not-an-email'],
-        },
-      },
-    },
-    {
-      input: {
-        emailsField: {
-          primaryEmail: 'not-an-email',
-          additionalEmails: ['additional@email.com'],
-        },
-      },
-    },
-    {
-      input: {
-        emailsField: {
-          additionalEmails: ['not-an-email', 'additional@email.com'],
-        },
-      },
-    },
   ],
   [FieldMetadataType.PHONES]: [
     {

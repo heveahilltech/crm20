@@ -2,6 +2,7 @@ import gql from 'graphql-tag';
 import { default as request } from 'supertest';
 import { createRoleOperation } from 'test/integration/graphql/utils/create-custom-role-operation-factory.util';
 import { deleteRole } from 'test/integration/graphql/utils/delete-one-role.util';
+import { makeGraphqlAPIRequest } from 'test/integration/graphql/utils/make-graphql-api-request.util';
 import { createUpsertObjectPermissionsOperation } from 'test/integration/graphql/utils/upsert-object-permission-operation-factory.util';
 import { makeMetadataAPIRequest } from 'test/integration/metadata/suites/utils/make-metadata-api-request.util';
 
@@ -61,7 +62,7 @@ describe('Object Permissions Validation', () => {
         canDestroyAllObjectRecords: true,
       });
 
-      const response = await makeMetadataAPIRequest(roleOperation);
+      const response = await makeGraphqlAPIRequest(roleOperation);
 
       customRoleId = response.body.data.createOneRole.id;
     });
@@ -85,7 +86,7 @@ describe('Object Permissions Validation', () => {
           },
         ]);
 
-        const response = await makeMetadataAPIRequest(operation);
+        const response = await makeGraphqlAPIRequest(operation);
 
         expect(response.body.errors).toBeUndefined();
         expect(response.body.data.upsertObjectPermissions).toHaveLength(1);
@@ -109,7 +110,7 @@ describe('Object Permissions Validation', () => {
           },
         ]);
 
-        const response = await makeMetadataAPIRequest(operation);
+        const response = await makeGraphqlAPIRequest(operation);
 
         expect(response.body.errors).toBeUndefined();
         expect(response.body.data.upsertObjectPermissions).toHaveLength(1);
@@ -143,7 +144,7 @@ describe('Object Permissions Validation', () => {
           ],
         );
 
-        const response = await makeMetadataAPIRequest(operation);
+        const response = await makeGraphqlAPIRequest(operation);
 
         expect(response.body.data).toBeNull();
         expect(response.body.errors).toBeDefined();
@@ -174,7 +175,7 @@ describe('Object Permissions Validation', () => {
           ],
         );
 
-        const response = await makeMetadataAPIRequest(operation);
+        const response = await makeGraphqlAPIRequest(operation);
 
         expect(response.body.data).toBeNull();
         expect(response.body.errors).toBeDefined();
@@ -205,7 +206,7 @@ describe('Object Permissions Validation', () => {
           ],
         );
 
-        const response = await makeMetadataAPIRequest(operation);
+        const response = await makeGraphqlAPIRequest(operation);
 
         expect(response.body.data).toBeNull();
         expect(response.body.errors).toBeDefined();
@@ -237,7 +238,7 @@ describe('Object Permissions Validation', () => {
           ],
         );
 
-        const response = await makeMetadataAPIRequest(operation);
+        const response = await makeGraphqlAPIRequest(operation);
 
         expect(response.body.data).toBeNull();
         expect(response.body.errors).toBeDefined();
@@ -277,7 +278,7 @@ describe('Object Permissions Validation', () => {
           ],
         );
 
-        const response = await makeMetadataAPIRequest(operation);
+        const response = await makeGraphqlAPIRequest(operation);
 
         expect(response.body.errors).toBeUndefined();
         expect(response.body.data.upsertObjectPermissions).toHaveLength(2);
@@ -309,7 +310,7 @@ describe('Object Permissions Validation', () => {
           ],
         );
 
-        const response = await makeMetadataAPIRequest(operation);
+        const response = await makeGraphqlAPIRequest(operation);
 
         expect(response.body.data).toBeNull();
         expect(response.body.errors).toBeDefined();
@@ -338,9 +339,7 @@ describe('Object Permissions Validation', () => {
         canDestroyAllObjectRecords: false,
       });
 
-      const response = await makeMetadataAPIRequest(
-        roleWithoutPermissionsQuery,
-      );
+      const response = await makeGraphqlAPIRequest(roleWithoutPermissionsQuery);
 
       roleWithoutPermissions = response.body.data.createOneRole.id;
     });
@@ -363,7 +362,7 @@ describe('Object Permissions Validation', () => {
         ['objectMetadataId', 'canReadObjectRecords'],
       );
 
-      const response = await makeMetadataAPIRequest(operation);
+      const response = await makeGraphqlAPIRequest(operation);
 
       expect(response.body.data).toBeNull();
       expect(response.body.errors).toBeDefined();
@@ -387,7 +386,7 @@ describe('Object Permissions Validation', () => {
         ],
       );
 
-      const response = await makeMetadataAPIRequest(operation);
+      const response = await makeGraphqlAPIRequest(operation);
 
       expect(response.body.errors).toBeUndefined();
       expect(response.body.data.upsertObjectPermissions).toHaveLength(1);

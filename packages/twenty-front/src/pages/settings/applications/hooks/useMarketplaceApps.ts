@@ -1,4 +1,4 @@
-import { useFindManyMarketplaceAppsQuery } from '~/generated-metadata/graphql';
+import { useFindManyMarketplaceAppsQuery } from '~/generated/graphql';
 import { type AvailableApplication } from '~/pages/settings/applications/types/availableApplication';
 
 export const useMarketplaceApps = () => {

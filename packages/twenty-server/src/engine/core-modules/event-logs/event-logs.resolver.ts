@@ -1,11 +1,10 @@
 /* @license Enterprise */
 
 import { UseFilters, UseGuards, UsePipes } from '@nestjs/common';
-import { Args, Query } from '@nestjs/graphql';
+import { Args, Query, Resolver } from '@nestjs/graphql';
 
 import { PermissionFlagType } from 'twenty-shared/constants';
 
-import { MetadataResolver } from 'src/engine/api/graphql/graphql-config/decorators/metadata-resolver.decorator';
 import { AuthGraphqlApiExceptionFilter } from 'src/engine/core-modules/auth/filters/auth-graphql-api-exception.filter';
 import { EnterpriseFeaturesEnabledGuard } from 'src/engine/core-modules/auth/guards/enterprise-features-enabled.guard';
 import { EventLogsGraphqlApiExceptionFilter } from 'src/engine/core-modules/event-logs/filters/event-logs-graphql-api-exception.filter';
@@ -23,7 +22,7 @@ import { EventLogsService } from './event-logs.service';
 import { EventLogQueryInput } from './dtos/event-log-query.input';
 import { EventLogQueryResult } from './dtos/event-log-result.output';
 
-@MetadataResolver()
+@Resolver()
 @UseFilters(
   ForbiddenExceptionGraphqlFilter,
   AuthGraphqlApiExceptionFilter,

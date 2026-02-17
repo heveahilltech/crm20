@@ -9,7 +9,7 @@ import { Processor } from 'src/engine/core-modules/message-queue/decorators/proc
 import { MessageQueue } from 'src/engine/core-modules/message-queue/message-queue.constants';
 import { MetricsService } from 'src/engine/core-modules/metrics/metrics.service';
 import { MetricsKeys } from 'src/engine/core-modules/metrics/types/metrics-keys.type';
-import { SecureHttpClientService } from 'src/engine/core-modules/secure-http-client/secure-http-client.service';
+import { SecureHttpClientService } from 'src/engine/core-modules/tool/services/secure-http-client.service';
 
 export type CallWebhookJobData = {
   targetUrl: string;
@@ -83,14 +83,7 @@ export class CallWebhookJob {
           .toString('hex');
       }
 
-      const axiosClient = this.secureHttpClientService.getHttpClient(
-        undefined,
-        {
-          workspaceId: data.workspaceId,
-          userId: data.userId,
-          source: 'webhook',
-        },
-      );
+      const axiosClient = this.secureHttpClientService.getHttpClient();
 
       const response = await axiosClient.post(
         getAbsoluteUrl(data.targetUrl),
