@@ -1,4 +1,4 @@
 export const DEFAULT_WORKSPACE_LOGO =
-  '/images/Vena.png';
+  '/images/VoxRingIcon.png';
 
-export const VENA_AI_LOGO = '/images/Vena-ai-logo.png';
+export const VOXRING_AI_LOGO = '/images/integrations/VoxRingIcon.png';

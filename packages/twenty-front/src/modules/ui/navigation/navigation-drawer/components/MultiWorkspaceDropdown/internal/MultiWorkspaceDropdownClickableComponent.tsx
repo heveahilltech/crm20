@@ -28,7 +28,7 @@ export const MultiWorkspaceDropdownClickableComponent = () => {
       data-testid="workspace-dropdown"
       isNavigationDrawerExpanded={isNavigationDrawerExpanded}
     >
-     <StyledLogo src="/images/Vena-ai-logo.png" alt="Vena AI Logo" />
+     <StyledLogo src="/images/integrations/VoxRingLogo.png" alt="VoxRing AI Logo" />
       <NavigationDrawerAnimatedCollapseWrapper>
         <StyledIconChevronDown
           size={theme.icon.size.md}

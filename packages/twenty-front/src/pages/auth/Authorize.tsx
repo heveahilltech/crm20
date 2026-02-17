@@ -108,8 +108,8 @@ export const Authorize = () => {
       <StyledCardWrapper>
         <StyledAppsContainer>
           <img
-            src="/images/integrations/Vena-ai-logo.svg"
-            alt="Vena-ai-icon"
+            src="/images/integrations/VoxRing.png"
+            alt="VoxRing AI Logo"
             height={40}
             width={40}
           />

@@ -1,1 +1,1 @@
-export const DEFAULT_WORKSPACE_NAME = 'Voxring';
+export const DEFAULT_WORKSPACE_NAME = 'VoxRing';

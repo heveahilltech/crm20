@@ -47,7 +47,7 @@ describe('title-utils', () => {
     expect(getPageTitleFromPath('/settings/general')).toBe(
       'General - Settings',
     );
-    expect(getPageTitleFromPath('/')).toBe('Vena AI');
-    expect(getPageTitleFromPath('/random')).toBe('Vena AI');
+    expect(getPageTitleFromPath('/')).toBe('VoxRing');
+    expect(getPageTitleFromPath('/random')).toBe('VoxRing');
   });
 });
