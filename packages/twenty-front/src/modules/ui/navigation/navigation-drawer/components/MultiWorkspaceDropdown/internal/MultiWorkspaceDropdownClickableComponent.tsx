@@ -10,7 +10,7 @@ import styled from '@emotion/styled';
 import { useRecoilValue } from 'recoil';
 
 const StyledLogo = styled.img`
-  height: 45px;
+  height: 50px;
   width: auto;
   object-fit: contain;
   display: block;
