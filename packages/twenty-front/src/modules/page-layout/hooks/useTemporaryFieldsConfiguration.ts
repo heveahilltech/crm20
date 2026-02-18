@@ -73,14 +73,7 @@ export const useTemporaryFieldsConfiguration = (
     return {
       __typename: 'FieldsConfiguration',
       configurationType: 'FIELDS',
-      sections: [
-      {
-          id: `${objectNameSingular}-section-general`,
-          title: t`General`,
-          position: 0,
-          fields,
-        },
-      ],
+      sections,
     };
   }, [objectMetadataItem, objectNameSingular, t]);
 
