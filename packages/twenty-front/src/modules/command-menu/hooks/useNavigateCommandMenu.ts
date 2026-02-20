@@ -10,13 +10,18 @@ import { commandMenuShouldFocusTitleInputComponentState } from '@/command-menu/s
 import { hasUserSelectedCommandState } from '@/command-menu/states/hasUserSelectedCommandState';
 import { isCommandMenuClosingState } from '@/command-menu/states/isCommandMenuClosingState';
 import { isCommandMenuOpenedState } from '@/command-menu/states/isCommandMenuOpenedState';
-import { type CommandMenuPages } from '@/command-menu/types/CommandMenuPages';
+
 import { MAIN_CONTEXT_STORE_INSTANCE_ID } from '@/context-store/constants/MainContextStoreInstanceId';
 import { usePushFocusItemToFocusStack } from '@/ui/utilities/focus/hooks/usePushFocusItemToFocusStack';
 import { FocusComponentType } from '@/ui/utilities/focus/types/FocusComponentType';
 import { useRecoilCallback } from 'recoil';
 import { type IconComponent } from 'twenty-ui/display';
 import { v4 } from 'uuid';
+import { commandMenuPendingPageLayoutRecordIdState } from '@/command-menu/states/commandMenuPendingPageLayoutRecordIdState';
+import { contextStoreNumberOfSelectedRecordsComponentState } from '@/context-store/states/contextStoreNumberOfSelectedRecordsComponentState';
+import { contextStoreTargetedRecordsRuleComponentState } from '@/context-store/states/contextStoreTargetedRecordsRuleComponentState';
+import { isDefined } from 'twenty-shared/utils';
+import { CommandMenuPages } from '@/command-menu/types/CommandMenuPages';
 
 export type CommandMenuNavigationStackItem = {
   page: CommandMenuPages;
@@ -102,6 +107,36 @@ export const useNavigateCommandMenu = () => {
           Icon: pageIcon,
           instanceId: computedPageId,
         });
+
+        const isPageLayoutWidgetSettingsPage =
+          page === CommandMenuPages.PageLayoutGraphTypeSelect ||
+          page === CommandMenuPages.PageLayoutIframeSettings ||
+          page === CommandMenuPages.PageLayoutFieldsSettings;
+
+        if (isPageLayoutWidgetSettingsPage) {
+          const pendingRecordId = snapshot
+            .getLoadable(commandMenuPendingPageLayoutRecordIdState)
+            .getValue();
+
+          if (isDefined(pendingRecordId)) {
+            set(
+              contextStoreTargetedRecordsRuleComponentState.atomFamily({
+                instanceId: COMMAND_MENU_COMPONENT_INSTANCE_ID,
+              }),
+              {
+                mode: 'selection',
+                selectedRecordIds: [pendingRecordId],
+              },
+            );
+            set(
+              contextStoreNumberOfSelectedRecordsComponentState.atomFamily({
+                instanceId: COMMAND_MENU_COMPONENT_INSTANCE_ID,
+              }),
+              1,
+            );
+            set(commandMenuPendingPageLayoutRecordIdState, null);
+          }
+        }
 
         if (focusTitleInput) {
           set(
