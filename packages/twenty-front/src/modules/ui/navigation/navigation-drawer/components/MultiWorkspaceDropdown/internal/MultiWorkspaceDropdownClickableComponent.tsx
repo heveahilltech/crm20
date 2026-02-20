@@ -10,7 +10,7 @@ import styled from '@emotion/styled';
 import { useRecoilValue } from 'recoil';
 
 const StyledLogo = styled.img`
-  height: 50px;
+  height: 30px;
   width: auto;
   object-fit: contain;
   display: block;
@@ -28,7 +28,7 @@ export const MultiWorkspaceDropdownClickableComponent = () => {
       data-testid="workspace-dropdown"
       isNavigationDrawerExpanded={isNavigationDrawerExpanded}
     >
-     <StyledLogo src="/images/integrations/VoxRingLogo.png" alt="VoxRing AI Logo" />
+     <StyledLogo src="/images/integrations/VoxRing.jpg" alt="VoxRing AI Logo" />
       <NavigationDrawerAnimatedCollapseWrapper>
         <StyledIconChevronDown
           size={theme.icon.size.md}
