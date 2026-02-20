@@ -27,6 +27,7 @@ import { WORKFLOW_LOGIC_FUNCTION_TAB_LIST_COMPONENT_ID } from '@/workflow/workfl
 import { WorkflowLogicFunctionTabId } from '@/workflow/workflow-steps/workflow-actions/code-action/types/WorkflowLogicFunctionTabId';
 import { useRecoilCallback } from 'recoil';
 import { isDefined } from 'twenty-shared/utils';
+import { commandMenuPendingPageLayoutRecordIdState } from '@/command-menu/states/commandMenuPendingPageLayoutRecordIdState';
 
 export const useCommandMenuCloseAnimationCompleteCleanup = () => {
   const { resetSelectedItem } = useSelectableList(
@@ -97,6 +98,7 @@ export const useCommandMenuCloseAnimationCompleteCleanup = () => {
         }
 
         set(viewableRecordIdState, null);
+        set(commandMenuPendingPageLayoutRecordIdState, null);
         set(commandMenuPageState, CommandMenuPages.Root);
         set(commandMenuPageInfoState, {
           title: undefined,

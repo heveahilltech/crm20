@@ -3,6 +3,7 @@ import { useSetRecoilState } from 'recoil';
 import { COMMAND_MENU_COMPONENT_INSTANCE_ID } from '@/command-menu/constants/CommandMenuComponentInstanceId';
 import { useCommandMenu } from '@/command-menu/hooks/useCommandMenu';
 import { commandMenuPageState } from '@/command-menu/states/commandMenuPageState';
+import { commandMenuPendingPageLayoutRecordIdState } from '@/command-menu/states/commandMenuPendingPageLayoutRecordIdState';
 import { CommandMenuPages } from '@/command-menu/types/CommandMenuPages';
 import { useSetRecoilComponentState } from '@/ui/utilities/state/component-state/hooks/useSetRecoilComponentState';
 import { contextStoreNumberOfSelectedRecordsComponentState } from '@/context-store/states/contextStoreNumberOfSelectedRecordsComponentState';
@@ -43,7 +44,9 @@ export const useEditPageLayoutWidget = (pageLayoutIdFromProps?: string) => {
   const { navigatePageLayoutCommandMenu } = useNavigatePageLayoutCommandMenu();
   const { closeCommandMenu } = useCommandMenu();
   const setCommandMenuPage = useSetRecoilState(commandMenuPageState);
-
+  const setPendingPageLayoutRecordId = useSetRecoilState(
+    commandMenuPendingPageLayoutRecordIdState,
+  ); 
   const handleEditWidget = useCallback(
     ({
       widgetId,
@@ -56,6 +59,7 @@ export const useEditPageLayoutWidget = (pageLayoutIdFromProps?: string) => {
 
       const recordId = targetRecordIdentifier?.id;
       if (isDefined(recordId)) {
+        setPendingPageLayoutRecordId(recordId);
         setCommandMenuContextStoreTargetedRecords({
           mode: 'selection',
           selectedRecordIds: [recordId],
@@ -96,6 +100,7 @@ export const useEditPageLayoutWidget = (pageLayoutIdFromProps?: string) => {
     [
       setPageLayoutEditingWidgetId,
       targetRecordIdentifier?.id,
+      setPendingPageLayoutRecordId,
       setCommandMenuContextStoreTargetedRecords,
       setCommandMenuContextStoreNumberOfSelectedRecords,
       navigatePageLayoutCommandMenu,
