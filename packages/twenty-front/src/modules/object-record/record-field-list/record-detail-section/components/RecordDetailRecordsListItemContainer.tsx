@@ -23,6 +23,9 @@ type RecordDetailRecordsListItemContainerProps = {
   className?: string;
 };
 
+/**
+ * TODO: Remove noHorizontalPadding logic once the traditional record show page is removed.
+ */
 export const RecordDetailRecordsListItemContainer = ({
   children,
   className,
@@ -30,7 +33,8 @@ export const RecordDetailRecordsListItemContainer = ({
   const layoutRenderingContext = useLayoutRenderingContext();
 
   const isInRecordPageLayout =
-    layoutRenderingContext?.layoutType === PageLayoutType.RECORD_PAGE;
+    layoutRenderingContext?.layoutType === PageLayoutType.RECORD_PAGE &&
+    !layoutRenderingContext?.isLegacyRecordShowPage;
 
   return (
     <StyledListItem

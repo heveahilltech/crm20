@@ -4,7 +4,7 @@ import { coreViewsState } from '@/views/states/coreViewState';
 import { type FetchPolicy, useApolloClient } from '@apollo/client';
 import { useCallback } from 'react';
 import { isDefined } from 'twenty-shared/utils';
-import { type FindAllCoreViewsQuery } from '~/generated-metadata/graphql';
+import { type FindAllCoreViewsQuery } from '~/generated/graphql';
 import { isDeeplyEqual } from '~/utils/isDeeplyEqual';
 
 export const useRefreshAllCoreViews = (

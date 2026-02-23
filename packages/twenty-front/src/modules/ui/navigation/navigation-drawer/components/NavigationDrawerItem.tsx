@@ -6,7 +6,11 @@ import { useNavigationDrawerTooltip } from '@/ui/navigation/navigation-drawer/ho
 import { type NavigationDrawerSubItemState } from '@/ui/navigation/navigation-drawer/types/NavigationDrawerSubItemState';
 import { isNavigationDrawerExpandedState } from '@/ui/navigation/states/isNavigationDrawerExpanded';
 import { useIsMobile } from '@/ui/utilities/responsive/hooks/useIsMobile';
+<<<<<<< HEAD
 import { useRecoilStateV2 } from '@/ui/utilities/state/jotai/hooks/useRecoilStateV2';
+=======
+import { navigationDrawerItemPreset } from '@/ui/theme/utils/themeUtils';
+>>>>>>> hevea-local
 import isPropValid from '@emotion/is-prop-valid';
 import { css, useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
@@ -86,6 +90,7 @@ const StyledItem = styled('button', {
       'isSelectedInEditMode',
     ].includes(prop) && isPropValid(prop),
 })<StyledItemProps>`
+<<<<<<< HEAD
   box-sizing: border-box;
   align-items: center;
   background: ${(props) =>
@@ -151,6 +156,19 @@ const StyledItem = styled('button', {
   @media (max-width: ${MOBILE_VIEWPORT}px) {
     font-size: ${({ theme }) => theme.font.size.lg};
   }
+=======
+   ${(props) =>
+    navigationDrawerItemPreset(
+      props.theme,
+      props.active,
+      props.danger,
+      props.soon,
+      props.isDragging,
+      props.isNavigationDrawerExpanded,
+      props.hasRightOptions,
+      props.indentationLevel,
+    )}
+>>>>>>> hevea-local
 `;
 
 const StyledItemElementsContainer = styled.div`

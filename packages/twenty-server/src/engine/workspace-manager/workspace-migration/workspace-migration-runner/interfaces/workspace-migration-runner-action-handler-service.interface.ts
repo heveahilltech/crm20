@@ -26,36 +26,27 @@ import {
   WorkspaceMigrationRunnerException,
   WorkspaceMigrationRunnerExceptionCode,
 } from 'src/engine/workspace-manager/workspace-migration/workspace-migration-runner/exceptions/workspace-migration-runner.exception';
-import { type MetadataEvent } from 'src/engine/workspace-manager/workspace-migration/workspace-migration-runner/types/metadata-event';
 import {
   WorkspaceMigrationActionRunnerContext,
   type WorkspaceMigrationActionRunnerArgs,
 } from 'src/engine/workspace-manager/workspace-migration/workspace-migration-runner/types/workspace-migration-action-runner-args.type';
+<<<<<<< HEAD
 import { deriveMetadataEventsFromCreateAction } from 'src/engine/workspace-manager/workspace-migration/workspace-migration-runner/utils/derive-metadata-events-from-create-action.util';
 import { deriveMetadataEventsFromDeleteAction } from 'src/engine/workspace-manager/workspace-migration/workspace-migration-runner/utils/derive-metadata-events-from-delete-action.util';
 import { deriveMetadataEventsFromUpdateAction } from 'src/engine/workspace-manager/workspace-migration/workspace-migration-runner/utils/derive-metadata-events-from-update-action.util';
 import { flatEntityToScalarFlatEntity } from 'src/engine/workspace-manager/workspace-migration/workspace-migration-runner/utils/flat-entity-to-scalar-flat-entity.util';
+=======
+>>>>>>> hevea-local
 import { optimisticallyApplyCreateActionOnAllFlatEntityMaps } from 'src/engine/workspace-manager/workspace-migration/workspace-migration-runner/utils/optimistically-apply-create-action-on-all-flat-entity-maps.util';
 import { optimisticallyApplyDeleteActionOnAllFlatEntityMaps } from 'src/engine/workspace-manager/workspace-migration/workspace-migration-runner/utils/optimistically-apply-delete-action-on-all-flat-entity-maps.util';
 import { optimisticallyApplyUpdateActionOnAllFlatEntityMaps } from 'src/engine/workspace-manager/workspace-migration/workspace-migration-runner/utils/optimistically-apply-update-action-on-all-flat-entity-maps.util';
 
-type FlatActionWithAllFlatEntityMapsArgs<
+type OptimisticallyApplyActionOnAllFlatEntityMapsArgs<
   TFlatAction extends AllFlatWorkspaceMigrationAction,
 > = {
   flatAction: TFlatAction;
   allFlatEntityMaps: AllFlatEntityMaps;
 };
-
-export type ActionHandlerExecuteResult<TMetadataName extends AllMetadataName> =
-  {
-    partialOptimisticCache: Pick<
-      AllFlatEntityMaps,
-      | MetadataRelatedFlatEntityMapsKeys<TMetadataName>
-      | MetadataToFlatEntityMapsKey<TMetadataName>
-    >;
-    metadataEvents: MetadataEvent[];
-  };
-
 export abstract class BaseWorkspaceMigrationRunnerActionHandlerService<
   TActionType extends WorkspaceMigrationActionType,
   TMetadataName extends AllMetadataName,
@@ -140,7 +131,7 @@ export abstract class BaseWorkspaceMigrationRunnerActionHandlerService<
   private optimisticallyApplyActionOnAllFlatEntityMaps({
     flatAction,
     allFlatEntityMaps,
-  }: FlatActionWithAllFlatEntityMapsArgs<TFlatAction>): Pick<
+  }: OptimisticallyApplyActionOnAllFlatEntityMapsArgs<TFlatAction>): Pick<
     AllFlatEntityMaps,
     | MetadataRelatedFlatEntityMapsKeys<TMetadataName>
     | MetadataToFlatEntityMapsKey<TMetadataName>
@@ -160,29 +151,6 @@ export abstract class BaseWorkspaceMigrationRunnerActionHandlerService<
       }
       case 'update': {
         return optimisticallyApplyUpdateActionOnAllFlatEntityMaps({
-          flatAction,
-          allFlatEntityMaps,
-        });
-      }
-    }
-  }
-
-  private deriveMetadataEventsFromFlatAction({
-    flatAction,
-    allFlatEntityMaps,
-  }: FlatActionWithAllFlatEntityMapsArgs<TFlatAction>): MetadataEvent[] {
-    switch (flatAction.type) {
-      case 'create': {
-        return deriveMetadataEventsFromCreateAction(flatAction);
-      }
-      case 'delete': {
-        return deriveMetadataEventsFromDeleteAction({
-          flatAction,
-          allFlatEntityMaps,
-        });
-      }
-      case 'update': {
-        return deriveMetadataEventsFromUpdateAction({
           flatAction,
           allFlatEntityMaps,
         });
@@ -244,7 +212,13 @@ export abstract class BaseWorkspaceMigrationRunnerActionHandlerService<
 
   async execute(
     context: WorkspaceMigrationActionRunnerArgs<TUniversalAction>,
-  ): Promise<ActionHandlerExecuteResult<TMetadataName>> {
+  ): Promise<
+    Pick<
+      AllFlatEntityMaps,
+      | MetadataRelatedFlatEntityMapsKeys<TMetadataName>
+      | MetadataToFlatEntityMapsKey<TMetadataName>
+    >
+  > {
     const flatAction =
       await this.transpileUniversalActionToFlatActionOrThrow(context);
 
@@ -276,18 +250,13 @@ export abstract class BaseWorkspaceMigrationRunnerActionHandlerService<
       });
     }
 
-    const metadataEvents = this.deriveMetadataEventsFromFlatAction({
-      flatAction,
-      allFlatEntityMaps: context.allFlatEntityMaps,
-    });
-
     const partialOptimisticCache =
       this.optimisticallyApplyActionOnAllFlatEntityMaps({
         flatAction,
         allFlatEntityMaps: context.allFlatEntityMaps,
       });
 
-    return { partialOptimisticCache, metadataEvents };
+    return partialOptimisticCache;
   }
 
   async rollback(

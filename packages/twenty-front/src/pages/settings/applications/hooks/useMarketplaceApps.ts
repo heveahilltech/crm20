@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import {
   useFindManyMarketplaceAppsQuery,
   type MarketplaceApp,
@@ -11,6 +12,10 @@ export type MarketplaceAppWithContentCounts = MarketplaceApp & {
     frontComponents: number;
   };
 };
+=======
+import { useFindManyMarketplaceAppsQuery } from '~/generated/graphql';
+import { type AvailableApplication } from '~/pages/settings/applications/types/availableApplication';
+>>>>>>> hevea-local
 
 export const useMarketplaceApps = () => {
   const { data, loading, error } = useFindManyMarketplaceAppsQuery();

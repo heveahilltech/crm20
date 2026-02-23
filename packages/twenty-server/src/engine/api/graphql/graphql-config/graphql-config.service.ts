@@ -19,6 +19,17 @@ import { isDefined } from 'twenty-shared/utils';
 import { NodeEnvironment } from 'src/engine/core-modules/twenty-config/interfaces/node-environment.interface';
 
 import { WorkspaceSchemaFactory } from 'src/engine/api/graphql/workspace-schema.factory';
+import {
+  ApiConfig,
+  Billing,
+  Captcha,
+  ClientAIModelConfig,
+  NativeModelCapabilities,
+  PublicFeatureFlag,
+  PublicFeatureFlagMetadata,
+  Sentry as SentryConfig,
+  Support,
+} from 'src/engine/core-modules/client-config/client-config.entity';
 import { CoreEngineModule } from 'src/engine/core-modules/core-engine.module';
 import { ExceptionHandlerService } from 'src/engine/core-modules/exception-handler/exception-handler.service';
 import { useSentryTracing } from 'src/engine/core-modules/exception-handler/hooks/use-sentry-tracing';
@@ -82,8 +93,19 @@ export class GraphQLConfigService
     const config: YogaDriverConfig = {
       autoSchemaFile: true,
       include: [CoreEngineModule],
-      resolverSchemaScope: 'core',
-      buildSchemaOptions: {},
+      buildSchemaOptions: {
+        orphanedTypes: [
+          ApiConfig,
+          Billing,
+          Captcha,
+          ClientAIModelConfig,
+          NativeModelCapabilities,
+          PublicFeatureFlag,
+          PublicFeatureFlagMetadata,
+          SentryConfig,
+          Support,
+        ],
+      },
       conditionalSchema: async (context) => {
         const { workspace, user, application } = context.req;
 

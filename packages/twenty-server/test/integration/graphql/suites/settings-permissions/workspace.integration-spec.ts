@@ -1,7 +1,11 @@
 import gql from 'graphql-tag';
 import request from 'supertest';
+<<<<<<< HEAD
 import { makeMetadataAPIRequestWithFileUpload } from 'test/integration/metadata/suites/utils/make-metadata-api-request-with-file-upload.util';
 import { makeMetadataAPIRequest } from 'test/integration/metadata/suites/utils/make-metadata-api-request.util';
+=======
+import { makeGraphqlAPIRequest } from 'test/integration/graphql/utils/make-graphql-api-request.util';
+>>>>>>> hevea-local
 
 import { BillingPlanKey } from 'src/engine/core-modules/billing/enums/billing-plan-key.enum';
 import { FeatureFlagKey } from 'src/engine/core-modules/feature-flag/enums/feature-flag-key.enum';
@@ -38,7 +42,7 @@ describe('workspace permissions', () => {
       }
     `;
 
-    const response = await makeMetadataAPIRequest({ query });
+    const response = await makeGraphqlAPIRequest({ query });
 
     originalWorkspaceState = response.body.data.currentWorkspace;
   });
@@ -61,7 +65,7 @@ describe('workspace permissions', () => {
       }
     `;
 
-    await makeMetadataAPIRequest({ query: restoreQuery });
+    await makeGraphqlAPIRequest({ query: restoreQuery });
   });
 
   describe('workspace permissions', () => {
@@ -79,7 +83,7 @@ describe('workspace permissions', () => {
         };
 
         await client
-          .post('/metadata')
+          .post('/graphql')
           .set('Authorization', `Bearer ${APPLE_JONY_MEMBER_ACCESS_TOKEN}`)
           .send(queryData)
           .expect(200)
@@ -109,7 +113,7 @@ describe('workspace permissions', () => {
         };
 
         return client
-          .post('/metadata')
+          .post('/graphql')
           .set('Authorization', `Bearer ${APPLE_JANE_ADMIN_ACCESS_TOKEN}`)
           .send(queryData)
           .expect(200)
@@ -138,7 +142,7 @@ describe('workspace permissions', () => {
         };
 
         await client
-          .post('/metadata')
+          .post('/graphql')
           .set('Authorization', `Bearer ${APPLE_JONY_MEMBER_ACCESS_TOKEN}`)
           .send(queryData)
           .expect(200)
@@ -169,7 +173,7 @@ describe('workspace permissions', () => {
         };
 
         return client
-          .post('/metadata')
+          .post('/graphql')
           .set('Authorization', `Bearer ${APPLE_JANE_ADMIN_ACCESS_TOKEN}`)
           .send(queryData)
           .expect(200)
@@ -198,7 +202,7 @@ describe('workspace permissions', () => {
         };
 
         await client
-          .post('/metadata')
+          .post('/graphql')
           .set('Authorization', `Bearer ${APPLE_JONY_MEMBER_ACCESS_TOKEN}`)
           .send(queryData)
           .expect(200)
@@ -229,7 +233,7 @@ describe('workspace permissions', () => {
         };
 
         return client
-          .post('/metadata')
+          .post('/graphql')
           .set('Authorization', `Bearer ${APPLE_JANE_ADMIN_ACCESS_TOKEN}`)
           .send(queryData)
           .expect(200)
@@ -258,7 +262,7 @@ describe('workspace permissions', () => {
         };
 
         await client
-          .post('/metadata')
+          .post('/graphql')
           .set('Authorization', `Bearer ${APPLE_JONY_MEMBER_ACCESS_TOKEN}`)
           .send(queryData)
           .expect(200)
@@ -319,9 +323,23 @@ describe('workspace permissions', () => {
           }
         `;
 
+<<<<<<< HEAD
         const workspaceResponse = await makeMetadataAPIRequest({
           query: getWorkspaceQuery,
         });
+=======
+        return client
+          .post('/graphql')
+          .set('Authorization', `Bearer ${APPLE_JANE_ADMIN_ACCESS_TOKEN}`)
+          .send(queryData)
+          .expect(200)
+          .expect((res) => {
+            expect(res.body.data).toBeDefined();
+            expect(res.body.errors).toBeUndefined();
+          })
+          .expect((res) => {
+            const data = res.body.data.updateWorkspace;
+>>>>>>> hevea-local
 
         expect(workspaceResponse.body.data.currentWorkspace.logo).toBeDefined();
       });
@@ -332,6 +350,7 @@ describe('workspace permissions', () => {
           'base64',
         );
 
+<<<<<<< HEAD
         const response = await makeMetadataAPIRequestWithFileUpload(
           {
             query: uploadWorkspaceLogoMutation,
@@ -355,6 +374,23 @@ describe('workspace permissions', () => {
         expect(response.body.errors[0].extensions.code).toBe(
           ErrorCode.FORBIDDEN,
         );
+=======
+        await client
+          .post('/graphql')
+          .set('Authorization', `Bearer ${APPLE_JONY_MEMBER_ACCESS_TOKEN}`)
+          .send(queryData)
+          .expect(200)
+          .expect((res) => {
+            expect(res.body.data).toBeNull();
+            expect(res.body.errors).toBeDefined();
+            expect(res.body.errors[0].message).toBe(
+              PermissionsExceptionMessage.PERMISSION_DENIED,
+            );
+            expect(res.body.errors[0].extensions.code).toBe(
+              ErrorCode.FORBIDDEN,
+            );
+          });
+>>>>>>> hevea-local
       });
     });
   });
@@ -378,7 +414,7 @@ describe('workspace permissions', () => {
         };
 
         await client
-          .post('/metadata')
+          .post('/graphql')
           .set('Authorization', `Bearer ${APPLE_JONY_MEMBER_ACCESS_TOKEN}`)
           .send(queryData)
           .expect(200)
@@ -411,7 +447,7 @@ describe('workspace permissions', () => {
         };
 
         await client
-          .post('/metadata')
+          .post('/graphql')
           .set('Authorization', `Bearer ${APPLE_JONY_MEMBER_ACCESS_TOKEN}`)
           .send(queryData)
           .expect(200)
@@ -457,7 +493,7 @@ describe('workspace permissions', () => {
         };
 
         await client
-          .post('/metadata')
+          .post('/graphql')
           .set('Authorization', `Bearer ${APPLE_JONY_MEMBER_ACCESS_TOKEN}`)
           .send(queryData)
           .expect(200)
@@ -498,7 +534,7 @@ describe('workspace permissions', () => {
         };
 
         await client
-          .post('/metadata')
+          .post('/graphql')
           .set('Authorization', `Bearer ${APPLE_JANE_ADMIN_ACCESS_TOKEN}`)
           .send(queryData)
           .expect((res) => {
@@ -531,7 +567,7 @@ describe('workspace permissions', () => {
         };
 
         await client
-          .post('/metadata')
+          .post('/graphql')
           .set('Authorization', `Bearer ${APPLE_JONY_MEMBER_ACCESS_TOKEN}`)
           .send(queryData)
           .expect(200)

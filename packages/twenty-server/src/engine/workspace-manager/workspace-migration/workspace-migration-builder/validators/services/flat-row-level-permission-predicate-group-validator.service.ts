@@ -180,34 +180,27 @@ export class FlatRowLevelPermissionPredicateGroupValidatorService {
       ...flatEntityUpdate,
     };
 
-    if (
-      updatedPredicateGroup.roleUniversalIdentifier !==
-      existingPredicateGroup.roleUniversalIdentifier
-    ) {
-      const existingRoleIdentifier =
-        existingPredicateGroup.roleUniversalIdentifier;
-      const updatedRoleIdentifier =
-        updatedPredicateGroup.roleUniversalIdentifier;
+    if (updatedPredicateGroup.roleId !== existingPredicateGroup.roleId) {
+      const existingRoleId = existingPredicateGroup.roleId;
+      const updatedRoleId = updatedPredicateGroup.roleId;
 
       validationResult.errors.push({
         code: RowLevelPermissionPredicateGroupExceptionCode.UNAUTHORIZED_ROLE_MODIFICATION,
-        message: t`Cannot modify predicate group to change its role from ${existingRoleIdentifier} to ${updatedRoleIdentifier}`,
+        message: t`Cannot modify predicate group to change its role from ${existingRoleId} to ${updatedRoleId}`,
         userFriendlyMessage: msg`Cannot modify predicate group to change its role`,
       });
     }
 
     if (
-      updatedPredicateGroup.objectMetadataUniversalIdentifier !==
-      existingPredicateGroup.objectMetadataUniversalIdentifier
+      updatedPredicateGroup.objectMetadataId !==
+      existingPredicateGroup.objectMetadataId
     ) {
-      const existingObjectMetadataIdentifier =
-        existingPredicateGroup.objectMetadataUniversalIdentifier;
-      const updatedObjectMetadataIdentifier =
-        updatedPredicateGroup.objectMetadataUniversalIdentifier;
+      const existingObjectMetadataId = existingPredicateGroup.objectMetadataId;
+      const updatedObjectMetadataId = updatedPredicateGroup.objectMetadataId;
 
       validationResult.errors.push({
         code: RowLevelPermissionPredicateGroupExceptionCode.UNAUTHORIZED_OBJECT_MODIFICATION,
-        message: t`Cannot modify predicate group to change its object from ${existingObjectMetadataIdentifier} to ${updatedObjectMetadataIdentifier}`,
+        message: t`Cannot modify predicate group to change its object from ${existingObjectMetadataId} to ${updatedObjectMetadataId}`,
         userFriendlyMessage: msg`Cannot modify predicate group to change its object`,
       });
     }

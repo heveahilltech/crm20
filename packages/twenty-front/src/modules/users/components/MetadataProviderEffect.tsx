@@ -21,9 +21,15 @@ import { type APP_LOCALES, SOURCE_LOCALE } from 'twenty-shared/translations';
 import { AppPath, type ObjectPermissions } from 'twenty-shared/types';
 import { isDefined } from 'twenty-shared/utils';
 import {
+<<<<<<< HEAD
+=======
+  type WorkspaceMember,
+  useFindAllCoreViewsQuery,
+>>>>>>> hevea-local
   useGetCurrentUserQuery,
   type WorkspaceMember,
 } from '~/generated-metadata/graphql';
+import { useFindAllRecordPageLayoutsQuery } from '~/generated/graphql';
 import { dateLocaleState } from '~/localization/states/dateLocaleState';
 import { dateLocaleStateV2 } from '~/localization/states/dateLocaleStateV2';
 import { dynamicActivate } from '~/utils/i18n/dynamicActivate';

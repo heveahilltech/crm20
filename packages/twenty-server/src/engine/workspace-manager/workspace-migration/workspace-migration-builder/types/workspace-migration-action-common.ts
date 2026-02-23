@@ -12,11 +12,19 @@ export type AllUniversalWorkspaceMigrationAction<
   TMetadataName extends AllMetadataName = AllMetadataName,
 > = MetadataUniversalWorkspaceMigrationAction<TMetadataName, TActionType>;
 
+<<<<<<< HEAD
 export type AllFlatWorkspaceMigrationAction<
   TActionType extends
     WorkspaceMigrationActionType = WorkspaceMigrationActionType,
   TMetadataName extends AllMetadataName = AllMetadataName,
 > = MetadataFlatWorkspaceMigrationAction<TMetadataName, TActionType>;
+=======
+export type AllFlatWorkspaceMigrationAction =
+  MetadataFlatWorkspaceMigrationAction<
+    AllMetadataName,
+    WorkspaceMigrationActionType
+  >;
+>>>>>>> hevea-local
 
 export { WorkspaceMigrationActionType };
 

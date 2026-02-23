@@ -5,7 +5,14 @@ import {
   UsePipes,
   createParamDecorator,
 } from '@nestjs/common';
-import { Args, Mutation, Parent, Query, ResolveField } from '@nestjs/graphql';
+import {
+  Args,
+  Mutation,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql';
 
 import assert from 'assert';
 
@@ -83,7 +90,7 @@ const OriginHeader = createParamDecorator(
   },
 );
 
-@MetadataResolver(() => WorkspaceEntity)
+@Resolver(() => WorkspaceEntity)
 @UsePipes(ResolverValidationPipe)
 @UseFilters(
   PreventNestToAutoLogGraphqlErrorsFilter,

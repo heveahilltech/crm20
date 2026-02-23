@@ -1,7 +1,3 @@
-import { t } from '@lingui/core/macro';
-import { useRecoilCallback } from 'recoil';
-import { isDefined } from 'twenty-shared/utils';
-
 import { type BrowsingContext } from '@/ai/types/BrowsingContext';
 import { MAIN_CONTEXT_STORE_INSTANCE_ID } from '@/context-store/constants/MainContextStoreInstanceId';
 import { contextStoreCurrentObjectMetadataItemIdComponentState } from '@/context-store/states/contextStoreCurrentObjectMetadataItemIdComponentState';
@@ -11,11 +7,16 @@ import { contextStoreFiltersComponentState } from '@/context-store/states/contex
 import { contextStoreTargetedRecordsRuleComponentState } from '@/context-store/states/contextStoreTargetedRecordsRuleComponentState';
 import { ContextStoreViewType } from '@/context-store/types/ContextStoreViewType';
 import { objectMetadataItemsState } from '@/object-metadata/states/objectMetadataItemsState';
+<<<<<<< HEAD
 import { recordStoreFamilySelector } from '@/object-record/record-store/states/selectors/recordStoreFamilySelector';
 import { getTabListInstanceIdFromPageLayoutId } from '@/page-layout/utils/getTabListInstanceIdFromPageLayoutId';
 import { activeTabIdComponentState } from '@/ui/layout/tab-list/states/activeTabIdComponentState';
 import { useStore } from 'jotai';
+=======
+>>>>>>> hevea-local
 import { coreViewFromViewIdFamilySelector } from '@/views/states/selectors/coreViewFromViewIdFamilySelector';
+import { t } from '@lingui/core/macro';
+import { useRecoilCallback } from 'recoil';
 
 export const useGetBrowsingContext = () => {
   const store = useStore();
@@ -67,11 +68,12 @@ export const useGetBrowsingContext = () => {
             return null;
           }
 
-          const recordContext: BrowsingContext = {
+          return {
             type: 'recordPage',
             objectNameSingular: objectMetadataItem.nameSingular,
             recordId: targetedRecordsRule.selectedRecordIds[0],
           };
+<<<<<<< HEAD
 
           const pageLayoutId = snapshot
             .getLoadable(
@@ -99,6 +101,8 @@ export const useGetBrowsingContext = () => {
           }
 
           return recordContext;
+=======
+>>>>>>> hevea-local
         }
 
         if (

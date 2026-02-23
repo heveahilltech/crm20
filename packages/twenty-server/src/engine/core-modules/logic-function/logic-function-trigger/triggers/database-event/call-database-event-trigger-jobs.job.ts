@@ -1,5 +1,8 @@
+import { InjectRepository } from '@nestjs/typeorm';
+
 import chunk from 'lodash.chunk';
 import { isDefined } from 'twenty-shared/utils';
+import { IsNull, Not, Repository } from 'typeorm';
 
 import type { ObjectRecordEvent } from 'twenty-shared/database-events';
 
@@ -13,7 +16,7 @@ import {
   LogicFunctionTriggerJob,
   LogicFunctionTriggerJobData,
 } from 'src/engine/core-modules/logic-function/logic-function-trigger/jobs/logic-function-trigger.job';
-import { WorkspaceCacheService } from 'src/engine/workspace-cache/services/workspace-cache.service';
+import { LogicFunctionEntity } from 'src/engine/metadata-modules/logic-function/logic-function.entity';
 import { WorkspaceEventBatch } from 'src/engine/workspace-event-emitter/types/workspace-event-batch.type';
 
 const DATABASE_EVENT_JOBS_CHUNK_SIZE = 20;
@@ -23,26 +26,20 @@ export class CallDatabaseEventTriggerJobsJob {
   constructor(
     @InjectMessageQueue(MessageQueue.logicFunctionQueue)
     private readonly messageQueueService: MessageQueueService,
-    private readonly workspaceCacheService: WorkspaceCacheService,
+    @InjectRepository(LogicFunctionEntity)
+    private readonly logicFunctionRepository: Repository<LogicFunctionEntity>,
   ) {}
 
   @Process(CallDatabaseEventTriggerJobsJob.name)
   async handle(workspaceEventBatch: WorkspaceEventBatch<ObjectRecordEvent>) {
-    const { flatLogicFunctionMaps } =
-      await this.workspaceCacheService.getOrRecompute(
-        workspaceEventBatch.workspaceId,
-        ['flatLogicFunctionMaps'],
-      );
-
-    const logicFunctionsWithDatabaseEventTrigger = Object.values(
-      flatLogicFunctionMaps.byUniversalIdentifier,
-    )
-      .filter(isDefined)
-      .filter(
-        (logicFunction) =>
-          !isDefined(logicFunction.deletedAt) &&
-          isDefined(logicFunction.databaseEventTriggerSettings),
-      );
+    const logicFunctionsWithDatabaseEventTrigger =
+      await this.logicFunctionRepository.find({
+        where: {
+          workspaceId: workspaceEventBatch.workspaceId,
+          databaseEventTriggerSettings: Not(IsNull()),
+        },
+        select: ['id', 'databaseEventTriggerSettings', 'workspaceId'],
+      });
 
     const logicFunctionsToTrigger =
       logicFunctionsWithDatabaseEventTrigger.filter((logicFunction) =>

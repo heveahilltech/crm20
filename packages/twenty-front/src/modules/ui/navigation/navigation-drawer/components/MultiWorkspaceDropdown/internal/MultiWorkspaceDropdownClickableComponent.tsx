@@ -1,15 +1,26 @@
-import { DEFAULT_WORKSPACE_LOGO } from '@/ui/navigation/navigation-drawer/constants/DefaultWorkspaceLogo';
-import { NavigationDrawerAnimatedCollapseWrapper } from '@/ui/navigation/navigation-drawer/components/NavigationDrawerAnimatedCollapseWrapper';
+import { currentWorkspaceState } from '@/auth/states/currentWorkspaceState';
 import {
   StyledContainer,
-  StyledIconChevronDown,
-  StyledLabel,
+  StyledIconChevronDown
 } from '@/ui/navigation/navigation-drawer/components/MultiWorkspaceDropdown/internal/MultiWorkspacesDropdownStyles';
+<<<<<<< HEAD
 import { currentWorkspaceState } from '@/auth/states/currentWorkspaceState';
 import { useRecoilValueV2 } from '@/ui/utilities/state/jotai/hooks/useRecoilValueV2';
 import { useTheme } from '@emotion/react';
+=======
+import { NavigationDrawerAnimatedCollapseWrapper } from '@/ui/navigation/navigation-drawer/components/NavigationDrawerAnimatedCollapseWrapper';
+>>>>>>> hevea-local
 import { isNavigationDrawerExpandedState } from '@/ui/navigation/states/isNavigationDrawerExpanded';
-import { Avatar } from 'twenty-ui/display';
+import { useTheme } from '@emotion/react';
+import styled from '@emotion/styled';
+import { useRecoilValue } from 'recoil';
+
+const StyledLogo = styled.img`
+  height: 30px;
+  width: auto;
+  object-fit: contain;
+  display: block;
+`;
 
 export const MultiWorkspaceDropdownClickableComponent = () => {
   const currentWorkspace = useRecoilValueV2(currentWorkspaceState);
@@ -23,13 +34,7 @@ export const MultiWorkspaceDropdownClickableComponent = () => {
       data-testid="workspace-dropdown"
       isNavigationDrawerExpanded={isNavigationDrawerExpanded}
     >
-      <Avatar
-        placeholder={currentWorkspace?.displayName || ''}
-        avatarUrl={currentWorkspace?.logo ?? DEFAULT_WORKSPACE_LOGO}
-      />
-      <NavigationDrawerAnimatedCollapseWrapper>
-        <StyledLabel>{currentWorkspace?.displayName ?? ''}</StyledLabel>
-      </NavigationDrawerAnimatedCollapseWrapper>
+     <StyledLogo src="/images/integrations/VoxRing.png" alt="VoxRing AI Logo" />
       <NavigationDrawerAnimatedCollapseWrapper>
         <StyledIconChevronDown
           size={theme.icon.size.md}

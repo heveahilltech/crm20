@@ -26,7 +26,7 @@ jobs:
     runs-on: depot-ubuntu-24.04
     strategy:
       matrix:
-        task: [lint, typecheck, test:unit, storybook:build, storybook:test, test:integration]
+        task: [lint, typecheck, test:unit, storybook:build, storybook:test]
     steps:
       - name: Cancel Previous Runs
         uses: styfle/cancel-workflow-action@0.11.0
@@ -48,7 +48,7 @@ jobs:
         with:
           tag: scope:sdk
           tasks: ${{ matrix.task }}
-  sdk-e2e-test:
+  sdk-e2e-integration-test:
     timeout-minutes: 30
     runs-on: ubuntu-latest-8-cores
     needs: [changed-files-check, sdk-test]
@@ -83,9 +83,23 @@ jobs:
         uses: ./.github/actions/yarn-install
       - name: Build
         run: npx nx build twenty-sdk
+      - name: Server / Append billing config to .env.test
+        working-directory: packages/twenty-server
+        run: |
+          echo "" >> .env.test
+          echo "IS_BILLING_ENABLED=true" >> .env.test
+          echo "BILLING_STRIPE_API_KEY=test-api-key" >> .env.test
+          echo "BILLING_STRIPE_BASE_PLAN_PRODUCT_ID=test-base-plan-product-id" >> .env.test
+          echo "BILLING_STRIPE_WEBHOOK_SECRET=test-webhook-secret" >> .env.test
+          echo "BILLING_PLAN_REQUIRED_LINK=http://localhost:3001/stripe-redirection" >> .env.test
       - name: Server / Create Test DB
         run: |
           PGPASSWORD=postgres psql -h localhost -p 5432 -U postgres -d postgres -c 'CREATE DATABASE "test";'
+      - name: SDK / Run integration tests
+        uses: ./.github/actions/nx-affected
+        with:
+          tag: scope:sdk
+          tasks: test:integration
       - name: SDK / Run e2e Tests
         uses: ./.github/actions/nx-affected
         with:

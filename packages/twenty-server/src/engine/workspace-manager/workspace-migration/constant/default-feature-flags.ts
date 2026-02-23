@@ -4,7 +4,11 @@ export const DEFAULT_FEATURE_FLAGS = [
   FeatureFlagKey.IS_ATTACHMENT_MIGRATED,
   FeatureFlagKey.IS_NOTE_TARGET_MIGRATED,
   FeatureFlagKey.IS_TASK_TARGET_MIGRATED,
+<<<<<<< HEAD
   FeatureFlagKey.IS_CORE_PICTURE_MIGRATED,
   FeatureFlagKey.IS_FILES_FIELD_MIGRATED,
   FeatureFlagKey.IS_OTHER_FILE_MIGRATED,
+=======
+  FeatureFlagKey.IS_RECORD_PAGE_LAYOUT_ENABLED,
+>>>>>>> hevea-local
 ] as const satisfies FeatureFlagKey[];

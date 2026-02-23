@@ -6,6 +6,7 @@ import {
   Parent,
   Query,
   ResolveField,
+  Resolver,
 } from '@nestjs/graphql';
 
 import { isArray } from '@sniptt/guards';
@@ -45,7 +46,7 @@ import { ViewEntity } from 'src/engine/metadata-modules/view/entities/view.entit
 import { ViewService } from 'src/engine/metadata-modules/view/services/view.service';
 import { ViewGraphqlApiExceptionFilter } from 'src/engine/metadata-modules/view/utils/view-graphql-api-exception.filter';
 
-@MetadataResolver(() => ViewDTO)
+@Resolver(() => ViewDTO)
 @UseFilters(ViewGraphqlApiExceptionFilter)
 @UseGuards(WorkspaceAuthGuard)
 export class ViewResolver {

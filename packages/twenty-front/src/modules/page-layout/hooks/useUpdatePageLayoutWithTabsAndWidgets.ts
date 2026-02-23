@@ -1,7 +1,7 @@
 import {
   type UpdatePageLayoutWithTabsInput,
   useUpdatePageLayoutWithTabsAndWidgetsMutation,
-} from '~/generated-metadata/graphql';
+} from '~/generated/graphql';
 
 import { useMetadataErrorHandler } from '@/metadata-error-handler/hooks/useMetadataErrorHandler';
 import { type MetadataRequestResult } from '@/object-metadata/types/MetadataRequestResult.type';

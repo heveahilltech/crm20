@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
+<<<<<<< HEAD
 import { isDefined } from 'twenty-shared/utils';
 import { v4 } from 'uuid';
 
@@ -16,6 +17,12 @@ import {
   UniversalCreatePageLayoutAction,
 } from 'src/engine/workspace-manager/workspace-migration/workspace-migration-builder/builders/page-layout/types/workspace-migration-page-layout-action.type';
 import { findPageLayoutTabIdInCreatePageLayoutContext } from 'src/engine/workspace-manager/workspace-migration/workspace-migration-runner/action-handlers/page-layout/services/utils/find-page-layout-tab-id-in-create-page-layout-context.util';
+=======
+import { WorkspaceMigrationRunnerActionHandler } from 'src/engine/workspace-manager/workspace-migration/workspace-migration-runner/interfaces/workspace-migration-runner-action-handler-service.interface';
+
+import { PageLayoutEntity } from 'src/engine/metadata-modules/page-layout/entities/page-layout.entity';
+import { FlatCreatePageLayoutAction } from 'src/engine/workspace-manager/workspace-migration/workspace-migration-builder/builders/page-layout/types/workspace-migration-page-layout-action.type';
+>>>>>>> hevea-local
 import {
   WorkspaceMigrationActionRunnerArgs,
   WorkspaceMigrationActionRunnerContext,
@@ -30,6 +37,7 @@ export class CreatePageLayoutActionHandlerService extends WorkspaceMigrationRunn
     super();
   }
 
+<<<<<<< HEAD
   override async transpileUniversalActionToFlatAction({
     action,
     allFlatEntityMaps,
@@ -89,6 +97,12 @@ export class CreatePageLayoutActionHandlerService extends WorkspaceMigrationRunn
         ...emptyUniversalForeignKeyAggregators,
       },
     };
+=======
+  override async transpileUniversalActionToFlatAction(
+    context: WorkspaceMigrationActionRunnerArgs<FlatCreatePageLayoutAction>,
+  ): Promise<FlatCreatePageLayoutAction> {
+    return context.action;
+>>>>>>> hevea-local
   }
 
   async executeForMetadata(

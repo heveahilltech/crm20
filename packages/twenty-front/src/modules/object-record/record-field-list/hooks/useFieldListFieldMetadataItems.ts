@@ -34,7 +34,6 @@ export const useFieldListFieldMetadataItems = ({
   });
 
   const { objectMetadataItems } = useObjectMetadataItems();
-
   const isJunctionRelationsEnabled = useIsFeatureEnabled(
     FeatureFlagKey.IS_JUNCTION_RELATIONS_ENABLED,
   );
@@ -52,7 +51,7 @@ export const useFieldListFieldMetadataItems = ({
           (fieldMetadataItem.type !== FieldMetadataType.RELATION &&
             fieldMetadataItem.type !== FieldMetadataType.MORPH_RELATION)),
     )
-    .sort((fieldMetadataItemA, fieldMetadataItemB) =>
+     .sort((fieldMetadataItemA, fieldMetadataItemB) =>
       fieldMetadataItemA.name.localeCompare(fieldMetadataItemB.name),
     );
 

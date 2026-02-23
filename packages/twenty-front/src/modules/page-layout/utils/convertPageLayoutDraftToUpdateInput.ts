@@ -1,6 +1,10 @@
 import { type DraftPageLayout } from '@/page-layout/types/DraftPageLayout';
+<<<<<<< HEAD
 import { isDynamicRelationWidget } from '@/page-layout/utils/isDynamicRelationWidget';
 import { type UpdatePageLayoutWithTabsInput } from '~/generated-metadata/graphql';
+=======
+import { type UpdatePageLayoutWithTabsInput } from '~/generated/graphql';
+>>>>>>> hevea-local
 
 export const convertPageLayoutDraftToUpdateInput = (
   pageLayoutDraft: DraftPageLayout,

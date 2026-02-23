@@ -1,9 +1,11 @@
 import { CommandMenuForMobile } from '@/command-menu/components/CommandMenuForMobile';
+import { isCommandMenuOpenedState } from '@/command-menu/states/isCommandMenuOpenedState';
 import { CommandMenuSidePanelForDesktop } from '@/command-menu/components/CommandMenuSidePanelForDesktop';
 import { useCommandMenuHotKeys } from '@/command-menu/hooks/useCommandMenuHotKeys';
 import { PageBody } from '@/ui/layout/page/components/PageBody';
 import styled from '@emotion/styled';
 import { type ReactNode } from 'react';
+import { useRecoilValue } from 'recoil';
 import { useIsMobile } from 'twenty-ui/utilities';
 
 type MainContainerLayoutWithCommandMenuProps = {
@@ -43,6 +45,10 @@ const StyledPageBodyForMobile = styled(PageBody)`
 export const MainContainerLayoutWithCommandMenu = ({
   children,
 }: MainContainerLayoutWithCommandMenuProps) => {
+  const isCommandMenuOpened = useRecoilValue(isCommandMenuOpenedState);
+
+  // Command menu is now rendered as a modal via DefaultLayout
+  // When command menu is open, we don't need to adjust layout for side panel
   const isMobile = useIsMobile();
 
   useCommandMenuHotKeys();
@@ -51,7 +57,6 @@ export const MainContainerLayoutWithCommandMenu = ({
     return (
       <StyledMainContainerLayoutForMobile>
         <StyledPageBodyForMobile>{children}</StyledPageBodyForMobile>
-        <CommandMenuForMobile />
       </StyledMainContainerLayoutForMobile>
     );
   }
@@ -59,7 +64,6 @@ export const MainContainerLayoutWithCommandMenu = ({
   return (
     <StyledMainContainerLayoutForDesktop>
       <StyledPageBodyForDesktop>{children}</StyledPageBodyForDesktop>
-      <CommandMenuSidePanelForDesktop />
     </StyledMainContainerLayoutForDesktop>
   );
 };

@@ -1,14 +1,17 @@
 import { Injectable } from '@nestjs/common';
 
-import { v4 } from 'uuid';
-
 import { WorkspaceMigrationRunnerActionHandler } from 'src/engine/workspace-manager/workspace-migration/workspace-migration-runner/interfaces/workspace-migration-runner-action-handler-service.interface';
 
+<<<<<<< HEAD
 import { getUniversalFlatEntityEmptyForeignKeyAggregators } from 'src/engine/workspace-manager/workspace-migration/universal-flat-entity/utils/reset-universal-flat-entity-foreign-key-aggregators.util';
 import {
   FlatCreateAgentAction,
   UniversalCreateAgentAction,
 } from 'src/engine/workspace-manager/workspace-migration/workspace-migration-builder/builders/agent/types/workspace-migration-agent-action-builder.service';
+=======
+import { AgentEntity } from 'src/engine/metadata-modules/ai/ai-agent/entities/agent.entity';
+import { FlatCreateAgentAction } from 'src/engine/workspace-manager/workspace-migration/workspace-migration-builder/builders/agent/types/workspace-migration-agent-action-builder.service';
+>>>>>>> hevea-local
 import {
   WorkspaceMigrationActionRunnerArgs,
   WorkspaceMigrationActionRunnerContext,
@@ -23,6 +26,7 @@ export class CreateAgentActionHandlerService extends WorkspaceMigrationRunnerAct
     super();
   }
 
+<<<<<<< HEAD
   override async transpileUniversalActionToFlatAction({
     action,
     flatApplication,
@@ -43,6 +47,12 @@ export class CreateAgentActionHandlerService extends WorkspaceMigrationRunnerAct
         ...emptyUniversalForeignKeyAggregators,
       },
     };
+=======
+  override async transpileUniversalActionToFlatAction(
+    context: WorkspaceMigrationActionRunnerArgs<FlatCreateAgentAction>,
+  ): Promise<FlatCreateAgentAction> {
+    return context.action;
+>>>>>>> hevea-local
   }
 
   async executeForMetadata(

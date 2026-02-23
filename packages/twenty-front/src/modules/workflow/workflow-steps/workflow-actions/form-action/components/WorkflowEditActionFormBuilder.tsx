@@ -5,10 +5,7 @@ import { FormFieldPlaceholder } from '@/object-record/record-field/ui/form-types
 import { InputLabel } from '@/ui/input/components/InputLabel';
 import { DraggableItem } from '@/ui/layout/draggable-list/components/DraggableItem';
 import { DraggableList } from '@/ui/layout/draggable-list/components/DraggableList';
-import {
-  type WorkflowFormAction,
-  type WorkflowTriggerType,
-} from '@/workflow/types/Workflow';
+import { type WorkflowFormAction } from '@/workflow/types/Workflow';
 import { WorkflowStepBody } from '@/workflow/workflow-steps/components/WorkflowStepBody';
 import { WorkflowStepFooter } from '@/workflow/workflow-steps/components/WorkflowStepFooter';
 import { WorkflowEditActionFormFieldSettings } from '@/workflow/workflow-steps/workflow-actions/form-action/components/WorkflowEditActionFormFieldSettings';
@@ -23,8 +20,11 @@ import { useEffect, useState } from 'react';
 import { FieldMetadataType } from 'twenty-shared/types';
 import { isDefined } from 'twenty-shared/utils';
 import {
+<<<<<<< HEAD
   Callout,
   IconAlertTriangle,
+=======
+>>>>>>> hevea-local
   IconChevronDown,
   IconGripVertical,
   IconPlus,
@@ -35,7 +35,6 @@ import { useDebouncedCallback } from 'use-debounce';
 import { v4 } from 'uuid';
 
 export type WorkflowEditActionFormBuilderProps = {
-  triggerType: WorkflowTriggerType | undefined;
   action: WorkflowFormAction;
   actionOptions:
     | {
@@ -147,7 +146,6 @@ const StyledNotClosableCalloutContainer = styled(StyledCalloutContainer)`
 `;
 
 export const WorkflowEditActionFormBuilder = ({
-  triggerType,
   action,
   actionOptions,
 }: WorkflowEditActionFormBuilderProps) => {
@@ -156,7 +154,6 @@ export const WorkflowEditActionFormBuilder = ({
 
   const [formData, setFormData] = useState<FormData>(action.settings.input);
 
-  const [isCalloutVisible, setIsCalloutVisible] = useState<boolean>(true);
   const [selectedField, setSelectedField] = useState<string | null>(null);
   const [hoveredField, setHoveredField] = useState<string | null>(null);
 
@@ -234,6 +231,7 @@ export const WorkflowEditActionFormBuilder = ({
   return (
     <>
       <StyledWorkflowStepBody>
+<<<<<<< HEAD
         {triggerType && triggerType !== 'MANUAL' && isCalloutVisible && (
           <StyledCalloutContainer>
             <Callout
@@ -255,6 +253,8 @@ export const WorkflowEditActionFormBuilder = ({
             />
           </StyledCalloutContainer>
         )}
+=======
+>>>>>>> hevea-local
         {formData.length === 0 && (
           <StyledNotClosableCalloutContainer>
             <Callout

@@ -8,8 +8,7 @@ import {
   CaptchaDriverType,
   type CaptchaModuleAsyncOptions,
 } from 'src/engine/core-modules/captcha/interfaces';
-import { SecureHttpClientModule } from 'src/engine/core-modules/secure-http-client/secure-http-client.module';
-import { SecureHttpClientService } from 'src/engine/core-modules/secure-http-client/secure-http-client.service';
+import { SecureHttpClientService } from 'src/engine/core-modules/tool/services/secure-http-client.service';
 
 @Global()
 export class CaptchaModule {
@@ -52,8 +51,7 @@ export class CaptchaModule {
 
     return {
       module: CaptchaModule,
-      imports: [SecureHttpClientModule],
-      providers: [CaptchaService, provider],
+      providers: [CaptchaService, SecureHttpClientService, provider],
       exports: [CaptchaService],
     };
   }

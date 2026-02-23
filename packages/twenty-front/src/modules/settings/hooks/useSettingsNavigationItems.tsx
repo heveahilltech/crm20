@@ -22,6 +22,7 @@ import {
   IconCurrencyDollar,
   IconDoorEnter,
   IconHelpCircle,
+  IconCreditCard,
   IconHierarchy2,
   IconKey,
   IconLock,

@@ -20,7 +20,7 @@ describe('logicFunctionsResolver (e2e)', () => {
     };
 
     return client
-      .post('/metadata')
+      .post('/graphql')
       .set('Authorization', `Bearer ${APPLE_JANE_ADMIN_ACCESS_TOKEN}`)
       .send(queryData)
       .expect(200)

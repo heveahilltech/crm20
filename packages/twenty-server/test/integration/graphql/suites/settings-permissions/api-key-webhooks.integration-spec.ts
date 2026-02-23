@@ -19,7 +19,7 @@ describe('api key and webhooks permissions', () => {
       };
 
       await client
-        .post('/metadata')
+        .post('/graphql')
         .set('Authorization', `Bearer ${APPLE_JONY_MEMBER_ACCESS_TOKEN}`)
         .send(queryData)
         .expect(200)

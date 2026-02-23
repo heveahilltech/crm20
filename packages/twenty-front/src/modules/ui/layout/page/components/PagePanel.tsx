@@ -1,16 +1,9 @@
 import styled from '@emotion/styled';
 import React from 'react';
+import { pagePanelPreset } from '@/ui/theme/utils/themeUtils';
 
 const StyledPanel = styled.div`
-  background: ${({ theme }) => theme.background.primary};
-  border: 1px solid ${({ theme }) => theme.border.color.medium};
-  border-radius: ${({ theme }) => theme.border.radius.md};
-  height: 100%;
-  overflow-x: auto;
-  overflow-y: hidden;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
+  ${({ theme }) => pagePanelPreset(theme)}
 `;
 
 type PagePanelProps = {

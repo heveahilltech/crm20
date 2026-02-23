@@ -152,6 +152,7 @@ export class WorkspaceMigrationRunnerService {
   run = async ({
     workspaceMigration: { actions, applicationUniversalIdentifier },
     workspaceId,
+<<<<<<< HEAD
   }: {
     workspaceMigration: WorkspaceMigration;
     workspaceId: string;
@@ -159,6 +160,9 @@ export class WorkspaceMigrationRunnerService {
     allFlatEntityMaps: AllFlatEntityMaps;
     metadataEvents: MetadataEvent[];
   }> => {
+=======
+  }: WorkspaceMigration): Promise<AllFlatEntityMaps> => {
+>>>>>>> hevea-local
     this.logger.time('Runner', 'Total execution');
     this.logger.time('Runner', 'Initial cache retrieval');
 
@@ -213,10 +217,8 @@ export class WorkspaceMigrationRunnerService {
       await queryRunner.connect();
       await queryRunner.startTransaction();
 
-      const allMetadataEvents: MetadataEvent[] = [];
-
       for (const action of actions) {
-        const { partialOptimisticCache, metadataEvents } =
+        const result =
           await this.workspaceMigrationRunnerActionHandlerRegistry.executeActionHandler(
             {
               action,
@@ -232,10 +234,8 @@ export class WorkspaceMigrationRunnerService {
 
         allFlatEntityMaps = {
           ...allFlatEntityMaps,
-          ...partialOptimisticCache,
+          ...result,
         } as typeof allFlatEntityMaps;
-
-        allMetadataEvents.push(...metadataEvents);
       }
 
       await queryRunner.commitTransaction();
@@ -249,7 +249,7 @@ export class WorkspaceMigrationRunnerService {
 
       this.logger.timeEnd('Runner', 'Total execution');
 
-      return { allFlatEntityMaps, metadataEvents: allMetadataEvents };
+      return allFlatEntityMaps;
     } catch (error) {
       if (queryRunner.isTransactionActive) {
         await queryRunner.rollbackTransaction().catch((error) =>

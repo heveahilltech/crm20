@@ -2,6 +2,7 @@ import { isDefined } from 'twenty-shared/utils';
 
 import { type ValidateFlatPageLayoutWidgetTypeSpecificitiesForUpdateArgs } from 'src/engine/metadata-modules/flat-page-layout-widget/services/flat-page-layout-widget-type-validator.service';
 import { type FlatPageLayoutWidgetValidationError } from 'src/engine/metadata-modules/flat-page-layout-widget/types/flat-page-layout-widget-validation-error.type';
+import { type IframeConfiguration } from 'src/engine/metadata-modules/flat-page-layout-widget/validators/types/iframe-configuration.type';
 import { validateIframeConfigurationType } from 'src/engine/metadata-modules/flat-page-layout-widget/validators/utils/validate-iframe-configuration-type.util';
 import { validateIframeUrl } from 'src/engine/metadata-modules/flat-page-layout-widget/validators/utils/validate-iframe-url.util';
 
@@ -9,28 +10,23 @@ export const validateIframeFlatPageLayoutWidgetForUpdate = (
   args: ValidateFlatPageLayoutWidgetTypeSpecificitiesForUpdateArgs,
 ): FlatPageLayoutWidgetValidationError[] => {
   const { flatEntityToValidate } = args;
-  const { universalConfiguration, title: widgetTitle } = flatEntityToValidate;
+  const { configuration, title } = flatEntityToValidate;
   const errors: FlatPageLayoutWidgetValidationError[] = [];
 
-  if (!isDefined(universalConfiguration)) {
+  if (!isDefined(configuration)) {
     return [];
   }
 
-  const result = validateIframeConfigurationType({
-    universalConfiguration,
-    widgetTitle,
-  });
+  const iframeConfiguration = configuration as IframeConfiguration;
 
-  if (result.status === 'fail') {
-    return result.errors;
-  }
+  const configurationTypeErrors = validateIframeConfigurationType(
+    iframeConfiguration,
+    title,
+  );
 
-  const { iframeUniversalConfiguration } = result;
+  errors.push(...configurationTypeErrors);
 
-  const urlErrors = validateIframeUrl({
-    iframeUniversalConfiguration,
-    widgetTitle,
-  });
+  const urlErrors = validateIframeUrl(iframeConfiguration, title);
 
   errors.push(...urlErrors);
 

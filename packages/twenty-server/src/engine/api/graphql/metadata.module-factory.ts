@@ -28,10 +28,13 @@ export const metadataModuleFactory = async (
   const config: YogaDriverConfig = {
     autoSchemaFile: true,
     include: [MetadataGraphQLApiModule],
+<<<<<<< HEAD
     resolverSchemaScope: 'metadata',
     buildSchemaOptions: {
       orphanedTypes: [ClientConfig],
     },
+=======
+>>>>>>> hevea-local
     renderGraphiQL() {
       return renderApolloPlayground({ path: 'metadata' });
     },

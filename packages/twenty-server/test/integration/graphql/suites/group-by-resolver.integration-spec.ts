@@ -12,7 +12,6 @@ import { groupByOperationFactory } from 'test/integration/graphql/utils/group-by
 import { makeGraphqlAPIRequestWithMemberRole } from 'test/integration/graphql/utils/make-graphql-api-request-with-member-role.util';
 import { makeGraphqlAPIRequest } from 'test/integration/graphql/utils/make-graphql-api-request.util';
 import { updateWorkspaceMemberRole } from 'test/integration/graphql/utils/update-workspace-member-role.util';
-import { makeMetadataAPIRequest } from 'test/integration/metadata/suites/utils/make-metadata-api-request.util';
 import { deleteOneFieldMetadata } from 'test/integration/metadata/suites/field-metadata/utils/delete-one-field-metadata.util';
 import { updateOneFieldMetadata } from 'test/integration/metadata/suites/field-metadata/utils/update-one-field-metadata.util';
 import { createOneObjectMetadata } from 'test/integration/metadata/suites/object-metadata/utils/create-one-object-metadata.util';
@@ -875,7 +874,7 @@ describe('group-by resolver (integration)', () => {
       viewId = createViewData.createCoreView.id;
 
       // create a filter group and a filter for the view
-      const viewFilterGroupResponse = await makeMetadataAPIRequest(
+      const viewFilterGroupResponse = await makeGraphqlAPIRequest(
         createViewFilterGroupOperationFactory({
           data: {
             viewId,
@@ -1674,7 +1673,7 @@ describe('group-by resolver (integration)', () => {
         };
 
         const rolesResponse = await client
-          .post('/metadata')
+          .post('/graphql')
           .set('Authorization', `Bearer ${APPLE_JANE_ADMIN_ACCESS_TOKEN}`)
           .send(getRolesQuery);
 
@@ -1727,7 +1726,7 @@ describe('group-by resolver (integration)', () => {
         };
 
         const createRoleResponse =
-          await makeMetadataAPIRequest(createRoleOperation);
+          await makeGraphqlAPIRequest(createRoleOperation);
 
         customRoleId = createRoleResponse.body.data.createOneRole.id;
 
@@ -1770,7 +1769,7 @@ describe('group-by resolver (integration)', () => {
           },
         };
 
-        await makeMetadataAPIRequest(upsertObjectPermissionsOperation);
+        await makeGraphqlAPIRequest(upsertObjectPermissionsOperation);
 
         // Assign the custom role to a workspace member
         await updateWorkspaceMemberRole({
@@ -1840,7 +1839,7 @@ describe('group-by resolver (integration)', () => {
         };
 
         await client
-          .post('/metadata')
+          .post('/graphql')
           .set('Authorization', `Bearer ${APPLE_JANE_ADMIN_ACCESS_TOKEN}`)
           .send(restoreMemberRoleQuery);
 

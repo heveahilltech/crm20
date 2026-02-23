@@ -1,5 +1,5 @@
 import { UseFilters, UseGuards, UsePipes } from '@nestjs/common';
-import { Args, Mutation } from '@nestjs/graphql';
+import { Args, Mutation, Resolver } from '@nestjs/graphql';
 
 import GraphQLUpload from 'graphql-upload/GraphQLUpload.mjs';
 import { PermissionFlagType } from 'twenty-shared/constants';
@@ -21,7 +21,7 @@ import { streamToBuffer } from 'src/utils/stream-to-buffer';
 @UseGuards(WorkspaceAuthGuard)
 @UsePipes(ResolverValidationPipe)
 @UseFilters(PreventNestToAutoLogGraphqlErrorsFilter)
-@MetadataResolver()
+@Resolver()
 export class FileResolver {
   constructor(private readonly fileMetadataService: FileMetadataService) {}
 

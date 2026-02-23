@@ -11,7 +11,7 @@ import { type QueryResultFieldValue } from 'src/engine/api/graphql/workspace-que
 import { type QueryResultGetterHandlerInterface } from 'src/engine/api/graphql/workspace-query-runner/factories/query-result-getters/interfaces/query-result-getter-handler.interface';
 
 import { FilesFieldQueryResultGetterHandler } from 'src/engine/api/common/common-result-getters/handlers/field-handlers/files-field-query-result-getter.handler';
-import { RichTextV2FieldQueryResultGetterHandler } from 'src/engine/api/common/common-result-getters/handlers/field-handlers/rich-text-v2-field-query-result-getter.handler';
+import { ActivityQueryResultGetterHandler } from 'src/engine/api/graphql/workspace-query-runner/factories/query-result-getters/handlers/activity-query-result-getter.handler';
 import { AttachmentQueryResultGetterHandler } from 'src/engine/api/graphql/workspace-query-runner/factories/query-result-getters/handlers/attachment-query-result-getter.handler';
 import { PersonQueryResultGetterHandler } from 'src/engine/api/graphql/workspace-query-runner/factories/query-result-getters/handlers/person-query-result-getter.handler';
 import { WorkspaceMemberQueryResultGetterHandler } from 'src/engine/api/graphql/workspace-query-runner/factories/query-result-getters/handlers/workspace-member-query-result-getter.handler';
@@ -61,6 +61,8 @@ export class CommonResultGettersService {
           this.fileUrlService,
         ),
       ],
+      ['note', new ActivityQueryResultGetterHandler(this.fileService)],
+      ['task', new ActivityQueryResultGetterHandler(this.fileService)],
     ]);
   }
 
@@ -73,6 +75,7 @@ export class CommonResultGettersService {
         FieldMetadataType.FILES,
         new FilesFieldQueryResultGetterHandler(this.fileUrlService),
       ],
+<<<<<<< HEAD
       [
         FieldMetadataType.RICH_TEXT_V2,
         new RichTextV2FieldQueryResultGetterHandler(
@@ -81,6 +84,8 @@ export class CommonResultGettersService {
           this.featureFlagService,
         ),
       ],
+=======
+>>>>>>> hevea-local
     ]);
   }
 

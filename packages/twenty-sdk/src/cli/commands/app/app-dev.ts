@@ -12,11 +12,14 @@ export class AppDevCommand {
   private orchestrator: DevModeOrchestrator | null = null;
   private unmountUI: (() => void) | null = null;
 
+<<<<<<< HEAD
   async close(): Promise<void> {
     this.unmountUI?.();
     await this.orchestrator?.close();
   }
 
+=======
+>>>>>>> hevea-local
   async execute(options: AppDevOptions): Promise<void> {
     const appPath = options.appPath ?? CURRENT_EXECUTION_DIRECTORY;
 
@@ -42,9 +45,21 @@ export class AppDevCommand {
   }
 
   private setupGracefulShutdown(): void {
-    const shutdown = () => void this.close().then(() => process.exit(0));
+    const shutdown = async () => {
+      this.unmountUI?.();
 
-    process.on('SIGINT', shutdown);
-    process.on('SIGTERM', shutdown);
+      await Promise.all([
+        this.manifestWatcher?.close(),
+        this.logicFunctionsWatcher?.close(),
+        this.frontComponentsWatcher?.close(),
+        this.assetWatcher?.close(),
+        this.dependencyWatcher?.close(),
+      ]);
+
+      process.exit(0);
+    };
+
+    process.on('SIGINT', () => void shutdown());
+    process.on('SIGTERM', () => void shutdown());
   }
 }

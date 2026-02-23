@@ -5,7 +5,7 @@ import { FeatureFlagModule } from 'src/engine/core-modules/feature-flag/feature-
 import { FileEntity } from 'src/engine/core-modules/file/entities/file.entity';
 import { FileModule } from 'src/engine/core-modules/file/file.module';
 import { JwtModule } from 'src/engine/core-modules/jwt/jwt.module';
-import { SecureHttpClientModule } from 'src/engine/core-modules/secure-http-client/secure-http-client.module';
+import { SecureHttpClientService } from 'src/engine/core-modules/tool/services/secure-http-client.service';
 import { CodeInterpreterTool } from 'src/engine/core-modules/tool/tools/code-interpreter-tool/code-interpreter-tool';
 import { DraftEmailTool } from 'src/engine/core-modules/tool/tools/email-tool/draft-email-tool';
 import { EmailComposerService } from 'src/engine/core-modules/tool/tools/email-tool/email-composer.service';
@@ -23,7 +23,6 @@ import { MessagingSendManagerModule } from 'src/modules/messaging/message-outbou
     FeatureFlagModule,
     FileModule,
     JwtModule,
-    SecureHttpClientModule,
   ],
   providers: [
     HttpTool,
@@ -40,6 +39,14 @@ import { MessagingSendManagerModule } from 'src/modules/messaging/message-outbou
     EmailComposerService,
     SearchHelpCenterTool,
     CodeInterpreterTool,
+    SecureHttpClientService,
+  ],
+  exports: [
+    HttpTool,
+    SendEmailTool,
+    SearchHelpCenterTool,
+    CodeInterpreterTool,
+    SecureHttpClientService,
   ],
 })
 export class ToolModule {}

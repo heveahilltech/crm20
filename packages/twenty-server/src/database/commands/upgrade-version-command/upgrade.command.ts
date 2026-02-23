@@ -10,13 +10,14 @@ import {
   type VersionCommands,
 } from 'src/database/commands/command-runners/upgrade.command-runner';
 import { BackfillApplicationPackageFilesCommand } from 'src/database/commands/upgrade-version-command/1-17/1-17-backfill-application-package-files.command';
-import { DeleteFileRecordsAndUpdateTableCommand } from 'src/database/commands/upgrade-version-command/1-17/1-17-delete-all-files-and-update-table.command';
+import { DeleteFileRecordsCommand } from 'src/database/commands/upgrade-version-command/1-17/1-17-delete-all-files.command';
 import { FixMorphRelationFieldNamesCommand } from 'src/database/commands/upgrade-version-command/1-17/1-17-fix-morph-relation-field-names.command';
 import { IdentifyWebhookMetadataCommand } from 'src/database/commands/upgrade-version-command/1-17/1-17-identify-webhook-metadata.command';
 import { MakeWebhookUniversalIdentifierAndApplicationIdNotNullableMigrationCommand } from 'src/database/commands/upgrade-version-command/1-17/1-17-make-webhook-universal-identifier-and-application-id-not-nullable-migration.command';
 import { MigrateAttachmentToMorphRelationsCommand } from 'src/database/commands/upgrade-version-command/1-17/1-17-migrate-attachment-to-morph-relations.command';
 import { MigrateNoteTargetToMorphRelationsCommand } from 'src/database/commands/upgrade-version-command/1-17/1-17-migrate-note-target-to-morph-relations.command';
 import { MigrateTaskTargetToMorphRelationsCommand } from 'src/database/commands/upgrade-version-command/1-17/1-17-migrate-task-target-to-morph-relations.command';
+<<<<<<< HEAD
 import { BackfillFileSizeAndMimeTypeCommand } from 'src/database/commands/upgrade-version-command/1-18/1-18-backfill-file-size-and-mime-type.command';
 import { BackfillMessageChannelThrottleRetryAfterCommand } from 'src/database/commands/upgrade-version-command/1-18/1-18-backfill-message-channel-throttle-retry-after.command';
 import { BackfillStandardViewsAndFieldMetadataCommand } from 'src/database/commands/upgrade-version-command/1-18/1-18-backfill-standard-views-and-field-metadata.command';
@@ -30,6 +31,10 @@ import { AddMissingSystemFieldsToStandardObjectsCommand } from 'src/database/com
 import { BackfillMessageChannelMessageAssociationMessageFolderCommand } from 'src/database/commands/upgrade-version-command/1-19/1-19-backfill-message-channel-message-association-message-folder.command';
 import { BackfillPageLayoutsCommand } from 'src/database/commands/upgrade-version-command/1-19/1-19-backfill-page-layouts.command';
 import { BackfillSystemFieldsIsSystemCommand } from 'src/database/commands/upgrade-version-command/1-19/1-19-backfill-system-fields-is-system.command';
+=======
+import { MigrateWorkflowCodeStepsCommand } from 'src/database/commands/upgrade-version-command/1-17/1-17-migrate-workflow-code-steps.command';
+import { UpdateFileTableMigrationCommand } from 'src/database/commands/upgrade-version-command/1-17/1-17-update-file-table-migration.command';
+>>>>>>> hevea-local
 import { TwentyConfigService } from 'src/engine/core-modules/twenty-config/twenty-config.service';
 import { WorkspaceEntity } from 'src/engine/core-modules/workspace/workspace.entity';
 import { DataSourceService } from 'src/engine/metadata-modules/data-source/data-source.service';
@@ -51,12 +56,17 @@ export class UpgradeCommand extends UpgradeCommandRunner {
 
     // 1.17 Commands
     protected readonly backfillApplicationPackageFilesCommand: BackfillApplicationPackageFilesCommand,
-    protected readonly deleteFileRecordsAndUpdateTableCommand: DeleteFileRecordsAndUpdateTableCommand,
+    protected readonly deleteFileRecordsCommand: DeleteFileRecordsCommand,
     protected readonly migrateAttachmentToMorphRelationsCommand: MigrateAttachmentToMorphRelationsCommand,
     protected readonly migrateNoteTargetToMorphRelationsCommand: MigrateNoteTargetToMorphRelationsCommand,
     protected readonly migrateTaskTargetToMorphRelationsCommand: MigrateTaskTargetToMorphRelationsCommand,
     protected readonly identifyWebhookMetadataCommand: IdentifyWebhookMetadataCommand,
     protected readonly makeWebhookUniversalIdentifierAndApplicationIdNotNullableMigrationCommand: MakeWebhookUniversalIdentifierAndApplicationIdNotNullableMigrationCommand,
+<<<<<<< HEAD
+=======
+    protected readonly migrateWorkflowCodeStepsCommand: MigrateWorkflowCodeStepsCommand,
+    protected readonly updateFileTableMigrationCommand: UpdateFileTableMigrationCommand,
+>>>>>>> hevea-local
     protected readonly fixMorphRelationFieldNamesCommand: FixMorphRelationFieldNamesCommand,
 
     // 1.18 Commands
@@ -93,8 +103,14 @@ export class UpgradeCommand extends UpgradeCommandRunner {
       this.identifyWebhookMetadataCommand,
       this
         .makeWebhookUniversalIdentifierAndApplicationIdNotNullableMigrationCommand,
+<<<<<<< HEAD
       this.deleteFileRecordsAndUpdateTableCommand,
+=======
+      this.migrateWorkflowCodeStepsCommand,
+      this.deleteFileRecordsCommand,
+>>>>>>> hevea-local
       this.backfillApplicationPackageFilesCommand,
+      this.updateFileTableMigrationCommand,
       this.fixMorphRelationFieldNamesCommand,
     ];
 

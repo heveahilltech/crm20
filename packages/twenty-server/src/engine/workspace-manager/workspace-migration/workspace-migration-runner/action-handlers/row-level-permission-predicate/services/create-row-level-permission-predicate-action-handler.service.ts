@@ -2,16 +2,19 @@
 
 import { Injectable } from '@nestjs/common';
 
-import { v4 } from 'uuid';
-
 import { WorkspaceMigrationRunnerActionHandler } from 'src/engine/workspace-manager/workspace-migration/workspace-migration-runner/interfaces/workspace-migration-runner-action-handler-service.interface';
 
+<<<<<<< HEAD
 import { getUniversalFlatEntityEmptyForeignKeyAggregators } from 'src/engine/workspace-manager/workspace-migration/universal-flat-entity/utils/reset-universal-flat-entity-foreign-key-aggregators.util';
 import { resolveUniversalRelationIdentifiersToIds } from 'src/engine/workspace-manager/workspace-migration/universal-flat-entity/utils/resolve-universal-relation-identifiers-to-ids.util';
 import {
   FlatCreateRowLevelPermissionPredicateAction,
   UniversalCreateRowLevelPermissionPredicateAction,
 } from 'src/engine/workspace-manager/workspace-migration/workspace-migration-builder/builders/row-level-permission-predicate/types/workspace-migration-row-level-permission-predicate-action.type';
+=======
+import { RowLevelPermissionPredicateEntity } from 'src/engine/metadata-modules/row-level-permission-predicate/entities/row-level-permission-predicate.entity';
+import { FlatCreateRowLevelPermissionPredicateAction } from 'src/engine/workspace-manager/workspace-migration/workspace-migration-builder/builders/row-level-permission-predicate/types/workspace-migration-row-level-permission-predicate-action.type';
+>>>>>>> hevea-local
 import {
   WorkspaceMigrationActionRunnerArgs,
   WorkspaceMigrationActionRunnerContext,
@@ -22,6 +25,7 @@ export class CreateRowLevelPermissionPredicateActionHandlerService extends Works
   'create',
   'rowLevelPermissionPredicate',
 ) {
+<<<<<<< HEAD
   override async transpileUniversalActionToFlatAction({
     action,
     allFlatEntityMaps,
@@ -60,6 +64,12 @@ export class CreateRowLevelPermissionPredicateActionHandlerService extends Works
         ...emptyUniversalForeignKeyAggregators,
       },
     };
+=======
+  override async transpileUniversalActionToFlatAction(
+    context: WorkspaceMigrationActionRunnerArgs<FlatCreateRowLevelPermissionPredicateAction>,
+  ): Promise<FlatCreateRowLevelPermissionPredicateAction> {
+    return context.action;
+>>>>>>> hevea-local
   }
 
   async executeForMetadata(

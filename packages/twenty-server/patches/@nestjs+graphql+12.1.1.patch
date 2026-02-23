@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 diff --git a/dist/interfaces/gql-module-options.interface.d.ts b/dist/interfaces/gql-module-options.interface.d.ts
 index 72bab49dcc2b411408c75adf64c3f250cdeaa195..068dc04966e3f7ac7c7093f9ed8f29f24337cebc 100644
 --- a/dist/interfaces/gql-module-options.interface.d.ts
@@ -13,6 +14,8 @@ index 72bab49dcc2b411408c75adf64c3f250cdeaa195..068dc04966e3f7ac7c7093f9ed8f29f2
  }
  export interface GqlOptionsFactory<T extends Record<string, any> = GqlModuleOptions> {
      createGqlOptions(): Promise<Omit<T, 'driver'>> | Omit<T, 'driver'>;
+=======
+>>>>>>> hevea-local
 diff --git a/dist/schema-builder/graphql-schema.factory.js b/dist/schema-builder/graphql-schema.factory.js
 index f349a6e8ea629f8784143b2596e9e95b3255d348..790b062233936dcb336bc615887870d5e7a24de8 100644
 --- a/dist/schema-builder/graphql-schema.factory.js
@@ -223,6 +226,7 @@ index d5423f1603ea2dbe32f70778cb715de648960cf3..47c80de38dc9045b1ee043dd6f74bb22
 +            metadata = metadata.filter((inputMetadata) => reachableTypes.has(inputMetadata.target));
 +        }
          const inputTypeDefs = metadata.map((metadata) => this.inputTypeDefinitionFactory.create(metadata, options));
+<<<<<<< HEAD
          this.typeDefinitionsStorage.addInputTypes(inputTypeDefs);
      }
 -    generateObjectTypeDefs(options) {
@@ -314,3 +318,5 @@ index 1cc43269cd0c4fbe446789b38970118f0c1856c7..3eeb77fcd3c78a134896faa3424209ab
          return resolvers;
      }
      mapToCtor(wrapper) {
+=======
+>>>>>>> hevea-local

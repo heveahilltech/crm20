@@ -4,6 +4,7 @@ import {
   UseInterceptors,
   UsePipes,
 } from '@nestjs/common';
+<<<<<<< HEAD
 import {
   Args,
   Context,
@@ -12,6 +13,9 @@ import {
   Query,
   ResolveField,
 } from '@nestjs/graphql';
+=======
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+>>>>>>> hevea-local
 
 import { PermissionFlagType } from 'twenty-shared/constants';
 
@@ -32,7 +36,7 @@ import { resolvePageLayoutTabTitle } from 'src/engine/metadata-modules/page-layo
 import { PageLayoutGraphqlApiExceptionFilter } from 'src/engine/metadata-modules/page-layout/utils/page-layout-graphql-api-exception.filter';
 import { WorkspaceMigrationGraphqlApiExceptionInterceptor } from 'src/engine/workspace-manager/workspace-migration/interceptors/workspace-migration-graphql-api-exception.interceptor';
 
-@MetadataResolver(() => PageLayoutTabDTO)
+@Resolver(() => PageLayoutTabDTO)
 @UseInterceptors(WorkspaceMigrationGraphqlApiExceptionInterceptor)
 @UseFilters(PageLayoutGraphqlApiExceptionFilter)
 @UseGuards(WorkspaceAuthGuard)

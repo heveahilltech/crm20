@@ -1,14 +1,17 @@
 import { Injectable } from '@nestjs/common';
 
-import { v4 } from 'uuid';
-
 import { WorkspaceMigrationRunnerActionHandler } from 'src/engine/workspace-manager/workspace-migration/workspace-migration-runner/interfaces/workspace-migration-runner-action-handler-service.interface';
 
+<<<<<<< HEAD
 import { getUniversalFlatEntityEmptyForeignKeyAggregators } from 'src/engine/workspace-manager/workspace-migration/universal-flat-entity/utils/reset-universal-flat-entity-foreign-key-aggregators.util';
 import {
   FlatCreateWebhookAction,
   UniversalCreateWebhookAction,
 } from 'src/engine/workspace-manager/workspace-migration/workspace-migration-builder/builders/webhook/types/workspace-migration-webhook-action.type';
+=======
+import { WebhookEntity } from 'src/engine/metadata-modules/webhook/entities/webhook.entity';
+import { FlatCreateWebhookAction } from 'src/engine/workspace-manager/workspace-migration/workspace-migration-builder/builders/webhook/types/workspace-migration-webhook-action.type';
+>>>>>>> hevea-local
 import {
   WorkspaceMigrationActionRunnerArgs,
   WorkspaceMigrationActionRunnerContext,
@@ -23,6 +26,7 @@ export class CreateWebhookActionHandlerService extends WorkspaceMigrationRunnerA
     super();
   }
 
+<<<<<<< HEAD
   override async transpileUniversalActionToFlatAction({
     action,
     flatApplication,
@@ -43,6 +47,12 @@ export class CreateWebhookActionHandlerService extends WorkspaceMigrationRunnerA
         ...emptyUniversalForeignKeyAggregators,
       },
     };
+=======
+  override async transpileUniversalActionToFlatAction(
+    context: WorkspaceMigrationActionRunnerArgs<FlatCreateWebhookAction>,
+  ): Promise<FlatCreateWebhookAction> {
+    return context.action;
+>>>>>>> hevea-local
   }
 
   async executeForMetadata(

@@ -25,7 +25,7 @@ import { v4 } from 'uuid';
 import {
   type RunWorkflowVersionMutation,
   type RunWorkflowVersionMutationVariables,
-} from '~/generated/graphql';
+} from '~/generated-metadata/graphql';
 
 export const useRunWorkflowVersion = () => {
   const apolloCoreClient = useApolloCoreClient();

@@ -245,7 +245,7 @@ export class ConfigVariables {
   })
   @IsDuration()
   @IsOptional()
-  ACCESS_TOKEN_EXPIRES_IN = '30m';
+  ACCESS_TOKEN_EXPIRES_IN = '1d';
 
   @ConfigVariablesMetadata({
     group: ConfigVariablesGroup.TOKENS_DURATION,

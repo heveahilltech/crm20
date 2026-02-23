@@ -9,8 +9,27 @@ import { Processor } from 'src/engine/core-modules/message-queue/decorators/proc
 import { MessageQueue } from 'src/engine/core-modules/message-queue/message-queue.constants';
 import { MetricsService } from 'src/engine/core-modules/metrics/metrics.service';
 import { MetricsKeys } from 'src/engine/core-modules/metrics/types/metrics-keys.type';
+<<<<<<< HEAD
 import { SecureHttpClientService } from 'src/engine/core-modules/secure-http-client/secure-http-client.service';
 import { type WebhookJobData } from 'src/engine/metadata-modules/webhook/types/webhook-job-data.type';
+=======
+import { SecureHttpClientService } from 'src/engine/core-modules/tool/services/secure-http-client.service';
+
+export type CallWebhookJobData = {
+  targetUrl: string;
+  eventName: string;
+  objectMetadata: { id: string; nameSingular: string };
+  workspaceId: string;
+  webhookId: string;
+  eventDate: Date;
+  userId?: string;
+  workspaceMemberId?: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  record: any;
+  updatedFields?: string[];
+  secret?: string;
+};
+>>>>>>> hevea-local
 
 @Processor(MessageQueue.webhookQueue)
 export class CallWebhookJob {
@@ -69,14 +88,7 @@ export class CallWebhookJob {
           .toString('hex');
       }
 
-      const axiosClient = this.secureHttpClientService.getHttpClient(
-        undefined,
-        {
-          workspaceId: data.workspaceId,
-          userId: data.userId,
-          source: 'webhook',
-        },
-      );
+      const axiosClient = this.secureHttpClientService.getHttpClient();
 
       const response = await axiosClient.post(
         getAbsoluteUrl(data.targetUrl),

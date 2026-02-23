@@ -29,6 +29,7 @@ import { useStore } from 'jotai';
 import { useRecoilCallback } from 'recoil';
 import { CommandMenuPages } from 'twenty-shared/types';
 import { isDefined } from 'twenty-shared/utils';
+import { commandMenuPendingPageLayoutRecordIdState } from '@/command-menu/states/commandMenuPendingPageLayoutRecordIdState';
 
 export const useCommandMenuCloseAnimationCompleteCleanup = () => {
   const { resetSelectedItem } = useSelectableList(
@@ -101,6 +102,7 @@ export const useCommandMenuCloseAnimationCompleteCleanup = () => {
         }
 
         set(viewableRecordIdState, null);
+        set(commandMenuPendingPageLayoutRecordIdState, null);
         set(commandMenuPageState, CommandMenuPages.Root);
         set(commandMenuPageInfoState, {
           title: undefined,

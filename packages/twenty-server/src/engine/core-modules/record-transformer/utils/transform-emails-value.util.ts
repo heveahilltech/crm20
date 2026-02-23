@@ -1,12 +1,11 @@
 import { isNonEmptyArray, isNonEmptyString } from '@sniptt/guards';
-import { isDefined } from 'class-validator';
 
 export const transformEmailsValue = (
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   value: any,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): any => {
-  if (!isDefined(value)) {
+  if (!value) {
     return value;
   }
 

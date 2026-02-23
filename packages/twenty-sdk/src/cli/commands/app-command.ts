@@ -77,12 +77,11 @@ export const registerCommands = (program: Command): void => {
   program
     .command('app:uninstall [appPath]')
     .description('Uninstall application from Twenty')
-    .option('-y, --yes', 'Skip confirmation prompt')
-    .action(async (appPath?: string, options?: { yes?: boolean }) => {
+    .action(async (appPath?: string) => {
       try {
         const result = await uninstallCommand.execute({
           appPath: formatPath(appPath),
-          askForConfirmation: !options?.yes,
+          askForConfirmation: true,
         });
         process.exit(result.success ? 0 : 1);
       } catch {

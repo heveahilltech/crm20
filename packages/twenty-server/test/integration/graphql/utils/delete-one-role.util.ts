@@ -4,7 +4,7 @@ export const deleteRole = async (client: any, roleId: string) => {
   const deleteRoleQuery = deleteOneRoleOperationFactory(roleId);
 
   await client
-    .post('/metadata')
+    .post('/graphql')
     .set('Authorization', `Bearer ${APPLE_JANE_ADMIN_ACCESS_TOKEN}`)
     .send(deleteRoleQuery);
 };

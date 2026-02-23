@@ -3,9 +3,9 @@ import { useMutation } from '@apollo/client';
 import {
   type CreateWorkflowVersionEdgeMutation,
   type CreateWorkflowVersionEdgeMutationVariables,
-  type CreateWorkflowVersionEdgeInput,
-} from '~/generated/graphql';
+} from '~/generated-metadata/graphql';
 import { CREATE_WORKFLOW_VERSION_EDGE } from '@/workflow/graphql/mutations/createWorkflowVersionEdge';
+import { type CreateWorkflowVersionEdgeInput } from '~/generated/graphql';
 import { useUpdateWorkflowVersionCache } from '@/workflow/workflow-steps/hooks/useUpdateWorkflowVersionCache';
 
 export const useCreateWorkflowVersionEdge = () => {

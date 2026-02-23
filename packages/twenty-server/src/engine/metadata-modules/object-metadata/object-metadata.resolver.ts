@@ -4,8 +4,13 @@ import {
   Context,
   Mutation,
   Parent,
+<<<<<<< HEAD
   Query,
   ResolveField,
+=======
+  ResolveField,
+  Resolver,
+>>>>>>> hevea-local
 } from '@nestjs/graphql';
 
 import { PermissionFlagType } from 'twenty-shared/constants';
@@ -35,7 +40,7 @@ import { resolveObjectMetadataStandardOverride } from 'src/engine/metadata-modul
 import { PermissionsGraphqlApiExceptionFilter } from 'src/engine/metadata-modules/permissions/utils/permissions-graphql-api-exception.filter';
 
 @UseGuards(WorkspaceAuthGuard)
-@MetadataResolver(() => ObjectMetadataDTO)
+@Resolver(() => ObjectMetadataDTO)
 @UsePipes(ResolverValidationPipe)
 @UseFilters(
   PreventNestToAutoLogGraphqlErrorsFilter,

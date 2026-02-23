@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
+<<<<<<< HEAD
 import { v4 } from 'uuid';
 
 import { WorkspaceMigrationRunnerActionHandler } from 'src/engine/workspace-manager/workspace-migration/workspace-migration-runner/interfaces/workspace-migration-runner-action-handler-service.interface';
@@ -9,6 +10,19 @@ import {
   FlatCreateLogicFunctionAction,
   UniversalCreateLogicFunctionAction,
 } from 'src/engine/workspace-manager/workspace-migration/workspace-migration-builder/builders/logic-function/types/workspace-migration-logic-function-action.type';
+=======
+import { FileFolder } from 'twenty-shared/types';
+
+import { WorkspaceMigrationRunnerActionHandler } from 'src/engine/workspace-manager/workspace-migration/workspace-migration-runner/interfaces/workspace-migration-runner-action-handler-service.interface';
+
+import { FileStorageService } from 'src/engine/core-modules/file-storage/file-storage.service';
+import { LogicFunctionEntity } from 'src/engine/metadata-modules/logic-function/logic-function.entity';
+import {
+  LogicFunctionException,
+  LogicFunctionExceptionCode,
+} from 'src/engine/metadata-modules/logic-function/logic-function.exception';
+import { FlatCreateLogicFunctionAction } from 'src/engine/workspace-manager/workspace-migration/workspace-migration-builder/builders/logic-function/types/workspace-migration-logic-function-action.type';
+>>>>>>> hevea-local
 import {
   WorkspaceMigrationActionRunnerArgs,
   WorkspaceMigrationActionRunnerContext,
@@ -19,6 +33,7 @@ export class CreateLogicFunctionActionHandlerService extends WorkspaceMigrationR
   'create',
   'logicFunction',
 ) {
+<<<<<<< HEAD
   override async transpileUniversalActionToFlatAction({
     action,
     flatApplication,
@@ -39,6 +54,16 @@ export class CreateLogicFunctionActionHandlerService extends WorkspaceMigrationR
         ...emptyUniversalForeignKeyAggregators,
       },
     };
+=======
+  constructor(private readonly fileStorageService: FileStorageService) {
+    super();
+  }
+
+  override async transpileUniversalActionToFlatAction(
+    context: WorkspaceMigrationActionRunnerArgs<FlatCreateLogicFunctionAction>,
+  ): Promise<FlatCreateLogicFunctionAction> {
+    return context.action;
+>>>>>>> hevea-local
   }
 
   async executeForMetadata(

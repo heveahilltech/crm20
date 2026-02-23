@@ -1,5 +1,5 @@
 import { UseFilters, UseGuards, UsePipes } from '@nestjs/common';
-import { Args, Mutation, Query, Subscription } from '@nestjs/graphql';
+import { Args, Mutation, Query, Resolver, Subscription } from '@nestjs/graphql';
 
 import graphqlTypeJson from 'graphql-type-json';
 import { PermissionFlagType } from 'twenty-shared/constants';
@@ -31,8 +31,17 @@ import { logicFunctionGraphQLApiExceptionHandler } from 'src/engine/metadata-mod
 import { SubscriptionChannel } from 'src/engine/subscriptions/enums/subscription-channel.enum';
 import { SubscriptionService } from 'src/engine/subscriptions/subscription.service';
 
+<<<<<<< HEAD
 @UseGuards(WorkspaceAuthGuard, FeatureFlagGuard, NoPermissionGuard)
 @MetadataResolver()
+=======
+@UseGuards(
+  WorkspaceAuthGuard,
+  FeatureFlagGuard,
+  SettingsPermissionGuard(PermissionFlagType.WORKFLOWS),
+)
+@Resolver()
+>>>>>>> hevea-local
 @UsePipes(ResolverValidationPipe)
 @UseFilters(PreventNestToAutoLogGraphqlErrorsFilter)
 export class LogicFunctionResolver {
