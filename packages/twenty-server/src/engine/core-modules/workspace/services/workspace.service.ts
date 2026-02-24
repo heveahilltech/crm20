@@ -282,10 +282,11 @@ export class WorkspaceService extends TypeOrmQueryService<WorkspaceEntity> {
 
     await this.userWorkspaceService.createWorkspaceMember(workspace.id, user);
 
-    await this.prefillCreatedWorkspaceRecords({
-      workspaceId: workspace.id,
-      schemaName: getWorkspaceSchemaName(workspace.id),
-    });
+    // Leave this commented out for now to avoid prefilling the workspace with records
+    // await this.prefillCreatedWorkspaceRecords({
+    //   workspaceId: workspace.id,
+    //   schemaName: getWorkspaceSchemaName(workspace.id),
+    // });
 
     const appVersion = this.twentyConfigService.get('APP_VERSION');
 
@@ -606,69 +607,70 @@ export class WorkspaceService extends TypeOrmQueryService<WorkspaceEntity> {
     }
   }
 
-  private async prefillCreatedWorkspaceRecords({
-    workspaceId,
-    schemaName,
-  }: {
-    workspaceId: string;
-    schemaName: string;
-  }): Promise<void> {
-    const {
-      flatObjectMetadataMaps,
-      flatFieldMetadataMaps,
-      flatPageLayoutMaps,
-    } =
-      await this.flatEntityMapsCacheService.getOrRecomputeManyOrAllFlatEntityMaps(
-        {
-          workspaceId,
-          flatMapsKeys: [
-            'flatObjectMetadataMaps',
-            'flatFieldMetadataMaps',
-            'flatPageLayoutMaps',
-          ],
-        },
-      );
+  // comment the function that prefills the workspace with records
+  // private async prefillCreatedWorkspaceRecords({
+  //   workspaceId,
+  //   schemaName,
+  // }: {
+  //   workspaceId: string;
+  //   schemaName: string;
+  // }): Promise<void> {
+  //   const {
+  //     flatObjectMetadataMaps,
+  //     flatFieldMetadataMaps,
+  //     flatPageLayoutMaps,
+  //   } =
+  //     await this.flatEntityMapsCacheService.getOrRecomputeManyOrAllFlatEntityMaps(
+  //       {
+  //         workspaceId,
+  //         flatMapsKeys: [
+  //           'flatObjectMetadataMaps',
+  //           'flatFieldMetadataMaps',
+  //           'flatPageLayoutMaps',
+  //         ],
+  //       },
+  //     );
 
-    const queryRunner = this.coreDataSource.createQueryRunner();
+  //   const queryRunner = this.coreDataSource.createQueryRunner();
 
-    await queryRunner.connect();
+  //   await queryRunner.connect();
 
-    try {
-      await queryRunner.startTransaction();
+  //   try {
+  //     await queryRunner.startTransaction();
 
-      await prefillCompanies(queryRunner.manager, schemaName);
+  //     await prefillCompanies(queryRunner.manager, schemaName);
 
-      await prefillPeople(queryRunner.manager, schemaName);
+  //     await prefillPeople(queryRunner.manager, schemaName);
 
-      await prefillWorkflows(
-        queryRunner.manager,
-        schemaName,
-        flatObjectMetadataMaps,
-        flatFieldMetadataMaps,
-      );
+  //     await prefillWorkflows(
+  //       queryRunner.manager,
+  //       schemaName,
+  //       flatObjectMetadataMaps,
+  //       flatFieldMetadataMaps,
+  //     );
 
-      await prefillOpportunities(queryRunner.manager, schemaName);
+  //     await prefillOpportunities(queryRunner.manager, schemaName);
 
-      await prefillDashboards(
-        queryRunner.manager,
-        schemaName,
-        flatPageLayoutMaps,
-      );
+  //     await prefillDashboards(
+  //       queryRunner.manager,
+  //       schemaName,
+  //       flatPageLayoutMaps,
+  //     );
 
-      await queryRunner.commitTransaction();
-    } catch (error) {
-      if (queryRunner.isTransactionActive) {
-        try {
-          await queryRunner.rollbackTransaction();
-        } catch (rollbackError) {
-          this.logger.error(
-            `Failed to rollback prefill transaction: ${rollbackError.message}`,
-          );
-        }
-      }
-      throw error;
-    } finally {
-      await queryRunner.release();
-    }
-  }
+  //     await queryRunner.commitTransaction();
+  //   } catch (error) {
+  //     if (queryRunner.isTransactionActive) {
+  //       try {
+  //         await queryRunner.rollbackTransaction();
+  //       } catch (rollbackError) {
+  //         this.logger.error(
+  //           `Failed to rollback prefill transaction: ${rollbackError.message}`,
+  //         );
+  //       }
+  //     }
+  //     throw error;
+  //   } finally {
+  //     await queryRunner.release();
+  //   }
+  // }
 }
