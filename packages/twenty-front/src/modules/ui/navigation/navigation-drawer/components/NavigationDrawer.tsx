@@ -48,10 +48,10 @@ const StyledContainer = styled.div<{
   isSettings?: boolean;
   isMobile?: boolean;
 }>`
+  width: var(${NAVIGATION_DRAWER_WIDTH_VAR});
   ${({ theme, isSettings, isMobile }) =>
     navigationDrawerContainerPreset(theme, isSettings, isMobile)}
-  width: var(${NAVIGATION_DRAWER_WIDTH_VAR});
-  
+    isSettings ? '100%' : NAV_DRAWER_WIDTHS.menu.desktop.expanded + 'px'};
 `;
 
 export const NavigationDrawer = ({
