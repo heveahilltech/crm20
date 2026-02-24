@@ -87,71 +87,17 @@ const StyledItem = styled('button', {
       'isSelectedInEditMode',
     ].includes(prop) && isPropValid(prop),
 })<StyledItemProps>`
-  box-sizing: border-box;
-  align-items: center;
-  background: ${(props) =>
-    props.active ? props.theme.background.transparent.light : 'inherit'};
-  height: ${({ theme }) => theme.spacing(7)};
-  border: ${({ theme, isSelectedInEditMode }) =>
-    isSelectedInEditMode
-      ? `1px solid ${theme.color.blue}`
-      : '1px solid transparent'};
-  border-radius: ${({ theme }) => theme.border.radius.sm};
-  text-decoration: none;
-  color: ${(props) => {
-    if (props.active === true) {
-      return props.theme.font.color.primary;
-    }
-    if (props.danger === true) {
-      return props.theme.color.red;
-    }
-    if (props.soon === true) {
-      return props.theme.font.color.light;
-    }
-    return props.theme.font.color.secondary;
-  }};
-  cursor: ${(props) => (props.soon ? 'default' : 'pointer')};
-  display: flex;
-  font-family: ${({ theme }) => theme.font.family};
-  font-size: ${({ theme }) => theme.font.size.md};
-
-  padding-bottom: ${({ theme }) => theme.spacing(1)};
-  padding-left: ${({ theme }) => theme.spacing(1)};
-  padding-right: ${({ theme, hasRightOptions }) =>
-    hasRightOptions ? theme.spacing(0.5) : theme.spacing(1)};
-  padding-top: ${({ theme }) => theme.spacing(1)};
-
-  margin-top: ${({ indentationLevel }) =>
-    indentationLevel === 2 ? '2px' : '0'};
-
-  pointer-events: ${(props) => (props.soon ? 'none' : 'auto')};
-
-  width: ${(props) =>
-    !props.isNavigationDrawerExpanded
-      ? `calc(${NAVIGATION_DRAWER_COLLAPSED_WIDTH}px - ${props.theme.spacing(6)} + ${props.theme.spacing(1)} + ${props.hasRightOptions ? props.theme.spacing(0.5) : props.theme.spacing(1)})`
-      : `calc(100% - ${props.theme.spacing(1.5)} + ${props.theme.spacing(1)} + ${props.hasRightOptions ? props.theme.spacing(0.5) : props.theme.spacing(1)})`};
-
-  ${({ isDragging }) =>
-    isDragging &&
-    `
-    cursor: grabbing;
-  `}
-
-  :hover {
-    background: ${({ theme }) => theme.background.transparent.light};
-    color: ${(props) =>
-      props.danger ? props.theme.color.red : props.theme.font.color.primary};
-  }
-
-  :hover .keyboard-shortcuts {
-    visibility: visible;
-  }
-
-  user-select: none;
-
-  @media (max-width: ${MOBILE_VIEWPORT}px) {
-    font-size: ${({ theme }) => theme.font.size.lg};
-  }
+  ${(props) =>
+    navigationDrawerItemPreset(
+      props.theme,
+      props.active,
+      props.danger,
+      props.soon,
+      props.isDragging,
+      props.isNavigationDrawerExpanded,
+      props.hasRightOptions,
+      props.indentationLevel,
+    )}
 `;
 
 const StyledItemElementsContainer = styled.div`

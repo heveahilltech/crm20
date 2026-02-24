@@ -1,8 +1,5 @@
 import { useAuth } from '@/auth/hooks/useAuth';
 import { currentWorkspaceMemberState } from '@/auth/states/currentWorkspaceMemberState';
-import { currentWorkspaceState } from '@/auth/states/currentWorkspaceState';
-import { NavigationDrawerCollapseButton } from '@/ui/navigation/navigation-drawer/components/NavigationDrawerCollapseButton';
-import { isNavigationDrawerExpandedState } from '@/ui/navigation/states/isNavigationDrawerExpanded';
 import { useColorScheme } from '@/ui/theme/hooks/useColorScheme';
 import { useSystemColorScheme } from '@/ui/theme/hooks/useSystemColorScheme';
 import {
@@ -15,8 +12,11 @@ import { useIsMobile } from '@/ui/utilities/responsive/hooks/useIsMobile';
 import styled from '@emotion/styled';
 import { useLingui } from '@lingui/react/macro';
 import { useRecoilValue } from 'recoil';
-import { Avatar, IconPower, IconMoon, IconSun } from 'twenty-ui/display';
 import { IconButton } from 'twenty-ui/input';
+import { Avatar, IconPower, IconMoon, IconSun } from 'twenty-ui/display';
+import { currentWorkspaceState } from '@/auth/states/currentWorkspaceState';
+import { NavigationDrawerCollapseButton } from '@/ui/navigation/navigation-drawer/components/NavigationDrawerCollapseButton';
+import { isNavigationDrawerExpandedState } from '@/ui/navigation/states/isNavigationDrawerExpanded';
 
 const StyledUserProfileHeader = styled.div`
   ${({ theme }) => userProfileHeaderPreset(theme)}
@@ -24,7 +24,7 @@ const StyledUserProfileHeader = styled.div`
 
 const StyledLeftSection = styled.div`
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   gap: ${({ theme }) => theme.spacing(0.5)};
   align-items: flex-start;
 `;
@@ -33,7 +33,7 @@ const StyledRightSection = styled.div`
   align-items: center;
   display: flex;
   flex-direction: row;
-  gap: ${({ theme }) => theme.spacing(2)};
+  gap: ${({ theme }) => theme.spacing(3)};
 `;
 
 const StyledUserInfo = styled.div`
@@ -41,6 +41,7 @@ const StyledUserInfo = styled.div`
   display: flex;
   flex-direction: row;
   gap: ${({ theme }) => theme.spacing(2)};
+  margin-right: ${({ theme }) => theme.spacing(2)};
 `;
 
 const StyledUserDetails = styled.div`
@@ -49,23 +50,21 @@ const StyledUserDetails = styled.div`
   gap: ${({ theme }) => theme.spacing(0.5)};
 `;
 
-const StyledWelcomeText = styled.div`
-  color: ${({ theme }) => getInvertedTextColor(theme)};
-  font-size: ${({ theme }) => theme.font.size.xs};
-  font-weight: ${({ theme }) => theme.font.weight.regular};
-  opacity: 0.8;
-`;
-
 const StyledWorkspaceName = styled.div`
   color: ${({ theme }) => getInvertedTextColor(theme)};
-  font-size: ${({ theme }) => theme.font.size.md};
-  font-weight: ${({ theme }) => theme.font.weight.medium};
+  font-size: ${({ theme }) => theme.font.size.lg};
+  font-weight: ${({ theme }) => theme.font.weight.regular};
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+  margin-top: ${({ theme }) => theme.spacing(0.25)};
 `;
 
 const StyledUserName = styled.div`
   color: ${({ theme }) => getInvertedTextColor(theme)};
-  font-size: ${({ theme }) => theme.font.size.md};
+  font-size: ${({ theme }) => theme.font.size.sm};
   font-weight: ${({ theme }) => theme.font.weight.medium};
+  letter-spacing: 0.01em;
+  line-height: 1.4;
 `;
 
 const StyledActions = styled.div`
@@ -73,7 +72,7 @@ const StyledActions = styled.div`
   display: flex;
   flex-direction: row;
   gap: ${({ theme }) => theme.spacing(1)};
-  
+
   ${({ theme }) => userProfileHeaderActionsPreset(theme)}
 `;
 
@@ -119,43 +118,41 @@ export const UserProfileHeader = () => {
 
   return (
     <StyledUserProfileHeader>
-      <StyledLeftSection>
-        {!isMobile && !isNavigationDrawerExpanded && (
-          <NavigationDrawerCollapseButton direction="right" />
-        )}
-        <StyledWelcomeText>{t`Welcome to`}</StyledWelcomeText>
-        <StyledWorkspaceName>{workspaceName}</StyledWorkspaceName>
-      </StyledLeftSection>
-      <StyledRightSection>
-        <StyledUserInfo>
-          <Avatar
-            avatarUrl={currentWorkspaceMember.avatarUrl}
-            placeholder={displayName}
-            size="xl"
-            type="rounded"
-          />
-          <StyledUserDetails>
-            <StyledUserName>{displayName}</StyledUserName>
-          </StyledUserDetails>
-        </StyledUserInfo>
-        <StyledActions>
-          {!isMobile && (
-            <IconButton
-              Icon={isDarkMode ? IconSun : IconMoon}
-              size="small"
-              variant="secondary"
-              accent="default"
-              ariaLabel={isDarkMode ? t`Switch to light mode` : t`Switch to dark mode`}
-              onClick={handleThemeToggle}
-            />
-          )}
-          <StyledLogoutButton onClick={handleLogout}>
-            <IconPower size={16} />
-            <span>{t`Log out`}</span>
-          </StyledLogoutButton>
-        </StyledActions>
-      </StyledRightSection>
+        <StyledLeftSection>
+            {!isMobile && !isNavigationDrawerExpanded && (
+              <NavigationDrawerCollapseButton direction="right" />
+            )}
+            <StyledWorkspaceName>Welcome to, {workspaceName}</StyledWorkspaceName>
+        </StyledLeftSection>
+        <StyledRightSection>
+            <StyledUserInfo>
+                <Avatar
+                avatarUrl={currentWorkspaceMember.avatarUrl}
+                placeholder={displayName}
+                size="xl"
+                type="rounded"
+                />
+                <StyledUserDetails>
+                <StyledUserName>{displayName}</StyledUserName>
+                </StyledUserDetails>
+            </StyledUserInfo>
+            <StyledActions>
+                {!isMobile && (
+                <IconButton
+                    Icon={isDarkMode ? IconSun : IconMoon}
+                    size="small"
+                    variant="secondary"
+                    accent="default"
+                    ariaLabel={isDarkMode ? t`Switch to light mode` : t`Switch to dark mode`}
+                    onClick={handleThemeToggle}
+                />
+                )}
+                <StyledLogoutButton onClick={handleLogout}>
+                <IconPower size={16} />
+                <span>{t`Log out`}</span>
+                </StyledLogoutButton>
+            </StyledActions>
+        </StyledRightSection>
     </StyledUserProfileHeader>
   );
 };
-
