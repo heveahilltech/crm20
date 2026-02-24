@@ -8,7 +8,7 @@ export const tokenPairState = createState<AuthTokenPair | null>({
   effects: [
     cookieStorageEffect(
       'tokenPair',
-      { domain: '.voxring.ai' },
+      {},
       {
         validateInitFn: (payload: AuthTokenPair) =>
           Boolean(payload['accessOrWorkspaceAgnosticToken']),
