@@ -17,6 +17,7 @@ import {
 import { NavigationDrawerWidthEffect } from '@/ui/navigation/components/NavigationDrawerWidthEffect';
 import { NavigationDrawerBackButton } from './NavigationDrawerBackButton';
 import { NavigationDrawerHeader } from './NavigationDrawerHeader';
+import { navigationDrawerContainerPreset } from '@/ui/theme/utils/themeUtils';
 
 export type NavigationDrawerProps = {
   children?: ReactNode;
@@ -47,23 +48,10 @@ const StyledContainer = styled.div<{
   isSettings?: boolean;
   isMobile?: boolean;
 }>`
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
+  ${({ theme, isSettings, isMobile }) =>
+    navigationDrawerContainerPreset(theme, isSettings, isMobile)}
   width: var(${NAVIGATION_DRAWER_WIDTH_VAR});
-  gap: ${({ theme }) => theme.spacing(3)};
-  height: 100%;
-  padding: ${({ theme, isSettings, isMobile }) =>
-    isSettings
-      ? isMobile
-        ? theme.spacing(3, 0, 0, 8)
-        : theme.spacing(3, 0, 4, 0)
-      : theme.spacing(3, 0, 4, 2)};
-  @media (max-width: ${MOBILE_VIEWPORT}px) {
-    width: 100%;
-    padding-left: ${({ theme }) => theme.spacing(5)};
-    padding-right: ${({ theme }) => theme.spacing(5)};
-  }
+  
 `;
 
 export const NavigationDrawer = ({

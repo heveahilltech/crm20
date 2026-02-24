@@ -29,6 +29,7 @@ import {
   type TriggerEventType,
   useMouseDownNavigation,
 } from 'twenty-ui/utilities';
+import { navigationDrawerItemPreset } from '@/ui/theme/utils/themeUtils';
 
 const DEFAULT_INDENTATION_LEVEL = 1;
 

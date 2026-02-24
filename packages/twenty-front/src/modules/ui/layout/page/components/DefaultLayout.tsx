@@ -22,20 +22,10 @@ import styled from '@emotion/styled';
 import { AnimatePresence, LayoutGroup, motion } from 'framer-motion';
 import { Outlet } from 'react-router-dom';
 import { useScreenSize } from 'twenty-ui/utilities';
+import { defaultLayoutPreset } from '@/ui/theme/utils/themeUtils';
 
 const StyledLayout = styled.div`
-  background: ${({ theme }) => theme.background.noisy};
-  display: flex;
-  flex-direction: column;
-  height: 100dvh;
-  position: relative;
-  scrollbar-color: ${({ theme }) => theme.border.color.medium} transparent;
-  scrollbar-width: 4px;
-  width: 100%;
-
-  *::-webkit-scrollbar-thumb {
-    border-radius: ${({ theme }) => theme.border.radius.sm};
-  }
+  ${({ theme }) => defaultLayoutPreset(theme)}
 `;
 
 const StyledPageContainer = styled(motion.div)`
