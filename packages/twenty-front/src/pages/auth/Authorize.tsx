@@ -108,7 +108,7 @@ export const Authorize = () => {
       <StyledCardWrapper>
         <StyledAppsContainer>
           <img
-            src="/images/integrations/VoxRingIcon.png"
+            src="/images/integrations/VoxringIcon.png"
             alt="voxring-icon"
             height={40}
             width={40}
