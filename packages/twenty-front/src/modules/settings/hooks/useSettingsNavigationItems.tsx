@@ -6,7 +6,6 @@ import { currentWorkspaceMemberState } from '@/auth/states/currentWorkspaceMembe
 import { billingState } from '@/client-config/states/billingState';
 import { supportChatState } from '@/client-config/states/supportChatState';
 import { usePermissionFlagMap } from '@/settings/roles/hooks/usePermissionFlagMap';
-import { getDocumentationUrl } from '@/support/utils/getDocumentationUrl';
 import { type NavigationDrawerItemIndentationLevel } from '@/ui/navigation/navigation-drawer/components/NavigationDrawerItem';
 import { useIsFeatureEnabled } from '@/workspace/hooks/useIsFeatureEnabled';
 import { t } from '@lingui/core/macro';
@@ -40,6 +39,10 @@ import {
   FeatureFlagKey,
   PermissionFlagType,
 } from '~/generated-metadata/graphql';
+
+// Set to true to hide Admin Panel, Updates, and Documentation in the "Other" section.
+// Logout (and Support when configured) remain visible so users can sign out.
+const HIDE_OTHER_SECTION_EXTRA_ITEMS = true;
 
 export type SettingsNavigationSection = {
   label: string;
@@ -205,34 +208,30 @@ const useSettingsNavigationItems = (): SettingsNavigationSection[] => {
           label: t`Admin Panel`,
           path: SettingsPath.AdminPanel,
           Icon: IconServer,
-          isHidden: !isAdminEnabled,
+          isHidden:
+            HIDE_OTHER_SECTION_EXTRA_ITEMS || !isAdminEnabled,
         },
         {
           label: t`Updates`,
           path: SettingsPath.Updates,
           Icon: IconRocket,
-          isHidden: !permissionMap[PermissionFlagType.WORKSPACE],
+          isHidden:
+            HIDE_OTHER_SECTION_EXTRA_ITEMS ||
+            !permissionMap[PermissionFlagType.WORKSPACE],
         },
         {
           label: t`Support`,
           onClick: () => window.FrontChat?.('show'),
           Icon: IconMessage,
-          isHidden: !isSupportChatConfigured,
-        },
-        {
-          label: t`Documentation`,
-          onClick: () =>
-            window.open(
-              getDocumentationUrl({ locale: currentWorkspaceMember?.locale }),
-              '_blank',
-            ),
-          Icon: IconHelpCircle,
+          isHidden:
+            HIDE_OTHER_SECTION_EXTRA_ITEMS || !isSupportChatConfigured,
         },
         {
           label: t`Logout`,
           onClick: signOut,
           Icon: IconDoorEnter,
           matchSubPages: false,
+          isHidden: HIDE_OTHER_SECTION_EXTRA_ITEMS,
         },
       ],
     },

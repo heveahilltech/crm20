@@ -8,7 +8,7 @@ import { countAvailableWorkspaces } from '@/auth/utils/availableWorkspacesUtils'
 import { useBuildWorkspaceUrl } from '@/domain-manager/hooks/useBuildWorkspaceUrl';
 import { useRedirectToWorkspaceDomain } from '@/domain-manager/hooks/useRedirectToWorkspaceDomain';
 import { supportChatState } from '@/client-config/states/supportChatState';
-import { getDocumentationUrl } from '@/support/utils/getDocumentationUrl';
+
 import { useSnackBar } from '@/ui/feedback/snack-bar-manager/hooks/useSnackBar';
 import { Dropdown } from '@/ui/layout/dropdown/components/Dropdown';
 import { DropdownContent } from '@/ui/layout/dropdown/components/DropdownContent';
@@ -81,14 +81,6 @@ export const MultiWorkspaceDropdownDefaultComponents = () => {
 
   const handleSupport = () => {
     window.FrontChat?.('show');
-    closeDropdown(MULTI_WORKSPACE_DROPDOWN_ID);
-  };
-
-  const handleDocumentation = () => {
-    window.open(
-      getDocumentationUrl({ locale: currentWorkspaceMember?.locale }),
-      '_blank',
-    );
     closeDropdown(MULTI_WORKSPACE_DROPDOWN_ID);
   };
 
@@ -232,11 +224,7 @@ export const MultiWorkspaceDropdownDefaultComponents = () => {
             onClick={handleSupport}
           />
         )}
-        <MenuItem
-          LeftIcon={IconHelpCircle}
-          text={t`Documentation`}
-          onClick={handleDocumentation}
-        />
+        
         <MenuItem LeftIcon={IconLogout} text={t`Log out`} onClick={signOut} />
       </DropdownMenuItemsContainer>
     </DropdownContent>
