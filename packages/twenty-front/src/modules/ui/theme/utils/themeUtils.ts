@@ -254,6 +254,12 @@ export const getPageHeaderPadding = () => 3;
 export const getPageHeaderGap = () => 2;
 
 /**
+ * Get gap between user profile header and page content (top bar).
+ * Used by PageHeader wrapper. Reduce this value to tighten the space.
+ */
+export const getPageHeaderWrapperGap = () => 1;
+
+/**
  * Get container padding
  */
 export const getContainerPadding = () => 3;
@@ -545,7 +551,7 @@ export const userProfileHeaderPreset = (theme: ExtendedTheme) => css`
   margin-left: ${theme.spacing(3)};
   margin-right: ${theme.spacing(3)};
   margin-top: ${theme.spacing(2)};
-  margin-bottom: ${theme.spacing(1)};
+  margin-bottom: ${theme.spacing(getPageHeaderWrapperGap())};
 `;
 
 /**

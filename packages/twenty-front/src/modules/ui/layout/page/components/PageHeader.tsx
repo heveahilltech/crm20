@@ -6,6 +6,7 @@ import { PAGE_BAR_MIN_HEIGHT } from '@/ui/layout/page/constants/PageBarMinHeight
 import { useIsMobile } from '@/ui/utilities/responsive/hooks/useIsMobile';
 import { AnimatePresence } from 'framer-motion';
 import {
+  getPageHeaderWrapperGap,
   pageHeaderActionContainerPreset,
   pageHeaderIconPreset,
   pageHeaderLeftContainerPreset,
@@ -24,7 +25,7 @@ import { UserProfileHeader } from './UserProfileHeader';
 const StyledPageHeaderWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  gap: ${({ theme }) => theme.spacing(2)};
+  gap: ${({ theme }) => theme.spacing(getPageHeaderWrapperGap())};
 `;
 
 const StyledTopBarContainer = styled.div<{ isMobile: boolean }>`
