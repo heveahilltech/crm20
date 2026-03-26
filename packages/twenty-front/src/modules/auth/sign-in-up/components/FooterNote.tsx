@@ -64,7 +64,7 @@ export const FooterNote = () => {
       <StyledCopyContainer>
         <Trans>By using Voxring, you agree to the</Trans>{' '}
         <a
-          href="https://seashell-octopus-210695.hostingersite.com/termsofservice"
+          href="https://voxring.ai/termsofservice/"
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -72,7 +72,7 @@ export const FooterNote = () => {
         </a>{' '}
         <Trans>and</Trans>{' '}
         <a
-          href="https://seashell-octopus-210695.hostingersite.com/privacy-policy"
+          href="https://voxring.ai/privacy-policy/"
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -94,7 +94,7 @@ export const FooterNote = () => {
         </>
       )}
       <a
-        href="https://seashell-octopus-210695.hostingersite.com/privacy-policy"
+        href="https://voxring.ai/privacy-policy/"
         target="_blank"
         rel="noopener noreferrer"
       >
@@ -102,7 +102,7 @@ export const FooterNote = () => {
       </a>
       <StyledSeparator>•</StyledSeparator>
       <a
-        href="https://seashell-octopus-210695.hostingersite.com/termsofservice"
+        href="https://voxring.ai/termsofservice/"
         target="_blank"
         rel="noopener noreferrer"
       >
