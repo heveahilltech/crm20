@@ -14,6 +14,7 @@ import { useLingui } from '@lingui/react/macro';
 import { useRecoilValue } from 'recoil';
 import { IconButton } from 'twenty-ui/input';
 import { Avatar, IconPower, IconMoon, IconSun } from 'twenty-ui/display';
+import React from 'react';
 import { currentWorkspaceState } from '@/auth/states/currentWorkspaceState';
 import { NavigationDrawerCollapseButton } from '@/ui/navigation/navigation-drawer/components/NavigationDrawerCollapseButton';
 import { isNavigationDrawerExpandedState } from '@/ui/navigation/states/isNavigationDrawerExpanded';
@@ -76,13 +77,17 @@ const StyledActions = styled.div`
   ${({ theme }) => userProfileHeaderActionsPreset(theme)}
 `;
 
-const StyledLogoutButton = styled.button`
+const StyledReturnToPortalLink = styled.a`
   ${({ theme }) => userProfileHeaderLogoutButtonPreset(theme)}
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: ${({ theme }) => theme.spacing(1)};
 `;
 
 export const UserProfileHeader = () => {
   const { t } = useLingui();
-  const { signOut } = useAuth();
+  //const { signOut } = useAuth();
   const currentWorkspaceMember = useRecoilValue(currentWorkspaceMemberState);
   const currentWorkspace = useRecoilValue(currentWorkspaceState);
   const isMobile = useIsMobile();
@@ -102,9 +107,8 @@ export const UserProfileHeader = () => {
 
   const workspaceName = currentWorkspace?.displayName || 'Your Workspace';
 
-  const handleLogout = async () => {
-    await signOut();
-  };
+    // Portal URL: Replace with your actual portal URL or fetch from config/env
+  const portalUrl = process.env.NEXT_PUBLIC_PORTAL_URL || 'https://portal.voxring.ai/portal/dashboard';
 
   // Determine effective theme (if System, use system preference)
   const effectiveTheme = colorScheme === 'System' ? systemColorScheme : colorScheme;
@@ -147,10 +151,14 @@ export const UserProfileHeader = () => {
                     onClick={handleThemeToggle}
                 />
                 )}
-                <StyledLogoutButton onClick={handleLogout}>
+                <StyledReturnToPortalLink
+                  href={portalUrl}
+                  target="_self"
+                  rel="noopener noreferrer"
+                >
                 <IconPower size={16} />
-                <span>{t`Log out`}</span>
-                </StyledLogoutButton>
+                  <span>{t`Return to Portal`}</span>
+                </StyledReturnToPortalLink>
             </StyledActions>
         </StyledRightSection>
     </StyledUserProfileHeader>
