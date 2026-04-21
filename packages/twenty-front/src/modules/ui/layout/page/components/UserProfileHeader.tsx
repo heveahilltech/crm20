@@ -153,7 +153,7 @@ export const UserProfileHeader = () => {
                   target="_self"
                   rel="noopener noreferrer"
                 >
-                {t`Return to Portal`}
+                {"Return to Portal"}
                 </StyledReturnToPortalLink>
             </StyledActions>
         </StyledRightSection>
