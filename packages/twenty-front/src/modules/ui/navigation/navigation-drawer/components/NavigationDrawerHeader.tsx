@@ -42,7 +42,7 @@ export const NavigationDrawerHeader = ({
 
   return (
     <StyledContainer>
-      {/* MultiWorkspaceDropdownButton removed to hide workspace switching */}
+      <MultiWorkspaceDropdownButton />
       {!isMobile && isNavigationDrawerExpanded && (
         <StyledNavigationDrawerCollapseButton
           direction="left"
