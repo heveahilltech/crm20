@@ -80,9 +80,6 @@ const StyledActions = styled.div`
 const StyledReturnToPortalLink = styled.a`
   ${({ theme }) => userProfileHeaderLogoutButtonPreset(theme)}
   text-decoration: none;
-  display: flex;
-  align-items: center;
-  gap: ${({ theme }) => theme.spacing(1)};
 `;
 
 export const UserProfileHeader = () => {
@@ -156,8 +153,7 @@ export const UserProfileHeader = () => {
                   target="_self"
                   rel="noopener noreferrer"
                 >
-                <IconPower size={16} />
-                  <span>{t`Return to Portal`}</span>
+                {t`Return to Portal`}
                 </StyledReturnToPortalLink>
             </StyledActions>
         </StyledRightSection>
