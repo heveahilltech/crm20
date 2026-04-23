@@ -126,7 +126,7 @@ export const SignInUp = () => {
     }
 
     if (isGlobalScope) {
-      return t`Welcome to Twenty`;
+      return `Welcome to VoxRing`;
     }
 
     const workspaceName = workspacePublicData?.displayName;

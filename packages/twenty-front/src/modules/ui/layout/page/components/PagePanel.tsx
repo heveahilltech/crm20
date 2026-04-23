@@ -1,17 +1,9 @@
 import { styled } from '@linaria/react';
 import React from 'react';
-import { themeCssVariables } from 'twenty-ui/theme-constants';
+import { pagePanelPreset } from '@/ui/theme/utils/themeUtils';
 
 const StyledPanel = styled.div`
-  background: ${themeCssVariables.background.primary};
-  border: 1px solid ${themeCssVariables.border.color.medium};
-  border-radius: ${themeCssVariables.border.radius.md};
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  overflow-x: auto;
-  overflow-y: hidden;
-  width: 100%;
+  ${({ theme }) => pagePanelPreset(theme)}
 `;
 
 type PagePanelProps = {

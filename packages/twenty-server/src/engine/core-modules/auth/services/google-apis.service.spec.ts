@@ -16,6 +16,7 @@ import { GoogleApisServiceAvailabilityService } from 'src/engine/core-modules/au
 import { GoogleAPIsService } from 'src/engine/core-modules/auth/services/google-apis.service';
 import { UpdateConnectedAccountOnReconnectService } from 'src/engine/core-modules/auth/services/update-connected-account-on-reconnect.service';
 import { FeatureFlagService } from 'src/engine/core-modules/feature-flag/services/feature-flag.service';
+import { FeatureFlagService } from 'src/engine/core-modules/feature-flag/services/feature-flag.service';
 import { MessageQueue } from 'src/engine/core-modules/message-queue/message-queue.constants';
 import { getQueueToken } from 'src/engine/core-modules/message-queue/utils/get-queue-token.util';
 import { TwentyConfigService } from 'src/engine/core-modules/twenty-config/twenty-config.service';

@@ -27,20 +27,10 @@ import { styled } from '@linaria/react';
 import { AnimatePresence, LayoutGroup, motion } from 'framer-motion';
 import { Outlet } from 'react-router-dom';
 import { useScreenSize } from 'twenty-ui/utilities';
-import { ThemeContext, themeCssVariables } from 'twenty-ui/theme-constants';
-const StyledLayout = styled.div`
-  background: ${themeCssVariables.background.noisy};
-  display: flex;
-  flex-direction: column;
-  height: 100dvh;
-  position: relative;
-  scrollbar-color: ${themeCssVariables.border.color.medium} transparent;
-  scrollbar-width: 4px;
-  width: 100%;
+import { defaultLayoutPreset } from '@/ui/theme/utils/themeUtils';
 
-  *::-webkit-scrollbar-thumb {
-    border-radius: ${themeCssVariables.border.radius.sm};
-  }
+const StyledLayout = styled.div`
+  ${({ theme }) => defaultLayoutPreset(theme)}
 `;
 
 const StyledPageContainerBase = styled.div`

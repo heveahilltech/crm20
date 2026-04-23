@@ -3,7 +3,7 @@ import { useIsMobile } from '@/ui/utilities/responsive/hooks/useIsMobile';
 import { styled } from '@linaria/react';
 import { Fragment, type ReactNode } from 'react';
 import { Link } from 'react-router-dom';
-import { themeCssVariables } from 'twenty-ui/theme-constants';
+import { getPageHeaderTextColor } from '@/ui/theme/utils/themeUtils';
 
 export type BreadcrumbProps = {
   className?: string;
@@ -12,7 +12,7 @@ export type BreadcrumbProps = {
 
 const StyledWrapper = styled.nav`
   align-items: center;
-  color: ${themeCssVariables.font.color.tertiary};
+  color: ${({ theme }) => getPageHeaderTextColor()};
   display: grid;
   font-size: ${themeCssVariables.font.size.md};
   grid-auto-flow: column;
@@ -33,7 +33,7 @@ const StyledLinkContainer = styled.div`
 `;
 
 const StyledText = styled.span`
-  color: ${themeCssVariables.font.color.primary};
+  color: ${({ theme }) => getPageHeaderTextColor()};
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;

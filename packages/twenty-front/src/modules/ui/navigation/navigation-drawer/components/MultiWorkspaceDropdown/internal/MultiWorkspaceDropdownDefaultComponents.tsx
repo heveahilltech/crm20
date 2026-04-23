@@ -4,9 +4,10 @@ import { useAuth } from '@/auth/hooks/useAuth';
 import { availableWorkspacesState } from '@/auth/states/availableWorkspacesState';
 import { currentWorkspaceState } from '@/auth/states/currentWorkspaceState';
 import { countAvailableWorkspaces } from '@/auth/utils/availableWorkspacesUtils';
-import { supportChatState } from '@/client-config/states/supportChatState';
 import { useBuildWorkspaceUrl } from '@/domain-manager/hooks/useBuildWorkspaceUrl';
 import { useRedirectToWorkspaceDomain } from '@/domain-manager/hooks/useRedirectToWorkspaceDomain';
+import { supportChatState } from '@/client-config/states/supportChatState';
+
 import { useSnackBar } from '@/ui/feedback/snack-bar-manager/hooks/useSnackBar';
 import { Dropdown } from '@/ui/layout/dropdown/components/Dropdown';
 import { DropdownContent } from '@/ui/layout/dropdown/components/DropdownContent';

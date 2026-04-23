@@ -103,7 +103,7 @@ describe('GoogleAPIScopesService', () => {
         'https://www.googleapis.com/auth/userinfo.profile',
         'openid',
       ];
-      const expectedScopes = getGoogleApisOauthScopes();
+      const expectedScopes = getGoogleApisOauthScopes(true);
 
       const result = includesExpectedScopes(actualGoogleScopes, expectedScopes);
 

@@ -1,2 +1,5 @@
 export const DEFAULT_WORKSPACE_LOGO =
-  'https://twentyhq.github.io/placeholder-images/workspaces/twenty-logo.png';
+  '/images/integrations/VoxRing.png';
+
+export const VoxRing_Icon = '/images/integrations/VoxringIcon.png';
+export const VoxRing_FavIcon = '/images/integrations/VoxRingFavicon.png';

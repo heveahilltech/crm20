@@ -176,8 +176,8 @@ export class ResetPasswordService {
 
     const i18n = this.i18nService.getI18nInstance(locale);
     const subjectTemplate = hasPassword
-      ? msg`Action Needed to Reset Password`
-      : msg`Action Needed to Set Password`;
+      ? msg`Reset Your VoxRing Password`
+      : msg`Set Your VoxRing Password`;
     const subject = i18n._(subjectTemplate);
 
     await this.emailService.send({

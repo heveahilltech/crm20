@@ -13,7 +13,8 @@ import { useAtomStateValue } from '@/ui/utilities/state/jotai/hooks/useAtomState
 import { styled } from '@linaria/react';
 import { t } from '@lingui/core/macro';
 import { isDefined } from 'twenty-shared/utils';
-import { themeCssVariables } from 'twenty-ui/theme-constants';
+import { useIcons } from 'twenty-ui/display';
+import { getPageHeaderTextColor } from '@/ui/theme/utils/themeUtils';
 
 const StyledTitleWithSelectedRecords = styled.div`
   display: flex;
@@ -22,13 +23,13 @@ const StyledTitleWithSelectedRecords = styled.div`
 `;
 
 const StyledTitle = styled.div`
-  color: ${themeCssVariables.font.color.primary};
-  padding-right: ${themeCssVariables.spacing['0.5']};
+  color: ${getPageHeaderTextColor()};
+  padding-right: ${({ theme }) => theme.spacing(0.5)};
 `;
 
 const StyledSelectedRecordsCount = styled.div`
-  color: ${themeCssVariables.font.color.tertiary};
-  padding-left: ${themeCssVariables.spacing['0.5']};
+  color: ${getPageHeaderTextColor()};
+  padding-left: ${({ theme }) => theme.spacing(0.5)};
 `;
 
 export const RecordIndexPageHeader = () => {

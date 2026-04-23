@@ -12,8 +12,11 @@ export type GoogleAPIScopeConfig = {
 
 @Injectable()
 export class GoogleAPIsOauthRequestCodeStrategy extends GoogleAPIsOauthCommonStrategy {
-  constructor(twentyConfigService: TwentyConfigService) {
-    super(twentyConfigService);
+  constructor(
+    twentyConfigService: TwentyConfigService,
+    isDraftEmailEnabled = false,
+  ) {
+    super(twentyConfigService, isDraftEmailEnabled);
   }
 
   // oxlint-disable-next-line @typescripttypescript/no-explicit-any

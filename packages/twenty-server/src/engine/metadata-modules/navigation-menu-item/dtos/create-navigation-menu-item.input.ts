@@ -1,4 +1,5 @@
 import { Field, InputType } from '@nestjs/graphql';
+import { Field, InputType } from '@nestjs/graphql';
 
 import {
   IsEnum,
@@ -74,6 +75,7 @@ export class CreateNavigationMenuItemInput {
 
   @IsNumber()
   @IsOptional()
+  @Field({ nullable: true })
   @Field({ nullable: true })
   position?: number;
 }

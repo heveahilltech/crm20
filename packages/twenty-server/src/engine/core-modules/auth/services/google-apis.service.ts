@@ -105,9 +105,15 @@ export class GoogleAPIsService {
       'MESSAGING_PROVIDER_GMAIL_ENABLED',
     );
 
+    const isDraftEmailEnabled = await this.featureFlagService.isFeatureEnabled(
+      FeatureFlagKey.IS_DRAFT_EMAIL_ENABLED,
+      workspaceId,
+    );
+
     const { scopes, isValid } =
       await this.googleAPIScopesService.getScopesFromGoogleAccessTokenAndCheckIfExpectedScopesArePresent(
         input.accessToken,
+        isDraftEmailEnabled,
       );
 
     if (!isValid) {

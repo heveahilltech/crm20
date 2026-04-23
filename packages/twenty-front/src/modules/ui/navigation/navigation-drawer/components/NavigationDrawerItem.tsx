@@ -33,6 +33,8 @@ import {
   type TriggerEventType,
   useMouseDownNavigation,
 } from 'twenty-ui/utilities';
+import { navigationDrawerItemPreset } from '@/ui/theme/utils/themeUtils';
+
 const DEFAULT_INDENTATION_LEVEL = 1;
 
 export type NavigationDrawerItemIndentationLevel = 1 | 2;
@@ -81,64 +83,27 @@ type StyledItemProps = Pick<
   rel?: string;
 };
 
-const StyledItem = styled.button<StyledItemProps>`
-  align-items: center;
-  background: ${({ active }) =>
-    active ? themeCssVariables.background.transparent.light : 'transparent'};
-  border: ${({ isSelectedInEditMode }) =>
-    isSelectedInEditMode
-      ? `1px solid ${themeCssVariables.color.blue}`
-      : '1px solid transparent'};
-  border-radius: ${themeCssVariables.border.radius.sm};
-  box-sizing: border-box;
-  color: ${({ active, isSoon, variant }) => {
-    if (active === true) {
-      return themeCssVariables.font.color.primary;
-    }
-    if (isSoon) {
-      return themeCssVariables.font.color.light;
-    }
-    if (variant === 'tertiary') {
-      return themeCssVariables.font.color.tertiary;
-    }
-    return themeCssVariables.font.color.secondary;
-  }};
-  cursor: ${({ isSoon, isDragging }) =>
-    isDragging ? 'grabbing' : isSoon ? 'default' : 'pointer'};
-  display: flex;
-  font-family: ${themeCssVariables.font.family};
-  font-size: ${themeCssVariables.font.size.md};
-  height: ${themeCssVariables.spacing[7]};
-  margin-top: ${({ indentationLevel }) =>
-    indentationLevel === 2 ? '2px' : '0'};
-  min-width: 0;
-  padding-bottom: ${themeCssVariables.spacing[1]};
-  padding-left: ${themeCssVariables.spacing[1]};
-  padding-right: ${({ hasRightOptions }) =>
-    hasRightOptions
-      ? themeCssVariables.spacing['0.5']
-      : themeCssVariables.spacing[1]};
-  padding-top: ${themeCssVariables.spacing[1]};
-  pointer-events: ${({ isSoon }) => (isSoon ? 'none' : 'auto')};
-  text-decoration: none;
-  user-select: none;
-  width: ${({ isNavigationDrawerExpanded, hasRightOptions }) =>
-    !isNavigationDrawerExpanded
-      ? `calc(${NAVIGATION_DRAWER_COLLAPSED_WIDTH}px - ${themeCssVariables.spacing[6]} + ${themeCssVariables.spacing[1]} + ${hasRightOptions ? themeCssVariables.spacing['0.5'] : themeCssVariables.spacing[1]})`
-      : `calc(100% - ${themeCssVariables.spacing['1.5']} + ${themeCssVariables.spacing[1]} + ${hasRightOptions ? themeCssVariables.spacing['0.5'] : themeCssVariables.spacing[1]})`};
-
-  &:hover {
-    background: ${themeCssVariables.background.transparent.light};
-    color: ${themeCssVariables.font.color.primary};
-  }
-
-  &:hover .keyboard-shortcuts {
-    visibility: visible;
-  }
-
-  @media (max-width: ${MOBILE_VIEWPORT}px) {
-    font-size: ${themeCssVariables.font.size.lg};
-  }
+const StyledItem = styled('button', {
+  shouldForwardProp: (prop) =>
+    ![
+      'active',
+      'danger',
+      'soon',
+      'isDragging',
+      'isSelectedInEditMode',
+    ].includes(prop) && isPropValid(prop),
+})<StyledItemProps>`
+  ${(props) =>
+    navigationDrawerItemPreset(
+      props.theme,
+      props.active,
+      props.danger,
+      props.soon,
+      props.isDragging,
+      props.isNavigationDrawerExpanded,
+      props.hasRightOptions,
+      props.indentationLevel,
+    )}
 `;
 
 const StyledItemElementsContainer = styled.div`

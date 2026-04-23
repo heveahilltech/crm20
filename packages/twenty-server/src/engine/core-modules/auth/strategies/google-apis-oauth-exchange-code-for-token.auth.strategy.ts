@@ -13,8 +13,11 @@ import { TwentyConfigService } from 'src/engine/core-modules/twenty-config/twent
 
 @Injectable()
 export class GoogleAPIsOauthExchangeCodeForTokenStrategy extends GoogleAPIsOauthCommonStrategy {
-  constructor(twentyConfigService: TwentyConfigService) {
-    super(twentyConfigService);
+  constructor(
+    twentyConfigService: TwentyConfigService,
+    isDraftEmailEnabled = false,
+  ) {
+    super(twentyConfigService, isDraftEmailEnabled);
   }
 
   async validate(

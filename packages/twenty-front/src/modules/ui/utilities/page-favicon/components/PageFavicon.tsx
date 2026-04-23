@@ -1,5 +1,5 @@
 import { workspacePublicDataState } from '@/auth/states/workspacePublicDataState';
-import { DEFAULT_WORKSPACE_LOGO } from '@/ui/navigation/navigation-drawer/constants/DefaultWorkspaceLogo';
+import { VoxRing_FavIcon } from '@/ui/navigation/navigation-drawer/constants/DefaultWorkspaceLogo';
 import { Helmet } from 'react-helmet-async';
 import { useAtomStateValue } from '@/ui/utilities/state/jotai/hooks/useAtomStateValue';
 import { getImageAbsoluteURI } from 'twenty-shared/utils';
@@ -17,8 +17,8 @@ export const PageFavicon = () => {
             ? (getImageAbsoluteURI({
                 imageUrl: workspacePublicData.logo,
                 baseUrl: REACT_APP_SERVER_BASE_URL,
-              }) ?? DEFAULT_WORKSPACE_LOGO)
-            : DEFAULT_WORKSPACE_LOGO
+              }) ?? VoxRing_FavIcon)
+            : VoxRing_FavIcon
         }
       />
     </Helmet>
