@@ -5,6 +5,7 @@ import { NavigationDrawerCollapseButton } from '@/ui/navigation/navigation-drawe
 
 import { PAGE_ACTION_CONTAINER_CLICK_OUTSIDE_ID } from '@/ui/layout/page/constants/PageActionContainerClickOutsideId';
 import { PAGE_BAR_MIN_HEIGHT } from '@/ui/layout/page/constants/PageBarMinHeight';
+import { isNavigationDrawerExpandedState } from '@/ui/navigation/states/isNavigationDrawerExpanded';
 import { useIsMobile } from '@/ui/utilities/responsive/hooks/useIsMobile';
 import { useAtomStateValue } from '@/ui/utilities/state/jotai/hooks/useAtomStateValue';
 import { AnimatePresence } from 'framer-motion';
@@ -36,10 +37,6 @@ const StyledTopBarContainer = styled.div<{ isMobile: boolean }>`
     isMobile ? themeCssVariables.spacing[3] : themeCssVariables.spacing[4]};
   padding-right: ${themeCssVariables.spacing[3]};
   padding-top: ${themeCssVariables.spacing[3]};
-`;
-
-const StyledTopBarContainer = styled.div<{ isMobile: boolean }>`
-  ${({ theme }) => pageHeaderTopBarContainerPreset(theme)}
 `;
 
 const StyledLeftContainer = styled.div`
@@ -88,7 +85,6 @@ const StyledIconContainer = styled.div`
   align-items: center;
   display: flex;
   flex-direction: row;
-  ${pageHeaderIconPreset()}
 `;
 
 type PageHeaderProps = {
@@ -116,18 +112,19 @@ export const PageHeader = ({
 
   return (
     <AnimatePresence initial={false}>
-      <StyledPageHeaderWrapper>
-        <UserProfileHeader />
-        <StyledTopBarContainer className={className} isMobile={isMobile}>
-          <StyledLeftContainer>
-            {hasClosePageButton && (
-              <LightIconButton
-                Icon={IconX}
-                size="small"
-                accent="tertiary"
-                onClick={() => onClosePage?.()}
-              />
-            )}
+      <StyledTopBarContainer className={className} isMobile={isMobile}>
+        <StyledLeftContainer>
+          {!isMobile && !isNavigationDrawerExpanded && (
+            <NavigationDrawerCollapseButton direction="right" />
+          )}
+          {hasClosePageButton && (
+            <LightIconButton
+              Icon={IconX}
+              size="small"
+              accent="tertiary"
+              onClick={() => onClosePage?.()}
+            />
+          )}
 
           <StyledTopBarIconStyledTitleContainer>
             {Icon && (
