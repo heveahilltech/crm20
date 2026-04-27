@@ -293,84 +293,66 @@ export const Authorize = () => {
   return (
     <ModalContent isVerticallyCentered isHorizontallyCentered>
       <StyledCardWrapper>
-        <StyledHeader>
-          <StyledAppLogoTile>
-            <StyledAppLogo src="/images/integrations/twenty-logo.svg" alt="" />
-          </StyledAppLogoTile>
-          <StyledLinkIconContainer aria-hidden>
-            <IconRefresh
-              size={theme.icon.size.md}
-              stroke={theme.icon.stroke.sm}
-            />
-          </StyledLinkIconContainer>
-          <StyledAppLogoTile>
-            {showLogoImage ? (
-              <StyledAppLogo
-                src={appLogoUrl}
-                alt=""
-                onError={() => setHasLogoError(true)}
-              />
-            ) : (
-              <Avatar
-                size="xl"
-                placeholder={appName}
-                placeholderColorSeed={appName}
-                type="squared"
-              />
-            )}
-          </StyledAppLogoTile>
-        </StyledHeader>
-        <ModalContent contentPadding={10}>
-          <StyledOAuthTitle
-            title={<Trans>Connect {appName} to your account</Trans>}
-            fontColor={H1TitleFontColor.Primary}
+        <StyledAppsContainer>
+          <img
+            src="/images/integrations/voxring-icon.png"
+            alt="brand-icon"
+            height={40}
+            width={40}
           />
-          {requestedScopes.length > 0 && (
-            <StyledPermissionSection>
-              <StyledPermissionIntro>
-                <Trans>{appName} would like to:</Trans>
-              </StyledPermissionIntro>
-              <StyledScopeList>
-                {requestedScopes.map((scope) => {
-                  const ScopeIcon = OAUTH_SCOPE_ICONS[scope] ?? IconDatabase;
-
-                  return (
-                    <StyledScopeItem key={scope}>
-                      <StyledScopeIcon>
-                        <ScopeIcon
-                          size={theme.icon.size.md}
-                          stroke={theme.icon.stroke.sm}
-                        />
-                      </StyledScopeIcon>
-                      <span>{oauthScopeLabels[scope] ?? scope}</span>
-                    </StyledScopeItem>
-                  );
-                })}
-              </StyledScopeList>
-            </StyledPermissionSection>
-          )}
-          {authorizeError && (
-            <StyledErrorText>{authorizeError}</StyledErrorText>
-          )}
-          <StyledButtonContainer>
-            <StyledCancelLinkContainer>
-              <UndecoratedLink to={AppPath.Index} fullWidth>
-                <MainButton
-                  title={t`Cancel`}
-                  variant="secondary"
-                  fullWidth
-                  disabled={isAuthorizing}
-                />
-              </UndecoratedLink>
-            </StyledCancelLinkContainer>
-            <StyledAuthorizeButton
-              title={isAuthorizing ? t`Authorizing...` : t`Authorize`}
-              onClick={handleAuthorize}
-              disabled={isAuthorizing}
-              fullWidth
+          <img
+            src="/images/integrations/link-apps.svg"
+            alt="link-icon"
+            height={60}
+            width={60}
+          />
+          {showLogoImage ? (
+            <img
+              src={appLogoUrl}
+              alt={appName}
+              height={40}
+              width={40}
+              style={{ borderRadius: '2px' }}
+              onError={() => setHasLogoError(true)}
             />
-          </StyledButtonContainer>
-        </ModalContent>
+          ) : (
+            <Avatar
+              size="xl"
+              placeholder={appName}
+              placeholderColorSeed={appName}
+              type="squared"
+            />
+          )}
+        </StyledAppsContainer>
+        <StyledText>
+          <Trans>{appName} wants to access your account</Trans>
+        </StyledText>
+        {requestedScopes.length > 0 && (
+          <StyledScopeList>
+            {requestedScopes.map((scope) => (
+              <StyledScopeItem key={scope}>
+                {oauthScopeLabels[scope] ?? scope}
+              </StyledScopeItem>
+            ))}
+          </StyledScopeList>
+        )}
+        {authorizeError && <StyledErrorText>{authorizeError}</StyledErrorText>}
+        <StyledButtonContainer>
+          <UndecoratedLink to={AppPath.Index}>
+            <MainButton
+              title={t`Cancel`}
+              variant="secondary"
+              fullWidth
+              disabled={isAuthorizing}
+            />
+          </UndecoratedLink>
+          <MainButton
+            title={isAuthorizing ? t`Authorizing...` : t`Authorize`}
+            onClick={handleAuthorize}
+            disabled={isAuthorizing}
+            fullWidth
+          />
+        </StyledButtonContainer>
       </StyledCardWrapper>
     </ModalContent>
   );
