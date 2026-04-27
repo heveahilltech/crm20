@@ -10,7 +10,6 @@ import { useAuth } from '@/auth/hooks/useAuth';
 import { SignInUpWithCredentials } from '@/auth/sign-in-up/components/internal/SignInUpWithCredentials';
 import { SignInUpWithGoogle } from '@/auth/sign-in-up/components/internal/SignInUpWithGoogle';
 import { SignInUpWithMicrosoft } from '@/auth/sign-in-up/components/internal/SignInUpWithMicrosoft';
-import { useHandleResetPassword } from '@/auth/sign-in-up/hooks/useHandleResetPassword';
 import { useSignInUpForm } from '@/auth/sign-in-up/hooks/useSignInUpForm';
 import { useSignUpInNewWorkspace } from '@/auth/sign-in-up/hooks/useSignUpInNewWorkspace';
 import {
@@ -128,12 +127,6 @@ const StyledActionLinkContainer = styled.div`
   justify-content: center;
 `;
 
-const StyledForgotPasswordLinkContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  padding-top: ${themeCssVariables.spacing[4]};
-`;
-
 export const SignInUpGlobalScopeForm = () => {
   const { theme } = useContext(ThemeContext);
   const authProviders = useAtomStateValue(authProvidersState);
@@ -147,7 +140,6 @@ export const SignInUpGlobalScopeForm = () => {
   const { t } = useLingui();
 
   const { form } = useSignInUpForm();
-  const { handleResetPassword } = useHandleResetPassword();
   const returnToPath = useAtomStateValue(returnToPathState);
 
   const getAvailableWorkspaceUrl = (availableWorkspace: AvailableWorkspace) => {
@@ -252,15 +244,6 @@ export const SignInUpGlobalScopeForm = () => {
           <FormProvider {...form}>
             <SignInUpWithCredentials isGlobalScope />
           </FormProvider>
-          {signInUpStep === SignInUpStep.Password && (
-            <StyledForgotPasswordLinkContainer>
-              <ClickToActionLink
-                onClick={handleResetPassword(form.getValues('email'))}
-              >
-                <Trans>Forgot your password?</Trans>
-              </ClickToActionLink>
-            </StyledForgotPasswordLinkContainer>
-          )}
         </StyledContentContainer>
       )}
     </>
