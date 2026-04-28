@@ -261,3 +261,13 @@ LABEL org.opencontainers.image.source=https://github.com/twentyhq/twenty
 LABEL org.opencontainers.image.description="All-in-one Twenty image for local development and SDK usage. Includes PostgreSQL, Redis, server, and worker."
 
 ENTRYPOINT ["/init"]
+
+
+# ===========================================================================
+# Default final stage for hosts that only build the last Dockerfile stage
+# (e.g. Railway — no `docker build --target`). Identical runtime image to
+# `twenty`. For the all-in-one dev image, build explicitly:
+#   docker build --target twenty-app-dev -f packages/twenty-docker/twenty/Dockerfile .
+# ===========================================================================
+
+FROM twenty AS twenty-default
