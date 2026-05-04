@@ -21,6 +21,7 @@ const BackgroundMockPage = lazy(() =>
 );
 import { useShowFullscreen } from '@/ui/layout/fullscreen/hooks/useShowFullscreen';
 import { useShowAuthModal } from '@/ui/layout/hooks/useShowAuthModal';
+import { UserProfileHeader } from '@/ui/layout/page/components/UserProfileHeader';
 import { NAVIGATION_DRAWER_CONSTRAINTS } from '@/ui/layout/resizable-panel/constants/NavigationDrawerConstraints';
 import { useIsMobile } from '@/ui/utilities/responsive/hooks/useIsMobile';
 import { styled } from '@linaria/react';
@@ -59,7 +60,16 @@ const StyledNavigationDrawerWrapper = styled.div`
 const StyledMainContainer = styled.div`
   display: flex;
   flex: 0 1 100%;
-  min-width: 0;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+`;
+
+const StyledMainOutletWrapper = styled.div`
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
   overflow: hidden;
 `;
 
@@ -121,9 +131,14 @@ export const DefaultLayout = () => {
                   </>
                 ) : (
                   <StyledMainContainer>
-                    <AppErrorBoundary FallbackComponent={AppPageErrorFallback}>
-                      <Outlet />
+<UserProfileHeader />
+                    <StyledMainOutletWrapper>
+                      <AppErrorBoundary
+                        FallbackComponent={AppPageErrorFallback}
+                      >
+                          <Outlet />
                     </AppErrorBoundary>
+                    </StyledMainOutletWrapper>
                   </StyledMainContainer>
                 )}
               </PageDragDropProvider>
