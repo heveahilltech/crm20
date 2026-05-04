@@ -5,85 +5,136 @@ import { NavigationDrawerCollapseButton } from '@/ui/navigation/navigation-drawe
 import { isNavigationDrawerExpandedState } from '@/ui/navigation/states/isNavigationDrawerExpanded';
 import { useColorScheme } from '@/ui/theme/hooks/useColorScheme';
 import { useSystemColorScheme } from '@/ui/theme/hooks/useSystemColorScheme';
-import {
-  getInvertedTextColor,
-  userProfileHeaderActionsPreset,
-  userProfileHeaderLogoutButtonPreset,
-  userProfileHeaderPreset,
-} from '@/ui/theme/utils/themeUtils';
 import { useIsMobile } from '@/ui/utilities/responsive/hooks/useIsMobile';
-import styled from '@emotion/styled';
+import { styled } from '@linaria/react';
 import { useLingui } from '@lingui/react/macro';
+import { useContext } from 'react';
 import { useRecoilValue } from 'recoil';
 import { Avatar, IconPower, IconMoon, IconSun } from 'twenty-ui/display';
 import { IconButton } from 'twenty-ui/input';
+import { ThemeContext, themeCssVariables } from 'twenty-ui/theme-constants';
 
 const StyledUserProfileHeader = styled.div`
-  ${({ theme }) => userProfileHeaderPreset(theme)}
+  align-items: center;
+  border: 1px solid ${themeCssVariables.border.color.medium};
+  border-radius: ${themeCssVariables.border.radius.md};
+  color: ${themeCssVariables.font.color.primary};
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-bottom: ${themeCssVariables.spacing['1']};
+  margin-left: ${themeCssVariables.spacing['3']};
+  margin-right: ${themeCssVariables.spacing['3']};
+  margin-top: ${themeCssVariables.spacing['2']};
+  padding: ${themeCssVariables.spacing['2']} ${themeCssVariables.spacing['3']};
+
+  &[data-color-scheme='dark'] {
+    background: ${themeCssVariables.background.secondary};
+  }
+
+  &[data-color-scheme='light'] {
+    background: ${themeCssVariables.background.primary};
+  }
 `;
 
 const StyledLeftSection = styled.div`
+  align-items: flex-start;
   display: flex;
   flex-direction: column;
-  gap: ${({ theme }) => theme.spacing(0.5)};
-  align-items: flex-start;
+  gap: ${themeCssVariables.spacing['0.5']};
 `;
 
 const StyledRightSection = styled.div`
   align-items: center;
   display: flex;
   flex-direction: row;
-  gap: ${({ theme }) => theme.spacing(2)};
+  gap: ${themeCssVariables.spacing['2']};
 `;
 
 const StyledUserInfo = styled.div`
   align-items: center;
   display: flex;
   flex-direction: row;
-  gap: ${({ theme }) => theme.spacing(2)};
+  gap: ${themeCssVariables.spacing['2']};
 `;
 
 const StyledUserDetails = styled.div`
   display: flex;
   flex-direction: column;
-  gap: ${({ theme }) => theme.spacing(0.5)};
+  gap: ${themeCssVariables.spacing['0.5']};
 `;
 
 const StyledWelcomeText = styled.div`
-  color: ${({ theme }) => getInvertedTextColor(theme)};
-  font-size: ${({ theme }) => theme.font.size.xs};
-  font-weight: ${({ theme }) => theme.font.weight.regular};
+  color: ${themeCssVariables.font.color.primary};
+  font-size: ${themeCssVariables.font.size.xs};
+  font-weight: ${themeCssVariables.font.weight.regular};
   opacity: 0.8;
 `;
 
 const StyledWorkspaceName = styled.div`
-  color: ${({ theme }) => getInvertedTextColor(theme)};
-  font-size: ${({ theme }) => theme.font.size.md};
-  font-weight: ${({ theme }) => theme.font.weight.medium};
+  color: ${themeCssVariables.font.color.primary};
+  font-size: ${themeCssVariables.font.size.md};
+  font-weight: ${themeCssVariables.font.weight.medium};
 `;
 
 const StyledUserName = styled.div`
-  color: ${({ theme }) => getInvertedTextColor(theme)};
-  font-size: ${({ theme }) => theme.font.size.md};
-  font-weight: ${({ theme }) => theme.font.weight.medium};
+  color: ${themeCssVariables.font.color.primary};
+  font-size: ${themeCssVariables.font.size.md};
+  font-weight: ${themeCssVariables.font.weight.medium};
 `;
 
 const StyledActions = styled.div`
   align-items: center;
   display: flex;
   flex-direction: row;
-  gap: ${({ theme }) => theme.spacing(1)};
-  
-  ${({ theme }) => userProfileHeaderActionsPreset(theme)}
+  gap: ${themeCssVariables.spacing['1']};
+
+  & button svg {
+    color: ${themeCssVariables.font.color.primary} !important;
+    stroke: ${themeCssVariables.font.color.primary} !important;
+  }
+
+  &[data-color-scheme='dark'] button:hover {
+    background-color: ${themeCssVariables.background.transparent.medium} !important;
+  }
+
+  &[data-color-scheme='light'] button:hover {
+    background-color: ${themeCssVariables.background.transparent.light} !important;
+  }
 `;
 
 const StyledLogoutButton = styled.button`
-  ${({ theme }) => userProfileHeaderLogoutButtonPreset(theme)}
+  align-items: center;
+  background: transparent;
+  border: none;
+  border-radius: ${themeCssVariables.border.radius.sm};
+  color: ${themeCssVariables.font.color.primary};
+  cursor: pointer;
+  display: flex;
+  flex-direction: row;
+  font-size: ${themeCssVariables.font.size.sm};
+  gap: ${themeCssVariables.spacing['1']};
+  padding: ${themeCssVariables.spacing['1']} ${themeCssVariables.spacing['2']};
+  transition: background-color ${themeCssVariables.animation.duration.fast} ease;
+
+  &[data-color-scheme='dark']:hover {
+    background-color: ${themeCssVariables.background.transparent.medium};
+  }
+
+  &[data-color-scheme='light']:hover {
+    background-color: ${themeCssVariables.background.transparent.light};
+  }
+
+  & svg {
+    color: ${themeCssVariables.font.color.primary};
+    stroke: ${themeCssVariables.font.color.primary};
+  }
 `;
 
 export const UserProfileHeader = () => {
   const { t } = useLingui();
   const { signOut } = useAuth();
+  const { colorScheme: themeColorScheme } = useContext(ThemeContext);
   const currentWorkspaceMember = useRecoilValue(currentWorkspaceMemberState);
   const currentWorkspace = useRecoilValue(currentWorkspaceState);
   const isMobile = useIsMobile();
@@ -118,7 +169,7 @@ export const UserProfileHeader = () => {
   };
 
   return (
-    <StyledUserProfileHeader>
+    <StyledUserProfileHeader data-color-scheme={themeColorScheme}>
       <StyledLeftSection>
         {!isMobile && !isNavigationDrawerExpanded && (
           <NavigationDrawerCollapseButton direction="right" />
@@ -138,7 +189,7 @@ export const UserProfileHeader = () => {
             <StyledUserName>{displayName}</StyledUserName>
           </StyledUserDetails>
         </StyledUserInfo>
-        <StyledActions>
+        <StyledActions data-color-scheme={themeColorScheme}>
           {!isMobile && (
             <IconButton
               Icon={isDarkMode ? IconSun : IconMoon}
@@ -149,7 +200,11 @@ export const UserProfileHeader = () => {
               onClick={handleThemeToggle}
             />
           )}
-          <StyledLogoutButton onClick={handleLogout}>
+          <StyledLogoutButton
+            data-color-scheme={themeColorScheme}
+            type="button"
+            onClick={handleLogout}
+          >
             <IconPower size={16} />
             <span>{t`Log out`}</span>
           </StyledLogoutButton>
