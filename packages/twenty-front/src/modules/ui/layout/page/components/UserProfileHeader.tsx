@@ -6,10 +6,10 @@ import { isNavigationDrawerExpandedState } from '@/ui/navigation/states/isNaviga
 import { useColorScheme } from '@/ui/theme/hooks/useColorScheme';
 import { useSystemColorScheme } from '@/ui/theme/hooks/useSystemColorScheme';
 import { useIsMobile } from '@/ui/utilities/responsive/hooks/useIsMobile';
+import { useAtomStateValue } from '@/ui/utilities/state/jotai/hooks/useAtomStateValue';
 import { styled } from '@linaria/react';
 import { useLingui } from '@lingui/react/macro';
 import { useContext } from 'react';
-import { useRecoilValue } from 'recoil';
 import { Avatar, IconPower, IconMoon, IconSun } from 'twenty-ui/display';
 import { IconButton } from 'twenty-ui/input';
 import { ThemeContext, themeCssVariables } from 'twenty-ui/theme-constants';
@@ -135,10 +135,10 @@ export const UserProfileHeader = () => {
   const { t } = useLingui();
   const { signOut } = useAuth();
   const { colorScheme: themeColorScheme } = useContext(ThemeContext);
-  const currentWorkspaceMember = useRecoilValue(currentWorkspaceMemberState);
-  const currentWorkspace = useRecoilValue(currentWorkspaceState);
+  const currentWorkspaceMember = useAtomStateValue(currentWorkspaceMemberState);
+  const currentWorkspace = useAtomStateValue(currentWorkspaceState);
   const isMobile = useIsMobile();
-  const isNavigationDrawerExpanded = useRecoilValue(
+  const isNavigationDrawerExpanded = useAtomStateValue(
     isNavigationDrawerExpandedState,
   );
   const { colorScheme, setColorScheme } = useColorScheme();
