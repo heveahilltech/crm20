@@ -47,7 +47,22 @@ const StyledLeftSection = styled.div`
   align-items: flex-start;
   display: flex;
   flex-direction: column;
+  min-width: 0;
+`;
+
+const StyledWelcomeRow = styled.div`
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  gap: ${themeCssVariables.spacing['2']};
+  min-width: 0;
+`;
+
+const StyledWelcomeTextColumn = styled.div`
+  display: flex;
+  flex-direction: column;
   gap: ${themeCssVariables.spacing['0.5']};
+  min-width: 0;
 `;
 
 const StyledRightSection = styled.div`
@@ -180,11 +195,15 @@ export const UserProfileHeader = () => {
       data-color-scheme={themeColorScheme}
     >
       <StyledLeftSection>
-        {!isMobile && !isNavigationDrawerExpanded && (
-          <NavigationDrawerCollapseButton direction="right" />
-        )}
-        <StyledWelcomeText>{t`Welcome to`}</StyledWelcomeText>
-        <StyledWorkspaceName>{workspaceName}</StyledWorkspaceName>
+        <StyledWelcomeRow>
+          {!isMobile && !isNavigationDrawerExpanded && (
+            <NavigationDrawerCollapseButton direction="right" />
+          )}
+          <StyledWelcomeTextColumn>
+            <StyledWelcomeText>{t`Welcome to`}</StyledWelcomeText>
+            <StyledWorkspaceName>{workspaceName}</StyledWorkspaceName>
+          </StyledWelcomeTextColumn>
+        </StyledWelcomeRow>
       </StyledLeftSection>
       <StyledRightSection>
         <StyledUserInfo>

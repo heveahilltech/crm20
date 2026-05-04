@@ -1,7 +1,6 @@
 import { styled } from '@linaria/react';
 import { type ReactNode, useContext } from 'react';
 
-import { NavigationDrawerCollapseButton } from '@/ui/navigation/navigation-drawer/components/NavigationDrawerCollapseButton';
 
 import { useIsSettingsPage } from '@/navigation/hooks/useIsSettingsPage';
 import { useNavigationDrawerExpanded } from '@/navigation/hooks/useNavigationDrawerExpanded';
@@ -107,15 +106,11 @@ export const PageHeader = ({
   const isMobile = useIsMobile();
   const isSettingsPage = useIsSettingsPage();
   const { theme } = useContext(ThemeContext);
-  const isNavigationDrawerExpanded = useNavigationDrawerExpanded();
 
   return (
     <AnimatePresence initial={false}>
       <StyledTopBarContainer className={className} isMobile={isMobile}>
         <StyledLeftContainer>
-          {!isNavigationDrawerExpanded && (!isMobile || isSettingsPage) && (
-            <NavigationDrawerCollapseButton direction="right" />
-          )}
           {hasClosePageButton && (
             <LightIconButton
               Icon={IconX}

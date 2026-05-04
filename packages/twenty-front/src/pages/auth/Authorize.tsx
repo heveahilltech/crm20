@@ -295,8 +295,8 @@ export const Authorize = () => {
       <StyledCardWrapper>
         <StyledAppsContainer>
           <img
-            src="/images/integrations/voxring-icon.png"
-            alt="brand-icon"
+            src="/images/integrations/twenty-logo.svg"
+            alt="twenty-icon"
             height={40}
             width={40}
           />
