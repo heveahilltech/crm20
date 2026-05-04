@@ -14,7 +14,7 @@ import { Avatar, IconPower, IconMoon, IconSun } from 'twenty-ui/display';
 import { IconButton } from 'twenty-ui/input';
 import { ThemeContext, themeCssVariables } from 'twenty-ui/theme-constants';
 
-const StyledUserProfileHeader = styled.div`
+const StyledUserProfileHeader = styled.div<{ isMobile: boolean }>`
   align-items: center;
   border: 1px solid ${themeCssVariables.border.color.medium};
   border-radius: ${themeCssVariables.border.radius.md};
@@ -23,10 +23,16 @@ const StyledUserProfileHeader = styled.div`
   flex-direction: row;
   justify-content: space-between;
   margin-bottom: ${themeCssVariables.spacing['1']};
-  margin-left: ${themeCssVariables.spacing['3']};
+  margin-left: 0;
   margin-right: ${themeCssVariables.spacing['3']};
   margin-top: ${themeCssVariables.spacing['2']};
-  padding: ${themeCssVariables.spacing['2']} ${themeCssVariables.spacing['3']};
+  padding-bottom: ${themeCssVariables.spacing['2']};
+  padding-left: ${({ isMobile }) =>
+    isMobile
+      ? themeCssVariables.spacing['3']
+      : themeCssVariables.spacing['4']};
+  padding-right: ${themeCssVariables.spacing['3']};
+  padding-top: ${themeCssVariables.spacing['2']};
 
   &[data-color-scheme='dark'] {
     background: ${themeCssVariables.background.secondary};
@@ -169,7 +175,10 @@ export const UserProfileHeader = () => {
   };
 
   return (
-    <StyledUserProfileHeader data-color-scheme={themeColorScheme}>
+    <StyledUserProfileHeader
+      isMobile={isMobile}
+      data-color-scheme={themeColorScheme}
+    >
       <StyledLeftSection>
         {!isMobile && !isNavigationDrawerExpanded && (
           <NavigationDrawerCollapseButton direction="right" />
