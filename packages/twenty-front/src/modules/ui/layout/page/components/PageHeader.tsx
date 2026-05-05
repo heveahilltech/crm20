@@ -21,8 +21,10 @@ import {
 const PAGE_HEADER_LIGHT_BACKGROUND = '#004496';
 const PAGE_HEADER_DARK_BACKGROUND = '#292f46';
 const PAGE_HEADER_FOREGROUND = '#ffffff';
+
 const StyledTopBarContainer = styled.div<{ isMobile: boolean }>`
   align-items: center;
+  background: ${PAGE_HEADER_LIGHT_BACKGROUND};
   border: 1px solid ${themeCssVariables.border.color.medium};
   border-radius: ${themeCssVariables.border.radius.md};
   color: ${PAGE_HEADER_FOREGROUND};
@@ -135,14 +137,14 @@ export const PageHeader = ({
   className,
 }: PageHeaderProps) => {
   const isMobile = useIsMobile();
-  const { theme } = useContext(ThemeContext);
+  const { theme, colorScheme: themeColorScheme } = useContext(ThemeContext);
 
   return (
     <AnimatePresence initial={false}>
       <StyledTopBarContainer
         className={className}
         isMobile={isMobile}
-        data-color-scheme={theme.colorScheme}
+        data-color-scheme={themeColorScheme}
       >
         <StyledLeftContainer>
           {hasClosePageButton && (
