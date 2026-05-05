@@ -35,7 +35,8 @@ import {
   useMouseDownNavigation,
 } from 'twenty-ui/utilities';
 const DEFAULT_INDENTATION_LEVEL = 1;
-const NAV_ITEM_PRIMARY_TEXT = '#111111';
+const NAV_ITEM_PRIMARY_TEXT_LIGHT = '#111111';
+const NAV_ITEM_PRIMARY_TEXT_DARK = '#ffffff';
 const NAV_ITEM_ACTIVE_TEXT = '#ffffff';
 const NAV_ITEM_ACTIVE_HOVER_BG_LIGHT = '#004496';
 const NAV_ITEM_ACTIVE_HOVER_BG_DARK = '#292f46';
@@ -109,10 +110,12 @@ const StyledItem = styled.button<StyledItemProps>`
       : '1px solid transparent'};
   border-radius: ${themeCssVariables.border.radius.sm};
   box-sizing: border-box;
-  color: ${({ active, isSoon, variant }) => {
-    if (variant === 'tertiary') {
-      return themeCssVariables.font.color.tertiary;
-    }
+  color: ${({ active, isSoon, variant, colorScheme }) => {
+    const primaryTextColor =
+      colorScheme === 'dark'
+        ? NAV_ITEM_PRIMARY_TEXT_DARK
+        : NAV_ITEM_PRIMARY_TEXT_LIGHT;
+
     if (active === true) {
       return NAV_ITEM_ACTIVE_TEXT;
     }
@@ -120,9 +123,9 @@ const StyledItem = styled.button<StyledItemProps>`
       return themeCssVariables.font.color.light;
     }
     if (variant === 'tertiary') {
-      return NAV_ITEM_PRIMARY_TEXT;
+      return primaryTextColor;
     }
-    return NAV_ITEM_PRIMARY_TEXT;
+    return primaryTextColor;
   }};
   cursor: ${({ isSoon, isDragging }) =>
     isDragging ? 'grabbing' : isSoon ? 'default' : 'pointer'};
