@@ -37,7 +37,7 @@ const StyledTopBarContainer = styled.div<{ isMobile: boolean }>`
   margin-bottom: ${themeCssVariables.spacing['1']};
   margin-left: 0;
   margin-right: ${themeCssVariables.spacing['3']};
-  margin-top: ${themeCssVariables.spacing['2']};
+  margin-top: ${themeCssVariables.spacing['0.5']};
   padding-bottom: ${themeCssVariables.spacing[3]};
   padding-left: ${({ isMobile }) =>
     isMobile ? themeCssVariables.spacing[3] : themeCssVariables.spacing[4]};

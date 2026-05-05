@@ -1,5 +1,5 @@
 import { styled } from '@linaria/react';
-import { type ReactNode, useState } from 'react';
+import { type ReactNode, useContext, useState } from 'react';
 
 import { useNavigationDrawerExpanded } from '@/navigation/hooks/useNavigationDrawerExpanded';
 import { useIsSettingsDrawer } from '@/navigation/hooks/useIsSettingsDrawer';
@@ -19,7 +19,11 @@ import {
 import { useIsMobile } from '@/ui/utilities/responsive/hooks/useIsMobile';
 import { useAtomState } from '@/ui/utilities/state/jotai/hooks/useAtomState';
 import { useSetAtomState } from '@/ui/utilities/state/jotai/hooks/useSetAtomState';
-import { MOBILE_VIEWPORT, themeCssVariables } from 'twenty-ui/theme-constants';
+import {
+  MOBILE_VIEWPORT,
+  ThemeContext,
+  themeCssVariables,
+} from 'twenty-ui/theme-constants';
 import { NavigationDrawerBackButton } from './NavigationDrawerBackButton';
 import { NavigationDrawerHeader } from './NavigationDrawerHeader';
 
@@ -55,6 +59,7 @@ const StyledContainer = styled.div<{
   isSettings?: boolean;
   isExpanded?: boolean;
 }>`
+  background: #ffffff;  
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -69,8 +74,16 @@ const StyledContainer = styled.div<{
   @media (max-width: ${MOBILE_VIEWPORT}px) {
     gap: ${themeCssVariables.spacing[4]};
     width: 100%;
-    padding-left: ${themeCssVariables.spacing[2]};
-    padding-right: ${themeCssVariables.spacing[2]};
+    padding-left: ${themeCssVariables.spacing[5]};
+    padding-right: ${themeCssVariables.spacing[5]};
+  }
+
+  &[data-color-scheme='light'] {
+    background: #ffffff;
+  }
+
+  &[data-color-scheme='dark'] {
+    background: #000000;
   }
 `;
 
@@ -82,7 +95,9 @@ export const NavigationDrawer = ({
   const [isResizing, setIsResizing] = useState(false);
   const isMobile = useIsMobile();
   const isSettingsDrawer = useIsSettingsDrawer();
-  const isExpanded = useNavigationDrawerExpanded();
+  const { colorScheme: themeColorScheme } = useContext(ThemeContext) as {
+    colorScheme?: string;
+  };
 
   const [isNavigationDrawerExpanded, setIsNavigationDrawerExpanded] =
     useAtomState(isNavigationDrawerExpandedState);
@@ -123,8 +138,13 @@ export const NavigationDrawer = ({
         isExpanded={isExpanded}
         isResizing={isResizing}
       >
-        <StyledContainer isSettings={isSettingsDrawer} isExpanded={isExpanded}>
-          {!isMobile && isSettingsDrawer && title ? (
+        <StyledContainer
+          isSettings={isSettingsDrawer}
+          isMobile={isMobile}
+          isExpanded={isNavigationDrawerExpanded}
+          data-color-scheme={themeColorScheme}
+        >
+          {isSettingsDrawer && title ? (
             <NavigationDrawerBackButton title={title} />
           ) : (
             <NavigationDrawerHeader showCollapseButton />

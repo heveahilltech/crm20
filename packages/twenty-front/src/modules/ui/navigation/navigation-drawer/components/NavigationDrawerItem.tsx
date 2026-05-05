@@ -35,6 +35,10 @@ import {
   useMouseDownNavigation,
 } from 'twenty-ui/utilities';
 const DEFAULT_INDENTATION_LEVEL = 1;
+const NAV_ITEM_PRIMARY_TEXT = '#111111';
+const NAV_ITEM_ACTIVE_TEXT = '#ffffff';
+const NAV_ITEM_ACTIVE_HOVER_BG_LIGHT = '#004496';
+const NAV_ITEM_ACTIVE_HOVER_BG_DARK = '#292f46';
 
 export type NavigationDrawerItemIndentationLevel = 1 | 2;
 
@@ -77,15 +81,28 @@ type StyledItemProps = Pick<
   isSoon: boolean;
   isNavigationDrawerExpanded: boolean;
   hasRightOptions: boolean;
+  colorScheme?: string;
   href?: string;
   target?: string;
   rel?: string;
 };
 
+const StyledItemSecondaryLabel = styled.span`
+  color: ${themeCssVariables.font.color.light};
+  font-weight: ${themeCssVariables.font.weight.regular};
+`;
+
 const StyledItem = styled.button<StyledItemProps>`
   align-items: center;
-  background: ${({ active }) =>
-    active ? themeCssVariables.background.transparent.light : 'transparent'};
+  background: ${({ active, colorScheme }) => {
+    if (!active) {
+      return 'transparent';
+    }
+
+    return colorScheme === 'dark'
+      ? NAV_ITEM_ACTIVE_HOVER_BG_DARK
+      : NAV_ITEM_ACTIVE_HOVER_BG_LIGHT;
+  }};
   border: ${({ isSelectedInEditMode }) =>
     isSelectedInEditMode
       ? `1px solid ${themeCssVariables.color.blue}`
@@ -97,12 +114,15 @@ const StyledItem = styled.button<StyledItemProps>`
       return themeCssVariables.font.color.tertiary;
     }
     if (active === true) {
-      return themeCssVariables.font.color.primary;
+      return NAV_ITEM_ACTIVE_TEXT;
     }
     if (isSoon) {
       return themeCssVariables.font.color.light;
     }
-    return themeCssVariables.font.color.secondary;
+    if (variant === 'tertiary') {
+      return NAV_ITEM_PRIMARY_TEXT;
+    }
+    return NAV_ITEM_PRIMARY_TEXT;
   }};
   cursor: ${({ isSoon, isDragging }) =>
     isDragging ? 'grabbing' : isSoon ? 'default' : 'pointer'};
@@ -129,11 +149,22 @@ const StyledItem = styled.button<StyledItemProps>`
       : `calc(100% - ${themeCssVariables.spacing['1.5']} + ${themeCssVariables.spacing[1]} + ${hasRightOptions ? themeCssVariables.spacing['0.5'] : themeCssVariables.spacing[1]})`};
 
   &:hover {
-    background: ${themeCssVariables.background.transparent.light};
-    color: ${({ variant }) =>
-      variant === 'tertiary'
-        ? themeCssVariables.font.color.tertiary
-        : themeCssVariables.font.color.primary};
+    background: ${({ colorScheme }) =>
+      colorScheme === 'dark'
+        ? NAV_ITEM_ACTIVE_HOVER_BG_DARK
+        : NAV_ITEM_ACTIVE_HOVER_BG_LIGHT};
+    color: ${NAV_ITEM_ACTIVE_TEXT};
+  }
+
+  &[aria-selected='true'] svg,
+  &:hover svg {
+    color: ${NAV_ITEM_ACTIVE_TEXT};
+    stroke: ${NAV_ITEM_ACTIVE_TEXT};
+  }
+
+  &[aria-selected='true'] ${StyledItemSecondaryLabel},
+  &:hover ${StyledItemSecondaryLabel} {
+    color: rgba(255, 255, 255, 0.82);
   }
 
   &:hover .keyboard-shortcuts {
@@ -162,12 +193,7 @@ const StyledLabelParent = styled.div`
 `;
 
 const StyledItemLabel = styled.span`
-  font-weight: ${themeCssVariables.font.weight.regular};
-`;
-
-const StyledItemSecondaryLabel = styled.span`
-  color: ${themeCssVariables.font.color.light};
-  font-weight: ${themeCssVariables.font.weight.regular};
+  font-weight: ${themeCssVariables.font.weight.medium};
 `;
 
 const StyledKeyBoardShortcut = styled.span`
@@ -258,7 +284,10 @@ export const NavigationDrawerItem = ({
   isSelectedInEditMode = false,
   variant = 'default',
 }: NavigationDrawerItemProps) => {
-  const { theme } = useContext(ThemeContext);
+  const { theme, colorScheme: themeColorScheme } = useContext(ThemeContext) as {
+    theme: any;
+    colorScheme?: string;
+  };
   const isMobile = useIsMobile();
   const isExpanded = useNavigationDrawerExpanded();
   const [isNavigationDrawerExpanded, setIsNavigationDrawerExpanded] =
@@ -327,6 +356,7 @@ export const NavigationDrawerItem = ({
         isDragging={isDragging}
         hasRightOptions={isDefined(rightOptions)}
         isSelectedInEditMode={isSelectedInEditMode}
+        colorScheme={themeColorScheme}
         as={elementType}
         role={!to && isDefined(rightOptions) ? 'button' : undefined}
         to={isInternalLink ? to : undefined}
