@@ -1,5 +1,5 @@
 import { styled } from '@linaria/react';
-import { type ReactNode, useState } from 'react';
+import { type ReactNode, useContext, useState } from 'react';
 
 import { useIsSettingsDrawer } from '@/navigation/hooks/useIsSettingsDrawer';
 import { tableWidthResizeIsActiveState } from '@/object-record/record-table/states/tableWidthResizeIsActivedState';
@@ -18,7 +18,11 @@ import {
 import { useIsMobile } from '@/ui/utilities/responsive/hooks/useIsMobile';
 import { useAtomState } from '@/ui/utilities/state/jotai/hooks/useAtomState';
 import { useSetAtomState } from '@/ui/utilities/state/jotai/hooks/useSetAtomState';
-import { MOBILE_VIEWPORT, themeCssVariables } from 'twenty-ui/theme-constants';
+import {
+  MOBILE_VIEWPORT,
+  ThemeContext,
+  themeCssVariables,
+} from 'twenty-ui/theme-constants';
 import { NavigationDrawerBackButton } from './NavigationDrawerBackButton';
 import { NavigationDrawerHeader } from './NavigationDrawerHeader';
 
@@ -55,6 +59,7 @@ const StyledContainer = styled.div<{
   isMobile?: boolean;
   isExpanded?: boolean;
 }>`
+  background: #ffffff;  
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -73,6 +78,14 @@ const StyledContainer = styled.div<{
     padding-left: ${themeCssVariables.spacing[5]};
     padding-right: ${themeCssVariables.spacing[5]};
   }
+
+  &[data-color-scheme='light'] {
+    background: #ffffff;
+  }
+
+  &[data-color-scheme='dark'] {
+    background: #000000;
+  }
 `;
 
 export const NavigationDrawer = ({
@@ -83,6 +96,9 @@ export const NavigationDrawer = ({
   const [isResizing, setIsResizing] = useState(false);
   const isMobile = useIsMobile();
   const isSettingsDrawer = useIsSettingsDrawer();
+  const { colorScheme: themeColorScheme } = useContext(ThemeContext) as {
+    colorScheme?: string;
+  };
 
   const [isNavigationDrawerExpanded, setIsNavigationDrawerExpanded] =
     useAtomState(isNavigationDrawerExpandedState);
@@ -127,6 +143,7 @@ export const NavigationDrawer = ({
           isSettings={isSettingsDrawer}
           isMobile={isMobile}
           isExpanded={isNavigationDrawerExpanded}
+          data-color-scheme={themeColorScheme}
         >
           {isSettingsDrawer && title ? (
             <NavigationDrawerBackButton title={title} />

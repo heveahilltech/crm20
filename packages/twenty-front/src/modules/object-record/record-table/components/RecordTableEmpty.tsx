@@ -25,9 +25,20 @@ import { useMemo } from 'react';
 import { isDefined } from 'twenty-shared/utils';
 
 const StyledEmptyStateContainer = styled.div<{ width: number }>`
+  display: flex;
+  flex-direction: column;
   height: 100%;
   overflow: hidden;
   width: ${({ width }) => width}px;
+`;
+
+const StyledHeaderContainer = styled.div`
+  flex: 0 0 auto;
+`;
+
+const StyledEmptyStateContent = styled.div`
+  flex: 1 1 auto;
+  min-height: 0;
 `;
 
 export interface RecordTableEmptyProps {
@@ -105,16 +116,18 @@ export const RecordTableEmpty = ({ tableBodyRef }: RecordTableEmptyProps) => {
 
   return (
     <StyledEmptyStateContainer width={tableContainerWidth}>
-      <RecordTableStyleWrapper
-        ref={tableBodyRef}
-        style={columnWidthStyles}
-        id={getRecordTableHtmlId(recordTableId)}
-      >
-        <RecordTableHeader />
-      </RecordTableStyleWrapper>
-      <RecordTableEmptyState />
-      <RecordTableColumnWidthEffect />
-      <RecordTableWidthEffect />
+      <StyledHeaderContainer>
+        <RecordTableStyleWrapper
+          ref={tableBodyRef}
+          style={columnWidthStyles}
+          id={getRecordTableHtmlId(recordTableId)}
+        >
+          <RecordTableHeader />
+        </RecordTableStyleWrapper>
+      </StyledHeaderContainer>
+      <StyledEmptyStateContent>
+        <RecordTableEmptyState />
+      </StyledEmptyStateContent>
       <RecordTableVirtualizedDataChangedEffect />
     </StyledEmptyStateContainer>
   );
