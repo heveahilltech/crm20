@@ -28,7 +28,11 @@ import { styled } from '@linaria/react';
 import { AnimatePresence, LayoutGroup, motion } from 'framer-motion';
 import { Outlet } from 'react-router-dom';
 import { useScreenSize } from 'twenty-ui/utilities';
-import { ThemeContext, themeCssVariables } from 'twenty-ui/theme-constants';
+import {
+  MOBILE_VIEWPORT,
+  ThemeContext,
+  themeCssVariables,
+} from 'twenty-ui/theme-constants';
 const StyledLayout = styled.div`
   background: ${themeCssVariables.background.noisy};
   display: flex;
@@ -54,6 +58,11 @@ const StyledPageContainer = motion.create(StyledPageContainerBase);
 
 const StyledNavigationDrawerWrapper = styled.div`
   flex-shrink: 0;
+  margin-right: ${themeCssVariables.spacing[1]};
+
+  @media (max-width: ${MOBILE_VIEWPORT}px) {
+    margin-right: 0;
+  }
 `;
 
 const StyledMainContainer = styled.div`
