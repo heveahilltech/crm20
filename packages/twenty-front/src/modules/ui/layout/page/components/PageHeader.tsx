@@ -1,7 +1,6 @@
 import { styled } from '@linaria/react';
 import { type ReactNode, useContext } from 'react';
 
-
 import { PAGE_ACTION_CONTAINER_CLICK_OUTSIDE_ID } from '@/ui/layout/page/constants/PageActionContainerClickOutsideId';
 import { PAGE_BAR_MIN_HEIGHT } from '@/ui/layout/page/constants/PageBarMinHeight';
 import { useIsMobile } from '@/ui/utilities/responsive/hooks/useIsMobile';
@@ -19,21 +18,54 @@ import {
   themeCssVariables,
 } from 'twenty-ui/theme-constants';
 
+const PAGE_HEADER_LIGHT_BACKGROUND = '#004496';
+const PAGE_HEADER_DARK_BACKGROUND = '#292f46';
+const PAGE_HEADER_FOREGROUND = '#ffffff';
 const StyledTopBarContainer = styled.div<{ isMobile: boolean }>`
   align-items: center;
-  background: ${themeCssVariables.background.headerbackground};
-  color: ${themeCssVariables.font.color.primary};
+  border: 1px solid ${themeCssVariables.border.color.medium};
+  border-radius: ${themeCssVariables.border.radius.md};
+  color: ${PAGE_HEADER_FOREGROUND};
   display: flex;
   flex-direction: row;
   font-size: ${themeCssVariables.font.size.lg};
   gap: ${themeCssVariables.spacing[2]};
   justify-content: space-between;
   min-height: ${PAGE_BAR_MIN_HEIGHT}px;
+  margin-bottom: ${themeCssVariables.spacing['1']};
+  margin-left: 0;
+  margin-right: ${themeCssVariables.spacing['3']};
+  margin-top: ${themeCssVariables.spacing['2']};
   padding-bottom: ${themeCssVariables.spacing[3]};
   padding-left: ${({ isMobile }) =>
     isMobile ? themeCssVariables.spacing[3] : themeCssVariables.spacing[4]};
   padding-right: ${themeCssVariables.spacing[3]};
   padding-top: ${themeCssVariables.spacing[3]};
+  
+  &[data-color-scheme='light'] {
+    background: ${PAGE_HEADER_LIGHT_BACKGROUND};
+  }
+
+  &[data-color-scheme='dark'] {
+    background: ${PAGE_HEADER_DARK_BACKGROUND};
+  }
+
+  & button {
+    color: ${PAGE_HEADER_FOREGROUND} !important;
+  }
+
+  & button svg {
+    color: ${PAGE_HEADER_FOREGROUND} !important;
+    stroke: ${PAGE_HEADER_FOREGROUND} !important;
+  }
+
+  &[data-color-scheme='light'] button:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.12);
+  }
+
+  &[data-color-scheme='dark'] button:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.14);
+  }
 `;
 
 const StyledLeftContainer = styled.div`
@@ -51,6 +83,7 @@ const StyledLeftContainer = styled.div`
 
 const StyledTitleContainer = styled.div`
   align-items: center;
+  color: ${PAGE_HEADER_FOREGROUND};
   display: flex;
   font-size: ${themeCssVariables.font.size.md};
   font-weight: ${themeCssVariables.font.weight.medium};
@@ -106,7 +139,11 @@ export const PageHeader = ({
 
   return (
     <AnimatePresence initial={false}>
-      <StyledTopBarContainer className={className} isMobile={isMobile}>
+      <StyledTopBarContainer
+        className={className}
+        isMobile={isMobile}
+        data-color-scheme={theme.colorScheme}
+      >
         <StyledLeftContainer>
           {hasClosePageButton && (
             <LightIconButton
