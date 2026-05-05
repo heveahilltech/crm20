@@ -59,7 +59,7 @@ const StyledContainer = styled.div<{
   isMobile?: boolean;
   isExpanded?: boolean;
 }>`
-  background: #ffffff;  
+  background: ${themeCssVariables.background.primary}; 
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -80,11 +80,11 @@ const StyledContainer = styled.div<{
   }
 
   &[data-color-scheme='light'] {
-    background: #ffffff;
+    background: ${themeCssVariables.background.primary};
   }
 
   &[data-color-scheme='dark'] {
-    background: #000000;
+    background: ${themeCssVariables.background.primary};
   }
 `;
 
