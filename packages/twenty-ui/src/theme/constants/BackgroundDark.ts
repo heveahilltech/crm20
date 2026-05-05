@@ -7,7 +7,6 @@ import { TRANSPARENT_COLORS_DARK } from './TransparentColorsDark';
 
 export const BACKGROUND_DARK = {
   noisy: `url(${DarkNoise.toString()})`,
-  headerbackground: '#004496',
   primary: GRAY_SCALE_DARK.gray1,
   secondary: GRAY_SCALE_DARK.gray2,
   tertiary: GRAY_SCALE_DARK.gray4,

@@ -127,7 +127,6 @@ export const themeCssVariables = {
   },
   background: {
     noisy: 'var(--t-background-noisy)',
-    headerbackground: 'var(--t-background-headerbackground)',
     primary: 'var(--t-background-primary)',
     secondary: 'var(--t-background-secondary)',
     tertiary: 'var(--t-background-tertiary)',
