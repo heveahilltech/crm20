@@ -22,10 +22,10 @@ const StyledUserProfileHeader = styled.div<{ isMobile: boolean }>`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  margin-bottom: 0;
+  margin-bottom: ${themeCssVariables.spacing['1']};
   margin-left: 0;
   margin-right: ${themeCssVariables.spacing['3']};
-  margin-top: 0;
+  margin-top: ${themeCssVariables.spacing['0.5']};
   padding-bottom: ${themeCssVariables.spacing['2']};
   padding-left: ${({ isMobile }) =>
     isMobile
