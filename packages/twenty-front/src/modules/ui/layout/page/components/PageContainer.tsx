@@ -4,7 +4,7 @@ const StyledContainer = styled.div`
   display: flex;
   flex: 1 1 auto;
   flex-direction: column;
-  min
+  min-height: 0;
   width: 100%;
 `;
 
