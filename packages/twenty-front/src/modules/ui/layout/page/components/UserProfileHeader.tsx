@@ -133,7 +133,6 @@ const StyledPortalButton = styled.button`
   cursor: pointer;
   display: flex;
   flex-direction: row;
-  font-weight: ${themeCssVariables.font.weight.medium};
   font-size: ${themeCssVariables.font.size.sm};
   gap: ${themeCssVariables.spacing['1']};
   padding: ${themeCssVariables.spacing['1']} ${themeCssVariables.spacing['2']};
