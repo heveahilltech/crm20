@@ -7,9 +7,10 @@ const StyledPanel = styled.div`
   border: 1px solid ${themeCssVariables.border.color.medium};
   border-radius: ${themeCssVariables.border.radius.md};
   display: flex;
+  flex: 1;
   flex-direction: column;
-  height: 100%;
-  overflow-x: auto;
+  min-height: 0;
+  overflow-x: hidden;
   overflow-y: hidden;
   width: 100%;
 `;

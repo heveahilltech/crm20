@@ -13,7 +13,7 @@ const StyledMainContainer = styled.div`
   background: ${themeCssVariables.background.noisy};
   box-sizing: border-box;
   display: flex;
-  flex: 1 1 auto;
+  flex: 1;
   flex-direction: row;
   gap: ${themeCssVariables.spacing[2]};
   min-height: 0;
@@ -33,7 +33,9 @@ type LeftContainerProps = {
 
 const StyledLeftContainer = styled.div<LeftContainerProps>`
   display: flex;
+  flex: 1;
   flex-direction: column;
+  min-height: 0;
   position: relative;
   width: 100%;
 `;
