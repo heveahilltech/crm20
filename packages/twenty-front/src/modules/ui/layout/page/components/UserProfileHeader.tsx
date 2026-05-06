@@ -126,13 +126,14 @@ const StyledActions = styled.div`
 
 const StyledPortalButton = styled.button`
   align-items: center;
-  background: transparent;
-  border: none;
+  background: ${themeCssVariables.background.transparent.light};
+  border: 1px solid ${themeCssVariables.border.color.medium};
   border-radius: ${themeCssVariables.border.radius.sm};
   color: ${themeCssVariables.font.color.primary};
   cursor: pointer;
   display: flex;
   flex-direction: row;
+  font-weight: ${themeCssVariables.font.weight.medium};
   font-size: ${themeCssVariables.font.size.sm};
   gap: ${themeCssVariables.spacing['1']};
   padding: ${themeCssVariables.spacing['1']} ${themeCssVariables.spacing['2']};
