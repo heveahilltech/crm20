@@ -16,7 +16,6 @@ const StyledSettingsPageContainer = styled.div<{
   display: flex;
   flex-direction: column;
   gap: ${themeCssVariables.spacing[8]};
-  overflow: auto;
   padding: ${themeCssVariables.spacing[6]} ${themeCssVariables.spacing[8]}
     ${themeCssVariables.spacing[8]};
   padding-bottom: ${themeCssVariables.spacing[20]};
@@ -29,6 +28,18 @@ const StyledSettingsPageContainer = styled.div<{
     }
     return OBJECT_SETTINGS_WIDTH + 'px';
   }};
+`;
+
+const StyledSettingsScrollSlot = styled.div`
+  display: flex;
+  flex: 1;
+  min-height: 0;
+
+  & > div {
+    display: flex;
+    flex: 1;
+    min-height: 0;
+  }
 `;
 
 export const SettingsPageContainer = ({
@@ -55,10 +66,12 @@ export const SettingsPageContainer = ({
   useScrollRestoration(componentInstanceId);
 
   return (
+    <StyledSettingsScrollSlot> 
     <ScrollWrapper componentInstanceId={componentInstanceId}>
       <StyledSettingsPageContainer isMobile={isMobile}>
         {children}
       </StyledSettingsPageContainer>
     </ScrollWrapper>
+    </StyledSettingsScrollSlot>
   );
 };
