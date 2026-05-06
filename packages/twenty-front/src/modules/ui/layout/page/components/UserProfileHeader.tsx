@@ -10,7 +10,7 @@ import { useAtomStateValue } from '@/ui/utilities/state/jotai/hooks/useAtomState
 import { styled } from '@linaria/react';
 import { useLingui } from '@lingui/react/macro';
 import { useContext } from 'react';
-import { Avatar, IconPower, IconMoon, IconSun } from 'twenty-ui/display';
+import { Avatar, IconMoon, IconSun } from 'twenty-ui/display';
 import { IconButton } from 'twenty-ui/input';
 import { ThemeContext, themeCssVariables } from 'twenty-ui/theme-constants';
 
@@ -124,7 +124,7 @@ const StyledActions = styled.div`
   }
 `;
 
-const StyledLogoutButton = styled.button`
+const StyledPortalButton = styled.button`
   align-items: center;
   background: transparent;
   border: none;
@@ -154,7 +154,6 @@ const StyledLogoutButton = styled.button`
 
 export const UserProfileHeader = () => {
   const { t } = useLingui();
-  const { signOut } = useAuth();
   const { colorScheme: themeColorScheme } = useContext(ThemeContext);
   const currentWorkspaceMember = useAtomStateValue(currentWorkspaceMemberState);
   const currentWorkspace = useAtomStateValue(currentWorkspaceState);
@@ -175,8 +174,8 @@ export const UserProfileHeader = () => {
 
   const workspaceName = currentWorkspace?.displayName || 'Your Workspace';
 
-  const handleLogout = async () => {
-    await signOut();
+  const handleReturnToPortal = () => {
+    window.location.assign('https://portal.voxring.ai/portal/dashboard');
   };
 
   // Determine effective theme (if System, use system preference)
@@ -228,14 +227,13 @@ export const UserProfileHeader = () => {
               onClick={handleThemeToggle}
             />
           )}
-          <StyledLogoutButton
+          <StyledPortalButton
             data-color-scheme={themeColorScheme}
             type="button"
-            onClick={handleLogout}
+            onClick={handleReturnToPortal}
           >
-            <IconPower size={16} />
-            <span>{t`Log out`}</span>
-          </StyledLogoutButton>
+            <span>{t`Return to Portal`}</span>
+          </StyledPortalButton>
         </StyledActions>
       </StyledRightSection>
     </StyledUserProfileHeader>
