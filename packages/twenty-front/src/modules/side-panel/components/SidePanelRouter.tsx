@@ -14,8 +14,11 @@ import { isDefined } from 'twenty-shared/utils';
 import { ThemeContext } from 'twenty-ui/theme-constants';
 
 const StyledSidePanelContent = styled.div`
+  display: flex;
   flex: 1;
-  overflow-y: auto;
+  flex-direction: column;
+  min-height: 0;
+  overflow-y: hidden;
 `;
 
 export const SidePanelRouter = () => {
