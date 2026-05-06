@@ -1,4 +1,3 @@
-import { useAuth } from '@/auth/hooks/useAuth';
 import { currentWorkspaceMemberState } from '@/auth/states/currentWorkspaceMemberState';
 import { currentWorkspaceState } from '@/auth/states/currentWorkspaceState';
 import { NavigationDrawerCollapseButton } from '@/ui/navigation/navigation-drawer/components/NavigationDrawerCollapseButton';
@@ -9,8 +8,7 @@ import { useIsMobile } from '@/ui/utilities/responsive/hooks/useIsMobile';
 import { styled } from '@linaria/react';
 import { useLingui } from '@lingui/react/macro';
 import { useContext } from 'react';
-import { useRecoilValue } from 'recoil';
-import { Avatar, IconPower, IconMoon, IconSun } from 'twenty-ui/display';
+import { Avatar, IconMoon, IconSun } from 'twenty-ui/display';
 import { IconButton } from 'twenty-ui/input';
 import { ThemeContext, themeCssVariables } from 'twenty-ui/theme-constants';
 
@@ -28,9 +26,7 @@ const StyledUserProfileHeader = styled.div<{ isMobile: boolean }>`
   margin-top: ${themeCssVariables.spacing['0.5']};
   padding-bottom: ${themeCssVariables.spacing['2']};
   padding-left: ${({ isMobile }) =>
-    isMobile
-      ? themeCssVariables.spacing['3']
-      : themeCssVariables.spacing['4']};
+    isMobile ? themeCssVariables.spacing['3'] : themeCssVariables.spacing['4']};
   padding-right: ${themeCssVariables.spacing['3']};
   padding-top: ${themeCssVariables.spacing['2']};
 
@@ -116,15 +112,17 @@ const StyledActions = styled.div`
   }
 
   &[data-color-scheme='dark'] button:hover {
-    background-color: ${themeCssVariables.background.transparent.medium} !important;
+    background-color: ${themeCssVariables.background.transparent
+      .medium} !important;
   }
 
   &[data-color-scheme='light'] button:hover {
-    background-color: ${themeCssVariables.background.transparent.light} !important;
+    background-color: ${themeCssVariables.background.transparent
+      .light} !important;
   }
 `;
 
-const StyledLogoutButton = styled.button`
+const StyledPortalButton = styled.button`
   align-items: center;
   background: transparent;
   border: none;
@@ -154,7 +152,6 @@ const StyledLogoutButton = styled.button`
 
 export const UserProfileHeader = () => {
   const { t } = useLingui();
-  const { signOut } = useAuth();
   const { colorScheme: themeColorScheme } = useContext(ThemeContext);
   const currentWorkspaceMember = useRecoilValue(currentWorkspaceMemberState);
   const currentWorkspace = useRecoilValue(currentWorkspaceState);
@@ -175,12 +172,13 @@ export const UserProfileHeader = () => {
 
   const workspaceName = currentWorkspace?.displayName || 'Your Workspace';
 
-  const handleLogout = async () => {
-    await signOut();
+  const handleReturnToPortal = () => {
+    window.location.assign('https://portal.voxring.ai/portal/dashboard');
   };
 
   // Determine effective theme (if System, use system preference)
-  const effectiveTheme = colorScheme === 'System' ? systemColorScheme : colorScheme;
+  const effectiveTheme =
+    colorScheme === 'System' ? systemColorScheme : colorScheme;
   const isDarkMode = effectiveTheme === 'Dark';
 
   const handleThemeToggle = () => {
@@ -224,21 +222,21 @@ export const UserProfileHeader = () => {
               size="small"
               variant="secondary"
               accent="default"
-              ariaLabel={isDarkMode ? t`Switch to light mode` : t`Switch to dark mode`}
+              ariaLabel={
+                isDarkMode ? t`Switch to light mode` : t`Switch to dark mode`
+              }
               onClick={handleThemeToggle}
             />
           )}
-          <StyledLogoutButton
+          <StyledPortalButton
             data-color-scheme={themeColorScheme}
             type="button"
-            onClick={handleLogout}
+            onClick={handleReturnToPortal}
           >
-            <IconPower size={16} />
-            <span>{t`Log out`}</span>
-          </StyledLogoutButton>
+            <span>{t`Return to Portal`}</span>
+          </StyledPortalButton>
         </StyledActions>
       </StyledRightSection>
     </StyledUserProfileHeader>
   );
 };
-
