@@ -18,7 +18,7 @@ const StyledSettingsPageContainer = styled.div<{
   gap: ${themeCssVariables.spacing[8]};
   padding: ${themeCssVariables.spacing[6]} ${themeCssVariables.spacing[8]}
     ${themeCssVariables.spacing[8]};
-  padding-bottom: ${themeCssVariables.spacing[20]};
+  padding-bottom: ${themeCssVariables.spacing[8]};
   width: ${({ width, isMobile }) => {
     if (isDefined(width)) {
       return width + 'px';

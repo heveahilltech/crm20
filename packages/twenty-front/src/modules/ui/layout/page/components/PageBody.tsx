@@ -17,7 +17,7 @@ const StyledMainContainer = styled.div`
   flex-direction: row;
   gap: ${themeCssVariables.spacing[2]};
   min-height: 0;
-  padding-bottom: ${themeCssVariables.spacing[3]};
+  padding-bottom: ${themeCssVariables.spacing[2]};
   padding-left: 0;
   padding-right: ${themeCssVariables.spacing[3]};
   width: 100%;
