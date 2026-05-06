@@ -7,6 +7,7 @@ import { isDefined } from 'twenty-shared/utils';
 import { styled } from '@linaria/react';
 import { type JSX, type ReactNode } from 'react';
 import { PageBody } from './PageBody';
+import { PageContainer } from './PageContainer';
 import { PageHeader } from './PageHeader';
 import { themeCssVariables } from 'twenty-ui/theme-constants';
 
@@ -22,7 +23,9 @@ type SubMenuTopBarContainerProps = {
 
 const StyledContainer = styled.div`
   display: flex;
+  flex: 1;
   flex-direction: column;
+  min-height: 0;
   width: 100%;
 `;
 
@@ -50,6 +53,7 @@ export const SubMenuTopBarContainer = ({
 }: SubMenuTopBarContainerProps) => {
   return (
     <StyledContainer className={className}>
+      <PageContainer>
       <PageHeader title={<Breadcrumb links={links} />}>
         {actionButton}
       </PageHeader>
@@ -63,6 +67,7 @@ export const SubMenuTopBarContainer = ({
         )}
         {children}
       </PageBody>
+      </PageContainer>
     </StyledContainer>
   );
 };

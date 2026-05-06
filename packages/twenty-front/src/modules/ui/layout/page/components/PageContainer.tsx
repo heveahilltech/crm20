@@ -2,7 +2,7 @@ import { styled } from '@linaria/react';
 
 const StyledContainer = styled.div`
   display: flex;
-  flex: 1 1 auto;
+  flex: 1;
   flex-direction: column;
   min-height: 0;
   width: 100%;
