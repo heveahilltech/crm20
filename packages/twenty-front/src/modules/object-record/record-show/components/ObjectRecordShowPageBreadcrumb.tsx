@@ -22,7 +22,7 @@ const StyledEditableTitleContainer = styled.div`
 
 const StyledEditableTitlePrefix = styled.div`
   align-items: center;
-  color: ${themeCssVariables.font.color.tertiary};
+  color: inherit;
   cursor: pointer;
   display: flex;
   flex-direction: row;
