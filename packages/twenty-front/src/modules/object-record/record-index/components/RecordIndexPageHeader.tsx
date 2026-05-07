@@ -22,12 +22,12 @@ const StyledTitleWithSelectedRecords = styled.div`
 `;
 
 const StyledTitle = styled.div`
-  color: ${themeCssVariables.font.color.primary};
+  color: inherit;
   padding-right: ${themeCssVariables.spacing['0.5']};
 `;
 
 const StyledSelectedRecordsCount = styled.div`
-  color: ${themeCssVariables.font.color.tertiary};
+  color: inherit;
   padding-left: ${themeCssVariables.spacing['0.5']};
 `;
 
