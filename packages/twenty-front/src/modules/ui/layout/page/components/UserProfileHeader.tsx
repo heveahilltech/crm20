@@ -131,7 +131,7 @@ const StyledPortalButton = styled.button`
   cursor: pointer;
   display: flex;
   flex-direction: row;
-  font-size: ${themeCssVariables.font.size.sm};
+  font-size: ${themeCssVariables.font.size.md};
   gap: ${themeCssVariables.spacing['1']};
   padding: ${themeCssVariables.spacing['1']} ${themeCssVariables.spacing['2']};
   transition: background-color ${themeCssVariables.animation.duration.fast} ease;
