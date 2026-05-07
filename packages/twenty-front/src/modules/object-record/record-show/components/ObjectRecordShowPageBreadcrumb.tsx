@@ -42,7 +42,7 @@ const StyledTitle = styled.div`
 `;
 
 const StyledPaginationInformation = styled.span`
-  color: ${themeCssVariables.font.color.tertiary};
+  color:inherit;
 `;
 
 export const ObjectRecordShowPageBreadcrumb = ({
