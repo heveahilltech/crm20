@@ -12,7 +12,7 @@ export type BreadcrumbProps = {
 
 const StyledWrapper = styled.nav`
   align-items: center;
-  color: ${themeCssVariables.font.color.tertiary};
+  color: inherit;
   display: grid;
   font-size: ${themeCssVariables.font.size.md};
   grid-auto-flow: column;
@@ -33,7 +33,7 @@ const StyledLinkContainer = styled.div`
 `;
 
 const StyledText = styled.span`
-  color: ${themeCssVariables.font.color.primary};
+  color: inherit;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;

@@ -14,7 +14,7 @@ export type MobileBreadcrumbProps = {
 
 const StyledWrapper = styled.nav`
   align-items: center;
-  color: ${themeCssVariables.font.color.tertiary};
+  color: inherit;
   display: grid;
   font-size: ${themeCssVariables.font.size.md};
   grid-auto-flow: column;
