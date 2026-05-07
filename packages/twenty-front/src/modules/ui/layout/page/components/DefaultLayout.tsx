@@ -140,7 +140,7 @@ export const DefaultLayout = () => {
                   </>
                 ) : (
                   <StyledMainContainer>
-<UserProfileHeader />
+                    {!useShowFullScreen && <UserProfileHeader />}
                     <StyledMainOutletWrapper>
                       <AppErrorBoundary
                         FallbackComponent={AppPageErrorFallback}
