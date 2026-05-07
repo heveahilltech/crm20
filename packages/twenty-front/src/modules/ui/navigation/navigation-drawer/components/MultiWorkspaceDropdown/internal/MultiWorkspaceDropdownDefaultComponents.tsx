@@ -49,7 +49,6 @@ export const MultiWorkspaceDropdownDefaultComponents = () => {
   const { t } = useLingui();
   const { redirectToWorkspaceDomain } = useRedirectToWorkspaceDomain();
   const { closeDropdown } = useCloseDropdown();
-  const { signOut } = useAuth();
   const { enqueueErrorSnackBar } = useSnackBar();
   const { colorScheme, colorSchemeList } = useColorScheme();
   const supportChat = useAtomStateValue(supportChatState);
@@ -122,11 +121,6 @@ export const MultiWorkspaceDropdownDefaultComponents = () => {
                     LeftIcon={IconPlus}
                     text={t`Create Workspace`}
                     onClick={createWorkspace}
-                  />
-                  <MenuItem
-                    LeftIcon={IconLogout}
-                    text={t`Log out`}
-                    onClick={signOut}
                   />
                 </DropdownMenuItemsContainer>
               </DropdownContent>
