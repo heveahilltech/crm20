@@ -1,5 +1,5 @@
 import { PageHeader } from '@/ui/layout/page/components/PageHeader';
-import { PAGE_BAR_MIN_HEIGHT } from '@/ui/layout/page/constants/PageBarMinHeight';
+// import { PAGE_BAR_MIN_HEIGHT } from '@/ui/layout/page/constants/PageBarMinHeight';
 import {
   Breadcrumb,
   type BreadcrumbProps,
@@ -17,19 +17,23 @@ type FullScreenContainerProps = {
 const StyledFullScreen = styled.div`
   background: ${themeCssVariables.background.noisy};
   display: flex;
+  flex: 1;
   flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
   width: 100%;
 `;
 
 const StyledMainContainer = styled.div`
-  height: calc(
-    100% - ${PAGE_BAR_MIN_HEIGHT}px - ${themeCssVariables.spacing[9]}
-  );
+  display: flex;
+  flex: 1;
+  min-height: 0;
   padding: 0 ${themeCssVariables.spacing[3]} ${themeCssVariables.spacing[3]}
     ${themeCssVariables.spacing[3]};
 `;
 
 const StyledPageHeaderContainer = styled.div`
+  flex-shrink: 0;
   padding-left: ${themeCssVariables.spacing[3]};
 `;
 
