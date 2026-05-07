@@ -57,7 +57,6 @@ export type SettingsNavigationItem = {
 
 const useSettingsNavigationItems = (): SettingsNavigationSection[] => {
   const billing = useAtomStateValue(billingState);
-  const { signOut } = useAuth();
   const supportChat = useAtomStateValue(supportChatState);
 
   const isBillingEnabled = billing?.isBillingEnabled ?? false;
@@ -198,12 +197,6 @@ const useSettingsNavigationItems = (): SettingsNavigationSection[] => {
           onClick: () => window.FrontChat?.('show'),
           Icon: IconMessage,
           isHidden: !isSupportChatConfigured,
-        },
-        {
-          label: t`Logout`,
-          onClick: signOut,
-          Icon: IconDoorEnter,
-          matchSubPages: false,
         },
       ],
     },
