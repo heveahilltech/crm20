@@ -13,8 +13,11 @@ import { ThemeContext, themeCssVariables } from 'twenty-ui/theme-constants';
 const StyledContainer = styled.div`
   border: 1px solid ${themeCssVariables.border.color.medium};
   border-radius: ${themeCssVariables.border.radius.md};
+  display: flex;
+  flex: 1;
   height: 100%;
-  overflow-y: scroll;
+  min-height: 0;
+  overflow: hidden;
   width: 100%;
 
   .scalar-api-reference {
@@ -27,6 +30,7 @@ const StyledContainer = styled.div`
     --scalar-color-1: ${themeCssVariables.font.color.primary};
     --scalar-color-2: ${themeCssVariables.font.color.secondary};
     --scalar-color-3: ${themeCssVariables.font.color.tertiary};
+    height: 100%;
   }
 
   .scalar-app .text-pretty {
