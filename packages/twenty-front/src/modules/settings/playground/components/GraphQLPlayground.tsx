@@ -22,12 +22,18 @@ export const schemaToPath = {
 };
 
 const StyledGraphiQLContainer = styled.div`
+  display: flex;
+  flex: 1;
   height: 100%;
+  min-height: 0;
   width: 100%;
 
   .graphiql-container {
     background: ${themeCssVariables.background.primary};
     border-radius: ${themeCssVariables.border.radius.md};
+    display: flex;
+    flex: 1;
+    min-height: 0;
   }
 `;
 
