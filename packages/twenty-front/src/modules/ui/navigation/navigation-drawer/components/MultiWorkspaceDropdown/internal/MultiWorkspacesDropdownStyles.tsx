@@ -36,7 +36,7 @@ export const StyledContainer = styled.div<{
 export const StyledWorkspaceNavLogo = styled.img`
   display: block;
   flex-shrink: 0;
-  height: 28px;
+  height: 26px;
   object-fit: contain;
   width: auto;
 `;
