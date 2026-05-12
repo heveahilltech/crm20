@@ -37,8 +37,10 @@ export const StyledWorkspaceNavLogo = styled.img`
   display: block;
   flex-shrink: 0;
   height: 26px;
+  max-width: 120px;
   object-fit: contain;
-  width: auto;
+  overflow: hidden;
+  width: 120px;
 `;
 
 const StyledIconChevronDownContainer = styled.div<{ disabled?: boolean }>`
