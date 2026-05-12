@@ -33,17 +33,12 @@ export const StyledContainer = styled.div<{
   }
 `;
 
-export const StyledLabelWrapper = styled.div`
-  flex: 1 1 auto;
-  min-width: 0;
-  overflow: hidden;
-`;
-
-export const StyledLabel = styled.div`
-  font-weight: ${themeCssVariables.font.weight.medium};
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+export const StyledWorkspaceNavLogo = styled.img`
+  display: block;
+  flex-shrink: 0;
+  height: 30px;
+  object-fit: contain;
+  width: auto;
 `;
 
 const StyledIconChevronDownContainer = styled.div<{ disabled?: boolean }>`

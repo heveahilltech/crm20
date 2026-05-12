@@ -1,1 +1,2 @@
-export const DEFAULT_WORKSPACE_LOGO = '/images/integrations/voxring-icon.png';
+export const DEFAULT_WORKSPACE_LOGO =
+  '/images/integrations/VoxRing.png';

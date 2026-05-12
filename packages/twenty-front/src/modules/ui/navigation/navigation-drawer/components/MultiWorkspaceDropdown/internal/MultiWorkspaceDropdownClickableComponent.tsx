@@ -2,8 +2,7 @@ import { currentWorkspaceState } from '@/auth/states/currentWorkspaceState';
 import {
   StyledContainer,
   StyledIconChevronDown,
-  StyledLabel,
-  StyledLabelWrapper,
+  StyledWorkspaceNavLogo,
 } from '@/ui/navigation/navigation-drawer/components/MultiWorkspaceDropdown/internal/MultiWorkspacesDropdownStyles';
 import { NavigationDrawerAnimatedCollapseWrapper } from '@/ui/navigation/navigation-drawer/components/NavigationDrawerAnimatedCollapseWrapper';
 import { DEFAULT_WORKSPACE_LOGO } from '@/ui/navigation/navigation-drawer/constants/DefaultWorkspaceLogo';
@@ -32,15 +31,12 @@ export const MultiWorkspaceDropdownClickableComponent = ({
       isNavigationDrawerExpanded={isNavigationDrawerExpanded}
       disabled={disabled}
     >
-      <Avatar
-        placeholder={currentWorkspace?.displayName || ''}
-        avatarUrl={currentWorkspace?.logo ?? DEFAULT_WORKSPACE_LOGO}
+      <StyledWorkspaceNavLogo
+        src={DEFAULT_WORKSPACE_LOGO}
+        alt=""
+        draggable={false}
       />
-      <StyledLabelWrapper>
-        <NavigationDrawerAnimatedCollapseWrapper>
-          <StyledLabel>{currentWorkspace?.displayName ?? ''}</StyledLabel>
-        </NavigationDrawerAnimatedCollapseWrapper>
-      </StyledLabelWrapper>
+      
       <NavigationDrawerAnimatedCollapseWrapper>
         <StyledIconChevronDown
           size={theme.icon.size.md}
