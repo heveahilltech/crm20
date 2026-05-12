@@ -8,6 +8,7 @@ import { NavigationDrawerAnimatedCollapseWrapper } from '@/ui/navigation/navigat
 import { DEFAULT_WORKSPACE_LOGO } from '@/ui/navigation/navigation-drawer/constants/DefaultWorkspaceLogo';
 import { isNavigationDrawerExpandedState } from '@/ui/navigation/states/isNavigationDrawerExpanded';
 import { useAtomStateValue } from '@/ui/utilities/state/jotai/hooks/useAtomStateValue';
+import { isNonEmptyString } from '@sniptt/guards';
 import { useContext } from 'react';
 import { ThemeContext } from 'twenty-ui/theme-constants';
 
@@ -20,6 +21,9 @@ export const MultiWorkspaceDropdownClickableComponent = ({
 }: MultiWorkspaceDropdownClickableComponentProps) => {
   const { theme } = useContext(ThemeContext);
   const currentWorkspace = useAtomStateValue(currentWorkspaceState);
+  const workspaceLogoUrl = isNonEmptyString(currentWorkspace?.logo)
+    ? currentWorkspace.logo
+    : DEFAULT_WORKSPACE_LOGO;
 
   const isNavigationDrawerExpanded = useAtomStateValue(
     isNavigationDrawerExpandedState,
@@ -31,9 +35,12 @@ export const MultiWorkspaceDropdownClickableComponent = ({
       disabled={disabled}
     >
       <StyledWorkspaceNavLogo
-        src={currentWorkspace?.logo ?? DEFAULT_WORKSPACE_LOGO}
+        src={workspaceLogoUrl}
         alt=""
         draggable={false}
+        onError={(event) => {
+          event.currentTarget.src = DEFAULT_WORKSPACE_LOGO;
+        }}
       />
       
       <NavigationDrawerAnimatedCollapseWrapper>
