@@ -146,20 +146,21 @@ const useSettingsNavigationItems = (): SettingsNavigationSection[] => {
         //   Icon: IconApps,
         //   isHidden: !permissionMap[PermissionFlagType.API_KEYS_AND_WEBHOOKS],
         // },
-        {
-          label: t`Apps`,
-          path: SettingsPath.Applications,
-          Icon: IconPlug,
-          isHidden: !permissionMap[PermissionFlagType.APPLICATIONS],
-          modifier: 'new',
-        },
-        {
-          label: t`AI`,
-          path: SettingsPath.AI,
-          Icon: IconSparkles,
-          isHidden: !permissionMap[PermissionFlagType.WORKSPACE],
-          modifier: 'new',
-        },
+        // Enable when AI, Apps sections are set up
+        // {
+        //   label: t`Apps`,
+        //   path: SettingsPath.Applications,
+        //   Icon: IconPlug,
+        //   isHidden: !permissionMap[PermissionFlagType.APPLICATIONS],
+        //   modifier: 'new',
+        // },
+        // {
+        //   label: t`AI`,
+        //   path: SettingsPath.AI,
+        //   Icon: IconSparkles,
+        //   isHidden: !permissionMap[PermissionFlagType.WORKSPACE],
+        //   modifier: 'new',
+        // },
         {
           label: t`Security`,
           path: SettingsPath.Security,
