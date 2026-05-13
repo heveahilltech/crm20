@@ -5,6 +5,7 @@ import { isNavigationDrawerExpandedState } from '@/ui/navigation/states/isNaviga
 import { useColorScheme } from '@/ui/theme/hooks/useColorScheme';
 import { useSystemColorScheme } from '@/ui/theme/hooks/useSystemColorScheme';
 import { useIsMobile } from '@/ui/utilities/responsive/hooks/useIsMobile';
+import { useAtomStateValue } from '@/ui/utilities/state/jotai/hooks/useAtomStateValue';
 import { styled } from '@linaria/react';
 import { useLingui } from '@lingui/react/macro';
 import { useContext } from 'react';
@@ -26,7 +27,9 @@ const StyledUserProfileHeader = styled.div<{ isMobile: boolean }>`
   margin-top: ${themeCssVariables.spacing['0.5']};
   padding-bottom: ${themeCssVariables.spacing['2']};
   padding-left: ${({ isMobile }) =>
-    isMobile ? themeCssVariables.spacing['3'] : themeCssVariables.spacing['4']};
+    isMobile
+      ? themeCssVariables.spacing['3']
+      : themeCssVariables.spacing['4']};
   padding-right: ${themeCssVariables.spacing['3']};
   padding-top: ${themeCssVariables.spacing['2']};
 
@@ -112,20 +115,18 @@ const StyledActions = styled.div`
   }
 
   &[data-color-scheme='dark'] button:hover {
-    background-color: ${themeCssVariables.background.transparent
-      .medium} !important;
+    background-color: ${themeCssVariables.background.transparent.medium} !important;
   }
 
   &[data-color-scheme='light'] button:hover {
-    background-color: ${themeCssVariables.background.transparent
-      .light} !important;
+    background-color: ${themeCssVariables.background.transparent.light} !important;
   }
 `;
 
 const StyledPortalButton = styled.button`
   align-items: center;
-  background: transparent;
-  border: none;
+  background: ${themeCssVariables.background.transparent.light};
+  border: 1px solid ${themeCssVariables.border.color.medium};
   border-radius: ${themeCssVariables.border.radius.sm};
   color: ${themeCssVariables.font.color.primary};
   cursor: pointer;
@@ -154,10 +155,10 @@ const StyledPortalButton = styled.button`
 export const UserProfileHeader = () => {
   const { t } = useLingui();
   const { colorScheme: themeColorScheme } = useContext(ThemeContext);
-  const currentWorkspaceMember = useRecoilValue(currentWorkspaceMemberState);
-  const currentWorkspace = useRecoilValue(currentWorkspaceState);
+  const currentWorkspaceMember = useAtomStateValue(currentWorkspaceMemberState);
+  const currentWorkspace = useAtomStateValue(currentWorkspaceState);
   const isMobile = useIsMobile();
-  const isNavigationDrawerExpanded = useRecoilValue(
+  const isNavigationDrawerExpanded = useAtomStateValue(
     isNavigationDrawerExpandedState,
   );
   const { colorScheme, setColorScheme } = useColorScheme();
@@ -178,8 +179,7 @@ export const UserProfileHeader = () => {
   };
 
   // Determine effective theme (if System, use system preference)
-  const effectiveTheme =
-    colorScheme === 'System' ? systemColorScheme : colorScheme;
+  const effectiveTheme = colorScheme === 'System' ? systemColorScheme : colorScheme;
   const isDarkMode = effectiveTheme === 'Dark';
 
   const handleThemeToggle = () => {
@@ -223,9 +223,7 @@ export const UserProfileHeader = () => {
               size="small"
               variant="secondary"
               accent="default"
-              ariaLabel={
-                isDarkMode ? t`Switch to light mode` : t`Switch to dark mode`
-              }
+              ariaLabel={isDarkMode ? t`Switch to light mode` : t`Switch to dark mode`}
               onClick={handleThemeToggle}
             />
           )}
@@ -234,7 +232,7 @@ export const UserProfileHeader = () => {
             type="button"
             onClick={handleReturnToPortal}
           >
-            <span>{t`Return to Portal`}</span>
+            <span>{t`Return to portal`}</span>
           </StyledPortalButton>
         </StyledActions>
       </StyledRightSection>
