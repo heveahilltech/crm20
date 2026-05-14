@@ -187,18 +187,18 @@ const useSettingsNavigationItems = (): SettingsNavigationSection[] => {
     {
       label: t`Other`,
       items: [
-        {
-          label: t`Admin Panel`,
-          path: SettingsPath.AdminPanel,
-          Icon: IconServer,
-          isHidden: !isAdminEnabled,
-        },
-        {
-          label: t`Support`,
-          onClick: () => window.FrontChat?.('show'),
-          Icon: IconMessage,
-          isHidden: !isSupportChatConfigured,
-        },
+        // {
+        //   label: t`Admin Panel`,
+        //   path: SettingsPath.AdminPanel,
+        //   Icon: IconServer,
+        //   isHidden: !isAdminEnabled,
+        // },
+        // {
+        //   label: t`Support`,
+        //   onClick: () => window.FrontChat?.('show'),
+        //   Icon: IconMessage,
+        //   isHidden: !isSupportChatConfigured,
+        // },
       ],
     },
   ];
