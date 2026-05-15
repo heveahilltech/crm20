@@ -1,7 +1,7 @@
 import { FieldContext } from '@/object-record/record-field/ui/contexts/FieldContext';
 import { recordStoreFamilyState } from '@/object-record/record-store/states/recordStoreFamilyState';
 import { useRecordTitleCell } from '@/object-record/record-title-cell/hooks/useRecordTitleCell';
-import { type RecordTitleCellContainerType } from '@/object-record/record-title-cell/types/RecordTitleCellContainerType';
+import { RecordTitleCellContainerType } from '@/object-record/record-title-cell/types/RecordTitleCellContainerType';
 import { getRecordFieldInputInstanceId } from '@/object-record/utils/getRecordFieldInputId';
 import { useAtomFamilyStateValue } from '@/ui/utilities/state/jotai/hooks/useAtomFamilyStateValue';
 import { styled } from '@linaria/react';
@@ -10,6 +10,10 @@ import { useContext } from 'react';
 import { isDefined } from 'twenty-shared/utils';
 import { OverflowingTextWithTooltip } from 'twenty-ui/display';
 import { themeCssVariables } from 'twenty-ui/theme-constants';
+
+const StyledEmptyText = styled.div`
+  color: ${themeCssVariables.font.color.tertiary};
+`;
 
 const StyledDiv = styled.div`
   align-items: center;
@@ -27,10 +31,19 @@ const StyledDiv = styled.div`
   &:hover {
     background: ${themeCssVariables.background.transparent.light};
   }
-`;
 
-const StyledEmptyText = styled.div`
-  color: ${themeCssVariables.font.color.tertiary};
+  &[data-container-type='${RecordTitleCellContainerType.PageHeader}'] {
+    color: inherit;
+  }
+
+  &[data-container-type='${RecordTitleCellContainerType.PageHeader}']:hover {
+    background: rgba(255, 255, 255, 0.12);
+  }
+
+  &[data-container-type='${RecordTitleCellContainerType.PageHeader}']
+    ${StyledEmptyText} {
+    color: inherit;
+  }
 `;
 
 export const RecordTitleCellSingleTextDisplayMode = ({
@@ -49,6 +62,7 @@ export const RecordTitleCellSingleTextDisplayMode = ({
 
   return (
     <StyledDiv
+      data-container-type={containerType}
       onClick={() => {
         openRecordTitleCell({
           recordId,

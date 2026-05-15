@@ -1,7 +1,7 @@
 import { FieldContext } from '@/object-record/record-field/ui/contexts/FieldContext';
 import { recordStoreFamilyState } from '@/object-record/record-store/states/recordStoreFamilyState';
 import { useAtomFamilyStateValue } from '@/ui/utilities/state/jotai/hooks/useAtomFamilyStateValue';
-import { type RecordTitleCellContainerType } from '@/object-record/record-title-cell/types/RecordTitleCellContainerType';
+import { RecordTitleCellContainerType } from '@/object-record/record-title-cell/types/RecordTitleCellContainerType';
 import { styled } from '@linaria/react';
 import { useContext } from 'react';
 import { OverflowingTextWithTooltip } from 'twenty-ui/display';
@@ -19,10 +19,14 @@ const StyledDiv = styled.div`
   justify-content: center;
   overflow: hidden;
   padding: ${themeCssVariables.spacing[0]} 5px;
+
+  &[data-container-type='${RecordTitleCellContainerType.PageHeader}'] {
+    color: inherit;
+  }
 `;
 
 export const RecordTitleCellUuidFieldDisplay = ({
-  containerType: _containerType,
+  containerType,
 }: {
   containerType: RecordTitleCellContainerType;
 }) => {
@@ -33,7 +37,7 @@ export const RecordTitleCellUuidFieldDisplay = ({
   const uuidValue = recordStore?.[fieldDefinition.metadata.fieldName] ?? '';
 
   return (
-    <StyledDiv>
+    <StyledDiv data-container-type={containerType}>
       <OverflowingTextWithTooltip text={uuidValue} />
     </StyledDiv>
   );
