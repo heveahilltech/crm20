@@ -1,6 +1,7 @@
 import { FieldContext } from '@/object-record/record-field/ui/contexts/FieldContext';
 import { useFullNameFieldDisplay } from '@/object-record/record-field/ui/meta-types/hooks/useFullNameFieldDisplay';
 import { useRecordTitleCell } from '@/object-record/record-title-cell/hooks/useRecordTitleCell';
+import { RecordTitleCellContainerType } from '@/object-record/record-title-cell/types/RecordTitleCellContainerType';
 import { getRecordFieldInputInstanceId } from '@/object-record/utils/getRecordFieldInputId';
 import { usePushFocusItemToFocusStack } from '@/ui/utilities/focus/hooks/usePushFocusItemToFocusStack';
 import { FocusComponentType } from '@/ui/utilities/focus/types/FocusComponentType';
@@ -10,6 +11,10 @@ import { isNonEmptyString } from '@sniptt/guards';
 import { useContext } from 'react';
 import { OverflowingTextWithTooltip } from 'twenty-ui/display';
 import { themeCssVariables } from 'twenty-ui/theme-constants';
+
+const StyledEmptyText = styled.div`
+  color: ${themeCssVariables.font.color.tertiary};
+`;
 
 const StyledDiv = styled.div`
   align-items: center;
@@ -27,16 +32,25 @@ const StyledDiv = styled.div`
   &:hover {
     background: ${themeCssVariables.background.transparent.light};
   }
-`;
 
-const StyledEmptyText = styled.div`
-  color: ${themeCssVariables.font.color.tertiary};
+  &[data-container-type='${RecordTitleCellContainerType.PageHeader}'] {
+    color: inherit;
+  }
+
+  &[data-container-type='${RecordTitleCellContainerType.PageHeader}']:hover {
+    background: rgba(255, 255, 255, 0.12);
+  }
+
+  &[data-container-type='${RecordTitleCellContainerType.PageHeader}']
+    ${StyledEmptyText} {
+    color: inherit;
+  }
 `;
 
 export const RecordTitleFullNameFieldDisplay = ({
   containerType,
 }: {
-  containerType: string;
+  containerType: RecordTitleCellContainerType;
 }) => {
   const { recordId, fieldDefinition } = useContext(FieldContext);
 
@@ -59,6 +73,7 @@ export const RecordTitleFullNameFieldDisplay = ({
 
   return (
     <StyledDiv
+      data-container-type={containerType}
       onClick={() => {
         pushFocusItemToFocusStack({
           focusId: recordTitleCellId,
