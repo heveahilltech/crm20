@@ -43,6 +43,19 @@ export const StyledWorkspaceNavLogo = styled.img`
   width: 120px;
 `;
 
+export const StyledLabelWrapper = styled.div`
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+`;
+
+export const StyledLabel = styled.div`
+  font-weight: ${themeCssVariables.font.weight.medium};
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+`;
+
 const StyledIconChevronDownContainer = styled.div<{ disabled?: boolean }>`
   align-items: center;
   color: ${({ disabled }) =>
