@@ -4,6 +4,7 @@ import { currentUserWorkspaceState } from '@/auth/states/currentUserWorkspaceSta
 import { currentWorkspaceMemberState } from '@/auth/states/currentWorkspaceMemberState';
 import { currentWorkspaceMembersState } from '@/auth/states/currentWorkspaceMembersState';
 import { currentWorkspaceState } from '@/auth/states/currentWorkspaceState';
+import { workspacePublicDataState } from '@/auth/states/workspacePublicDataState';
 import { authProvidersState } from '@/client-config/states/authProvidersState';
 import { useIsCurrentLocationOnAWorkspace } from '@/domain-manager/hooks/useIsCurrentLocationOnAWorkspace';
 import { useLastAuthenticatedWorkspaceDomain } from '@/domain-manager/hooks/useLastAuthenticatedWorkspaceDomain';
@@ -34,6 +35,7 @@ export const useLoadCurrentUser = () => {
     currentWorkspaceMembersState,
   );
   const setCurrentWorkspace = useSetAtomState(currentWorkspaceState);
+  const setWorkspacePublicData = useSetAtomState(workspacePublicDataState);
   const { initializeFormatPreferences } = useInitializeFormatPreferences();
   const setWorkspaceAuthBypassProviders = useSetAtomState(
     workspaceAuthBypassProvidersState,
@@ -111,6 +113,15 @@ export const useLoadCurrentUser = () => {
     setCurrentWorkspace(workspace);
 
     if (isDefined(workspace)) {
+      setWorkspacePublicData((previousWorkspacePublicData) =>
+        isDefined(previousWorkspacePublicData)
+          ? {
+              ...previousWorkspacePublicData,
+              logo: workspace.logo ?? null,
+            }
+          : previousWorkspacePublicData,
+      );
+
       setWorkspaceAuthBypassProviders({
         google: authProviders.google && workspace.isGoogleAuthBypassEnabled,
         microsoft:
@@ -145,6 +156,7 @@ export const useLoadCurrentUser = () => {
     setLastAuthenticateWorkspaceDomain,
     authProviders,
     setWorkspaceAuthBypassProviders,
+    setWorkspacePublicData,
   ]);
 
   return {

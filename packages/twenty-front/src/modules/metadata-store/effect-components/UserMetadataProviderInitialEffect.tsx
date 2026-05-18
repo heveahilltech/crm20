@@ -6,6 +6,7 @@ import { currentWorkspaceDeletedMembersState } from '@/auth/states/currentWorksp
 import { currentWorkspaceMemberState } from '@/auth/states/currentWorkspaceMemberState';
 import { currentWorkspaceMembersState } from '@/auth/states/currentWorkspaceMembersState';
 import { currentWorkspaceState } from '@/auth/states/currentWorkspaceState';
+import { workspacePublicDataState } from '@/auth/states/workspacePublicDataState';
 import { isCurrentUserLoadedState } from '@/auth/states/isCurrentUserLoadedState';
 import { useInitializeFormatPreferences } from '@/localization/hooks/useInitializeFormatPreferences';
 import { getDateFnsLocale } from '@/ui/field/display/utils/getDateFnsLocale';
@@ -34,6 +35,7 @@ export const UserMetadataProviderInitialEffect = () => {
 
   const setCurrentUser = useSetAtomState(currentUserState);
   const setCurrentWorkspace = useSetAtomState(currentWorkspaceState);
+  const setWorkspacePublicData = useSetAtomState(workspacePublicDataState);
   const setCurrentUserWorkspace = useSetAtomState(currentUserWorkspaceState);
   const setAvailableWorkspaces = useSetAtomState(availableWorkspacesState);
   const setCurrentWorkspaceMember = useSetAtomState(
@@ -71,6 +73,8 @@ export const UserMetadataProviderInitialEffect = () => {
     GetCurrentUserDocument,
     {
       skip: shouldSkipUserQuery,
+      // Always fetch a fresh signed logo URL; cached logo URLs expire and desync the navbar/favicon.
+      fetchPolicy: 'network-only',
     },
   );
 
@@ -92,14 +96,25 @@ export const UserMetadataProviderInitialEffect = () => {
     setCurrentUser(userQueryData.currentUser);
 
     if (isDefined(userQueryData.currentUser.currentWorkspace)) {
-      setCurrentWorkspace({
+      const workspace = {
         ...userQueryData.currentUser.currentWorkspace,
         defaultRole:
           userQueryData.currentUser.currentWorkspace.defaultRole ?? null,
         workspaceCustomApplication:
           userQueryData.currentUser.currentWorkspace
             .workspaceCustomApplication ?? null,
-      });
+      };
+
+      setCurrentWorkspace(workspace);
+
+      setWorkspacePublicData((previousWorkspacePublicData) =>
+        isDefined(previousWorkspacePublicData)
+          ? {
+              ...previousWorkspacePublicData,
+              logo: workspace.logo ?? null,
+            }
+          : previousWorkspacePublicData,
+      );
     }
 
     if (isDefined(userQueryData.currentUser.currentUserWorkspace)) {
@@ -178,6 +193,7 @@ export const UserMetadataProviderInitialEffect = () => {
     setCurrentWorkspaceDeletedMembers,
     updateLocaleCatalog,
     setIsCurrentUserLoaded,
+    setWorkspacePublicData,
   ]);
 
   return null;
