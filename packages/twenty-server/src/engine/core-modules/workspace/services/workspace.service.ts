@@ -285,12 +285,18 @@ export class WorkspaceService extends TypeOrmQueryService<WorkspaceEntity> {
       }
     }
 
+    const logoFileIdToDelete =
+      payload.logo === null && isDefined(workspace.logoFileId)
+        ? workspace.logoFileId
+        : undefined;
+
     let updatedWorkspace: WorkspaceEntity;
 
     try {
       updatedWorkspace = await this.workspaceRepository.save({
         ...workspace,
         ...payload,
+        ...(payload.logo === null ? { logoFileId: null } : {}),
       });
     } catch (error) {
       // revert custom domain registration on error
@@ -309,9 +315,9 @@ export class WorkspaceService extends TypeOrmQueryService<WorkspaceEntity> {
       workspace.id,
     );
 
-    if (payload.logo === null && isDefined(workspace.logoFileId)) {
+    if (isDefined(logoFileIdToDelete)) {
       await this.fileCorePictureService.deleteCorePicture({
-        fileId: workspace.logoFileId,
+        fileId: logoFileIdToDelete,
         workspaceId: workspace.id,
       });
     }
