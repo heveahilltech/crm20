@@ -6,6 +6,7 @@ import {
   UpdateWorkspaceDocument,
   UploadWorkspaceLogoDocument,
 } from '~/generated-metadata/graphql';
+import { isDefined } from 'twenty-shared/utils';
 import { isUndefinedOrNull } from '~/utils/isUndefinedOrNull';
 
 export const WorkspaceLogoUploader = () => {
@@ -23,36 +24,49 @@ export const WorkspaceLogoUploader = () => {
       throw new Error('Workspace id not found');
     }
 
-    await uploadLogo({
+    const { data } = await uploadLogo({
       variables: {
         file,
       },
-      onCompleted: (data) => {
-        setCurrentWorkspace({
-          ...currentWorkspace,
-          logo: data.uploadWorkspaceLogo.url,
-        });
-      },
     });
+
+    const logoUrl = data?.uploadWorkspaceLogo?.url;
+
+    if (!isDefined(logoUrl)) {
+      return;
+    }
+
+    setCurrentWorkspace((previousWorkspace) =>
+      previousWorkspace
+        ? {
+            ...previousWorkspace,
+            logo: logoUrl,
+          }
+        : previousWorkspace,
+    );
   };
 
   const onRemove = async () => {
     if (!currentWorkspace?.id) {
       throw new Error('Workspace id not found');
     }
+
     await updateWorkspace({
       variables: {
         input: {
           logo: null,
         },
       },
-      onCompleted: () => {
-        setCurrentWorkspace({
-          ...currentWorkspace,
-          logo: null,
-        });
-      },
     });
+
+    setCurrentWorkspace((previousWorkspace) =>
+      previousWorkspace
+        ? {
+            ...previousWorkspace,
+            logo: null,
+          }
+        : previousWorkspace,
+    );
   };
 
   return (
