@@ -11,6 +11,7 @@ import { isDefined } from 'twenty-shared/utils';
 import { Like, type QueryRunner, Repository } from 'typeorm';
 import { v4 } from 'uuid';
 
+import { CoreEntityCacheService } from 'src/engine/core-entity-cache/services/core-entity-cache.service';
 import {
   ApplicationException,
   ApplicationExceptionCode,
@@ -38,6 +39,7 @@ export class FileCorePictureService {
     private readonly fileRepository: Repository<FileEntity>,
     private readonly fileUrlService: FileUrlService,
     private readonly secureHttpClientService: SecureHttpClientService,
+    private readonly coreEntityCacheService: CoreEntityCacheService,
   ) {}
 
   private async findCustomApplicationUniversalIdentifier(
@@ -118,6 +120,8 @@ export class FileCorePictureService {
     await this.workspaceRepository.update(workspace.id, {
       logoFileId: savedFile.id,
     });
+
+    await this.coreEntityCacheService.invalidate('workspaceEntity', workspace.id);
 
     if (isDefined(workspace.logoFileId)) {
       await this.deleteCorePicture({

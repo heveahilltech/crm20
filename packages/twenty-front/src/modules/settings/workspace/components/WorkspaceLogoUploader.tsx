@@ -1,15 +1,17 @@
 import { currentWorkspaceState } from '@/auth/states/currentWorkspaceState';
 import { useAtomState } from '@/ui/utilities/state/jotai/hooks/useAtomState';
 import { ImageInput } from '@/ui/input/components/ImageInput';
+import { useLoadCurrentUser } from '@/users/hooks/useLoadCurrentUser';
 import { useMutation } from '@apollo/client/react';
+import { isDefined } from 'twenty-shared/utils';
 import {
   UpdateWorkspaceDocument,
   UploadWorkspaceLogoDocument,
 } from '~/generated-metadata/graphql';
-import { isDefined } from 'twenty-shared/utils';
 import { isUndefinedOrNull } from '~/utils/isUndefinedOrNull';
 
 export const WorkspaceLogoUploader = () => {
+  const { loadCurrentUser } = useLoadCurrentUser();
   const [uploadLogo] = useMutation(UploadWorkspaceLogoDocument);
   const [updateWorkspace] = useMutation(UpdateWorkspaceDocument);
   const [currentWorkspace, setCurrentWorkspace] = useAtomState(
@@ -44,6 +46,8 @@ export const WorkspaceLogoUploader = () => {
           }
         : previousWorkspace,
     );
+
+    await loadCurrentUser();
   };
 
   const onRemove = async () => {
@@ -67,6 +71,8 @@ export const WorkspaceLogoUploader = () => {
           }
         : previousWorkspace,
     );
+
+    await loadCurrentUser();
   };
 
   return (
