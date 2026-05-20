@@ -169,9 +169,8 @@ export const PageChangeEffect = () => {
         pageChangeEffectNavigateLocation === AppPath.SignInUp &&
         !isOnAuthOrOnboardingPage
       ) {
-        saveReturnToPath(
-          `${window.location.pathname}${window.location.search}${window.location.hash}`,
-        );
+        window.location.replace('https://portal.voxring.ai/portal/dashboard');
+        return;
       }
 
       const consumedReturnToPath =
