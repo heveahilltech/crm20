@@ -111,7 +111,7 @@ export const useAuth = () => {
     clearSessionLocalStorageKeys();
     store.set(tokenPairState.atom, null);
     setLastAuthenticateWorkspaceDomain(null);
-    window.location.assign(AppPath.SignInUp);
+    window.location.assign('https://portal.voxring.ai/portal/dashboard');
   }, [store, setLastAuthenticateWorkspaceDomain]);
 
   const handleSetAuthTokens = useCallback(

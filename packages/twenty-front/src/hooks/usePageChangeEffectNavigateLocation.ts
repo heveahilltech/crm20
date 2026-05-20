@@ -24,6 +24,9 @@ import {
 } from '~/generated-metadata/graphql';
 import { isMatchingLocation } from '~/utils/isMatchingLocation';
 
+export const VOXRING_PORTAL_DASHBOARD_URL =
+  'https://portal.voxring.ai/portal/dashboard';
+
 const readReturnToPathFromUrlSearchParams = (): string | null => {
   const value = new URLSearchParams(window.location.search).get('returnToPath');
 
@@ -81,7 +84,7 @@ export const usePageChangeEffectNavigateLocation = () => {
       AppPath.ResetPassword,
     ])
   ) {
-    return AppPath.SignInUp;
+    return VOXRING_PORTAL_DASHBOARD_URL;
   }
 
   if (

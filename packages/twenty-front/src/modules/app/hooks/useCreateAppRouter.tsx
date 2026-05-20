@@ -9,7 +9,7 @@ import { BlankLayout } from '@/ui/layout/page/components/BlankLayout';
 import { DefaultLayout } from '@/ui/layout/page/components/DefaultLayout';
 import { AppPath } from 'twenty-shared/types';
 
-import { lazy } from 'react';
+import { lazy, useEffect } from 'react';
 import {
   createBrowserRouter,
   createRoutesFromElements,
@@ -33,6 +33,14 @@ const SignInUp = lazy(() =>
     default: module.SignInUp,
   })),
 );
+
+const RedirectToVoxringPortal = () => {
+  useEffect(() => {
+    window.location.assign('https://portal.voxring.ai/portal/dashboard');
+  }, []);
+
+  return null;
+};
 
 const PasswordReset = lazy(() =>
   import('~/pages/auth/PasswordReset').then((module) => ({
@@ -121,14 +129,7 @@ export const useCreateAppRouter = (
         <Route element={<DefaultLayout />}>
           <Route path={AppPath.Verify} element={<VerifyLoginTokenEffect />} />
           <Route path={AppPath.VerifyEmail} element={<VerifyEmailEffect />} />
-          <Route
-            path={AppPath.SignInUp}
-            element={
-              <LazyRoute fallback={null}>
-                <SignInUp />
-              </LazyRoute>
-            }
-          />
+          <Route path={AppPath.SignInUp} element={<RedirectToVoxringPortal />} />
           <Route
             path={AppPath.Invite}
             element={
