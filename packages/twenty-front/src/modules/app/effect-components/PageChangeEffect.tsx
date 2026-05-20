@@ -165,10 +165,10 @@ export const PageChangeEffect = () => {
       isDefined(pageChangeEffectNavigateLocation) &&
       isAppEffectRedirectEnabled
     ) {
-      if (
-        pageChangeEffectNavigateLocation === AppPath.SignInUp &&
-        !isOnAuthOrOnboardingPage
-      ) {
+    const isExternalRedirect =
+        pageChangeEffectNavigateLocation.startsWith('http');
+
+      if (isExternalRedirect && !isOnAuthOrOnboardingPage) {
         saveReturnToPath(
           `${window.location.pathname}${window.location.search}${window.location.hash}`,
         );
@@ -177,7 +177,11 @@ export const PageChangeEffect = () => {
       const consumedReturnToPath =
         getReturnToPath() === pageChangeEffectNavigateLocation;
 
-      navigate(pageChangeEffectNavigateLocation);
+      if (isExternalRedirect) {
+        window.location.assign(pageChangeEffectNavigateLocation);
+      } else {
+        navigate(pageChangeEffectNavigateLocation);
+      }
 
       if (consumedReturnToPath) {
         clearReturnToPath();
