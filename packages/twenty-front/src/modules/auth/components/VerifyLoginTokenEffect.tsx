@@ -29,7 +29,7 @@ export const VerifyLoginTokenEffect = () => {
     if (isDefined(loginToken)) {
       verifyLoginToken(loginToken);
     } else if (!hasAccessTokenPair) {
-      navigate(AppPath.SignInUp);
+      window.location.replace('https://portal.voxring.ai/portal/dashboard');
     }
     // Verify only needs to run once at mount
     // oxlint-disable-next-line react-hooks/exhaustive-deps

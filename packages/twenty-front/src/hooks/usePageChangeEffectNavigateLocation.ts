@@ -81,7 +81,8 @@ export const usePageChangeEffectNavigateLocation = () => {
       AppPath.ResetPassword,
     ])
   ) {
-    return AppPath.SignInUp;
+    window.location.replace('https://portal.voxring.ai/portal/dashboard');
+    return;
   }
 
   if (
