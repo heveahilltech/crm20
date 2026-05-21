@@ -36,7 +36,7 @@ const SignInUp = lazy(() =>
 
 const RedirectToVoxringPortal = () => {
   useEffect(() => {
-    window.location.assign('https://portal.voxring.ai/portal/dashboard');
+    window.location.assign('https://portal.voxring.ai/auth/login');
   }, []);
 
   return null;
