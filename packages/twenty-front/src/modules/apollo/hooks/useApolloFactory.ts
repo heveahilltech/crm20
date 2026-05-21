@@ -82,9 +82,7 @@ export const useApolloFactory = (options: Partial<Options> = {}) => {
           if (isValidReturnToPath(path)) {
             setReturnToPath(path);
           }
-          window.location.assign(
-            'https://portal.voxring.ai/portal/dashboard',
-          );
+          window.location.assign('https://portal.voxring.ai/auth/login');
         }
       },
       onAppVersionMismatch: (message) => {
