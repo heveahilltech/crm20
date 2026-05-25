@@ -31,6 +31,7 @@ const StyledRecordTableCellDatePickerOverlay = styled(OverlayContainer)`
   align-items: stretch;
   backdrop-filter: none;
   background: ${themeCssVariables.background.primary};
+  color: ${themeCssVariables.font.color.primary};
   flex-direction: column;
   overflow-x: visible;
   overflow-y: auto;

@@ -44,9 +44,24 @@ const StyledOuterWrapper = styled.div`
   width: 280px;
 `;
 
+const StyledClearFooter = styled.div`
+  background: ${themeCssVariables.background.primary};
+  bottom: 0;
+  color: ${themeCssVariables.font.color.primary};
+  flex-shrink: 0;
+  position: sticky;
+  z-index: 1;
+
+  & svg {
+    color: ${themeCssVariables.font.color.secondary};
+  }
+`;
+
 const StyledContainer = styled.div<{
   calendarDisabled?: boolean;
 }>`
+  display: flex;
+  flex-direction: column;
   width: 280px;
 
   & .react-datepicker {
@@ -550,14 +565,14 @@ export const DateTimePicker = ({
           />
         </Suspense>
         {clearable && (
-          <>
+          <StyledClearFooter>
             <StyledSeparator />
             <StyledButtonContainer onClick={handleClear}>
               <StyledButtonContent>
                 <MenuItemLeftContent LeftIcon={IconCalendarX} text={t`Clear`} />
               </StyledButtonContent>
             </StyledButtonContainer>
-          </>
+          </StyledClearFooter>
         )}
       </StyledContainer>
     </StyledOuterWrapper>
