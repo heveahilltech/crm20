@@ -13,8 +13,8 @@ import { styled } from '@linaria/react';
 import {
   autoUpdate,
   flip,
-  offset,
   shift,
+  offset,
   useFloating,
   type MiddlewareState,
 } from '@floating-ui/react';
@@ -77,14 +77,14 @@ export const RecordTableCellEditMode = ({
 
   const { refs, floatingStyles } = useFloating({
     placement: 'bottom-start',
-    strategy: 'fixed',
     middleware: [
       flip(),
-      shift({ padding: 8 }),
       offset({
         mainAxis: -33,
         crossAxis: -3,
       }),
+      flip(),
+      shift({ padding: 16 }),
       setFieldInputLayoutDirectionMiddleware,
     ],
 
