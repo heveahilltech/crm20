@@ -14,10 +14,12 @@ import {
   autoUpdate,
   flip,
   offset,
+  shift,
   useFloating,
   type MiddlewareState,
 } from '@floating-ui/react';
 import { useContext, type ReactElement } from 'react';
+import { createPortal } from 'react-dom';
 
 const StyledEditableCellEditModeContainer = styled.div<{
   isFieldInputOnly: boolean;
@@ -75,8 +77,10 @@ export const RecordTableCellEditMode = ({
 
   const { refs, floatingStyles } = useFloating({
     placement: 'bottom-start',
+    strategy: 'fixed',
     middleware: [
       flip(),
+      shift({ padding: 8 }),
       offset({
         mainAxis: -33,
         crossAxis: -3,
@@ -108,14 +112,17 @@ export const RecordTableCellEditMode = ({
           {children}
         </StyledInputModeOnlyContainer>
       ) : (
-        <OverlayContainer
-          ref={refs.setFloating}
-          style={floatingStyles}
-          borderRadius="sm"
-          hasDangerBorder={recordFieldInputIsFieldInError}
-        >
-          {children}
-        </OverlayContainer>
+        createPortal(
+          <OverlayContainer
+            ref={refs.setFloating}
+            style={floatingStyles}
+            borderRadius="sm"
+            hasDangerBorder={recordFieldInputIsFieldInError}
+          >
+            {children}
+          </OverlayContainer>,
+          document.body,
+        )
       )}
     </StyledEditableCellEditModeContainer>
   );
