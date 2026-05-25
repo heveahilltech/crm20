@@ -3,6 +3,7 @@ import { RecordFieldComponentInstanceContext } from '@/object-record/record-fiel
 import { recordFieldInputIsFieldInErrorComponentState } from '@/object-record/record-field/ui/states/recordFieldInputIsFieldInErrorComponentState';
 import { recordFieldInputLayoutDirectionComponentState } from '@/object-record/record-field/ui/states/recordFieldInputLayoutDirectionComponentState';
 import { recordFieldInputLayoutDirectionLoadingComponentState } from '@/object-record/record-field/ui/states/recordFieldInputLayoutDirectionLoadingComponentState';
+import { TABLE_Z_INDEX } from '@/object-record/record-table/constants/TableZIndex';
 import { RecordTableCellContext } from '@/object-record/record-table/contexts/RecordTableCellContext';
 import { useFocusRecordTableCell } from '@/object-record/record-table/record-table-cell/hooks/useFocusRecordTableCell';
 import { OverlayContainer } from '@/ui/layout/overlay/components/OverlayContainer';
@@ -13,13 +14,28 @@ import { styled } from '@linaria/react';
 import {
   autoUpdate,
   flip,
-  shift,
   offset,
+  shift,
+  size,
   useFloating,
   type MiddlewareState,
+  type Placement,
 } from '@floating-ui/react';
 import { useContext, type ReactElement } from 'react';
 import { createPortal } from 'react-dom';
+import { themeCssVariables } from 'twenty-ui/theme-constants';
+
+const RECORD_TABLE_DATE_PICKER_VIEWPORT_PADDING = 16;
+
+const StyledRecordTableCellDatePickerOverlay = styled(OverlayContainer)`
+  align-items: stretch;
+  backdrop-filter: none;
+  background: ${themeCssVariables.background.primary};
+  flex-direction: column;
+  overflow-x: visible;
+  overflow-y: auto;
+  z-index: ${TABLE_Z_INDEX.cell.editMode};
+`;
 
 const StyledEditableCellEditModeContainer = styled.div<{
   isFieldInputOnly: boolean;
@@ -75,16 +91,32 @@ export const RecordTableCellEditMode = ({
     },
   };
 
+  const datePickerBoundaryPadding = RECORD_TABLE_DATE_PICKER_VIEWPORT_PADDING;
+
   const { refs, floatingStyles } = useFloating({
     placement: 'bottom-start',
+    strategy: 'fixed',
     middleware: [
-      flip(),
-      offset({
-        mainAxis: -33,
+      offset(({ placement }: { placement: Placement }) => ({
+        mainAxis: placement.startsWith('top') ? 8 : 4,
         crossAxis: -3,
+      })),
+      flip({ padding: datePickerBoundaryPadding }),
+      shift({ padding: datePickerBoundaryPadding }),
+      size({
+        padding: datePickerBoundaryPadding,
+        apply({
+          availableHeight,
+          elements,
+        }: {
+          availableHeight: number;
+          elements: { floating: HTMLElement; reference: HTMLElement };
+        }) {
+          Object.assign(elements.floating.style, {
+            maxHeight: `${Math.max(availableHeight, 0)}px`,
+          });
+        },
       }),
-      flip(),
-      shift({ padding: 16 }),
       setFieldInputLayoutDirectionMiddleware,
     ],
 
@@ -113,14 +145,14 @@ export const RecordTableCellEditMode = ({
         </StyledInputModeOnlyContainer>
       ) : (
         createPortal(
-          <OverlayContainer
+          <StyledRecordTableCellDatePickerOverlay
             ref={refs.setFloating}
             style={floatingStyles}
             borderRadius="sm"
             hasDangerBorder={recordFieldInputIsFieldInError}
           >
             {children}
-          </OverlayContainer>,
+          </StyledRecordTableCellDatePickerOverlay>,
           document.body,
         )
       )}
