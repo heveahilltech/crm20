@@ -15,6 +15,9 @@ type LogoProps = {
   onClick?: () => void;
 };
 
+const DEFAULT_APP_ICON =
+  'https://portal.voxring.ai/assets/voxring-logo-icon.png';
+
 const StyledContainer = styled.div`
   height: ${themeCssVariables.spacing[12]};
   margin-bottom: ${themeCssVariables.spacing[4]};
@@ -57,10 +60,9 @@ export const Logo = ({
   onClick,
 }: LogoProps) => {
   const { redirectToDefaultDomain } = useRedirectToDefaultDomain();
-  const defaultPrimaryLogoUrl = `${window.location.origin}/images/integrations/voxring-icon.png`;
 
   const primaryLogoUrl = getImageAbsoluteURI({
-    imageUrl: primaryLogo ?? defaultPrimaryLogoUrl,
+    imageUrl: primaryLogo ?? DEFAULT_APP_ICON,
     baseUrl: REACT_APP_SERVER_BASE_URL,
   });
 

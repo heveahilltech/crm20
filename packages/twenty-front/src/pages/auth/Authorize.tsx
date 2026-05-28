@@ -27,14 +27,11 @@ import {
 } from '~/generated-metadata/graphql';
 import { useNavigateApp } from '~/hooks/useNavigateApp';
 
-const StyledCardWrapper = styled.div`
-  --oauth-modal-content-max-width: calc(
-    ${themeCssVariables.modal.size.md.width} + ${themeCssVariables.spacing[32]}
-  );
+const DEFAULT_APP_ICON =
+  'https://portal.voxring.ai/assets/voxring-logo-icon.png';
 
-  background-color: ${themeCssVariables.background.primary};
-  border-radius: ${themeCssVariables.border.radius.md};
-  box-shadow: ${themeCssVariables.boxShadow.strong};
+const StyledContainer = styled.div`
+  align-items: center;
   display: flex;
   flex-direction: column;
   max-width: min(
@@ -295,8 +292,8 @@ export const Authorize = () => {
       <StyledCardWrapper>
         <StyledAppsContainer>
           <img
-            src="/images/integrations/twenty-logo.svg"
-            alt="twenty-icon"
+            src={DEFAULT_APP_ICON}
+            alt="brand-icon"
             height={40}
             width={40}
           />
