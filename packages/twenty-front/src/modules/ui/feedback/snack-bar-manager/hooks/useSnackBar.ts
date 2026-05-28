@@ -7,6 +7,10 @@ import {
   snackBarInternalComponentState,
   type SnackBarOptions,
 } from '@/ui/feedback/snack-bar-manager/states/snackBarInternalComponentState';
+import {
+  isAuthSessionTerminated,
+  isUnauthenticatedApolloError,
+} from '@/apollo/utils/apolloAuthSession';
 import { buildErrorAction } from '@/ui/feedback/snack-bar-manager/utils/buildErrorAction';
 import { useAvailableComponentInstanceIdOrThrow } from '@/ui/utilities/state/component-state/hooks/useAvailableComponentInstanceIdOrThrow';
 import { type ErrorLike } from '@apollo/client';
@@ -135,6 +139,13 @@ export const useSnackBar = () => {
       options?: Omit<SnackBarOptions, 'message' | 'id'>;
     }) => {
       if (apolloError?.name === 'AbortError') {
+        return;
+      }
+
+      if (
+        isAuthSessionTerminated() ||
+        (apolloError && isUnauthenticatedApolloError(apolloError))
+      ) {
         return;
       }
 

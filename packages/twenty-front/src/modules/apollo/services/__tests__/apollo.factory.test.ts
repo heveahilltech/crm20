@@ -6,6 +6,8 @@ import {
   AUTO_SELECT_FAST_MODEL_ID,
   AUTO_SELECT_SMART_MODEL_ID,
 } from 'twenty-shared/constants';
+import { renewToken } from '@/auth/services/AuthService';
+import { resetAuthSessionTerminated } from '@/apollo/utils/apolloAuthSession';
 import { ApolloFactory, type Options } from '@/apollo/services/apollo.factory';
 import { CUSTOM_WORKSPACE_APPLICATION_MOCK } from '@/object-metadata/hooks/__tests__/constants/CustomWorkspaceApplicationMock.test.constant';
 import { WorkspaceActivationStatus } from '~/generated-metadata/graphql';
@@ -38,6 +40,8 @@ jest.mock('@/apollo/utils/getTokenPair', () => ({
 const mockOnError = jest.fn();
 const mockOnNetworkError = jest.fn();
 const mockOnPayloadTooLarge = jest.fn();
+const mockOnUnauthenticatedError = jest.fn();
+const mockRenewToken = renewToken as jest.MockedFunction<typeof renewToken>;
 
 const mockWorkspaceMember = {
   id: 'workspace-member-id',
@@ -130,6 +134,18 @@ const makeRequest = async () => {
 };
 
 describe('ApolloFactory', () => {
+  beforeEach(() => {
+    resetAuthSessionTerminated();
+    mockOnUnauthenticatedError.mockClear();
+    mockRenewToken.mockResolvedValue({
+      accessOrWorkspaceAgnosticToken: {
+        token: 'newAccessToken',
+        expiresAt: '',
+      },
+      refreshToken: { token: 'newRefreshToken', expiresAt: '' },
+    });
+  });
+
   it('should create an instance of ApolloFactory', () => {
     const options = createMockOptions();
     const apolloFactory = new ApolloFactory(options);
@@ -244,6 +260,111 @@ describe('ApolloFactory', () => {
     apolloFactory.updateWorkspaceMember(newWorkspaceMember);
     expect(apolloFactory['currentWorkspaceMember']).toEqual(newWorkspaceMember);
   });
+
+  it('should call onUnauthenticatedError when token renewal returns no tokens', async () => {
+    mockRenewToken.mockResolvedValue(undefined);
+
+    const errors = [
+      {
+        message: 'Token has expired.',
+        extensions: {
+          code: 'UNAUTHENTICATED',
+        },
+      },
+    ];
+
+    fetchMock.mockResponse(() =>
+      Promise.resolve({
+        body: JSON.stringify({
+          data: {},
+          errors,
+        }),
+      }),
+    );
+
+    const options = {
+      ...createMockOptions(),
+      onUnauthenticatedError: mockOnUnauthenticatedError,
+    };
+    const apolloFactory = new ApolloFactory(options);
+    const client = apolloFactory.getClient();
+
+    await expect(
+      client.mutate({
+        mutation: gql`
+          mutation TrackAnalytics(
+            $type: AnalyticsType!
+            $event: String
+            $name: String
+            $properties: JSON
+          ) {
+            trackAnalytics(
+              type: $type
+              event: $event
+              name: $name
+              properties: $properties
+            ) {
+              success
+            }
+          }
+        `,
+      }),
+    ).rejects.toBeDefined();
+
+    expect(mockOnUnauthenticatedError).toHaveBeenCalled();
+  }, 10000);
+
+  it('should call onUnauthenticatedError when token renewal fails', async () => {
+    mockRenewToken.mockRejectedValue(new Error('Refresh token expired'));
+
+    const errors = [
+      {
+        extensions: {
+          code: 'UNAUTHENTICATED',
+        },
+      },
+    ];
+
+    fetchMock.mockResponse(() =>
+      Promise.resolve({
+        body: JSON.stringify({
+          data: {},
+          errors,
+        }),
+      }),
+    );
+
+    const options = {
+      ...createMockOptions(),
+      onUnauthenticatedError: mockOnUnauthenticatedError,
+    };
+    const apolloFactory = new ApolloFactory(options);
+    const client = apolloFactory.getClient();
+
+    await expect(
+      client.mutate({
+        mutation: gql`
+          mutation TrackAnalytics(
+            $type: AnalyticsType!
+            $event: String
+            $name: String
+            $properties: JSON
+          ) {
+            trackAnalytics(
+              type: $type
+              event: $event
+              name: $name
+              properties: $properties
+            ) {
+              success
+            }
+          }
+        `,
+      }),
+    ).rejects.toBeDefined();
+
+    expect(mockOnUnauthenticatedError).toHaveBeenCalledTimes(1);
+  }, 10000);
 
   it('should call onPayloadTooLarge when encountering a 413 error', async () => {
     fetchMock.mockResponse(() =>
