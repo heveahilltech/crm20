@@ -20,6 +20,14 @@ import { retryWithBackoff } from '~/utils/retryWithBackoff';
 
 import { REST_API_BASE_URL } from '@/apollo/constant/rest-api-base-url';
 import { type ApolloManager } from '@/apollo/types/apolloManager.interface';
+import {
+  clearTokenRenewalSucceeded,
+  hasRecentTokenRenewal,
+  isAuthSessionTerminated,
+  isUnauthenticatedGraphQLError,
+  markAuthSessionTerminated,
+  markTokenRenewalSucceeded,
+} from '@/apollo/utils/apolloAuthSession';
 import { getTokenPair } from '@/apollo/utils/getTokenPair';
 import { loggerLink } from '@/apollo/utils/loggerLink';
 import { StreamingRestLink } from '@/apollo/utils/streamingRestLink';
@@ -159,6 +167,16 @@ export class ApolloFactory implements ApolloManager {
         },
       });
 
+      const triggerUnauthenticatedError = () => {
+        if (isAuthSessionTerminated()) {
+          return;
+        }
+
+        markAuthSessionTerminated();
+        clearTokenRenewalSucceeded();
+        onUnauthenticatedError?.();
+      };
+
       const attemptTokenRenewal = async (): Promise<void> => {
         const graphqlUri = `${REACT_APP_SERVER_BASE_URL}/metadata`;
 
@@ -172,17 +190,30 @@ export class ApolloFactory implements ApolloManager {
           },
         );
 
-        if (isDefined(tokens)) {
-          onTokenPairChange?.(tokens);
+        if (!isDefined(tokens)) {
+          throw new Error('Token renewal returned no tokens');
         }
+
+        onTokenPairChange?.(tokens);
+        markTokenRenewalSucceeded();
       };
 
       const handleTokenRenewal = (
         operation: ApolloLink.Operation,
         forward: ApolloLink.ForwardFunction,
       ) => {
+        if (isAuthSessionTerminated()) {
+          return EMPTY;
+        }
+
         if (!getTokenPair()) {
-          onUnauthenticatedError?.();
+          triggerUnauthenticatedError();
+
+          return EMPTY;
+        }
+
+        if (hasRecentTokenRenewal()) {
+          triggerUnauthenticatedError();
 
           return EMPTY;
         }
@@ -195,7 +226,7 @@ export class ApolloFactory implements ApolloManager {
               console.log(
                 'Failed to renew token after retries, triggering unauthenticated error',
               );
-              onUnauthenticatedError?.();
+              triggerUnauthenticatedError();
 
               return false;
             })
@@ -269,14 +300,23 @@ export class ApolloFactory implements ApolloManager {
 
       const errorLink = new ErrorLink(({ error, operation, forward }) => {
         if (CombinedGraphQLErrors.is(error)) {
-          onErrorCb?.(error.errors);
-          for (const graphQLError of error.errors) {
-            if (graphQLError.message === 'Unauthorized') {
-              // oxlint-disable-next-line no-console
-              console.log('Unauthorized, triggering token renewal');
-              return handleTokenRenewal(operation, forward);
+          const hasUnauthenticatedError = error.errors.some(
+            isUnauthenticatedGraphQLError,
+          );
+
+          if (hasUnauthenticatedError) {
+            if (isAuthSessionTerminated()) {
+              return EMPTY;
             }
 
+            // oxlint-disable-next-line no-console
+            console.log('UNAUTHENTICATED, triggering token renewal');
+
+            return handleTokenRenewal(operation, forward);
+          }
+
+          onErrorCb?.(error.errors);
+          for (const graphQLError of error.errors) {
             switch (graphQLError?.extensions?.code) {
               case 'APP_VERSION_MISMATCH': {
                 onAppVersionMismatch?.(
@@ -284,11 +324,6 @@ export class ApolloFactory implements ApolloManager {
                     t`Your app version is out of date. Please refresh the page.`,
                 );
                 return;
-              }
-              case 'UNAUTHENTICATED': {
-                // oxlint-disable-next-line no-console
-                console.log('UNAUTHENTICATED, triggering token renewal');
-                return handleTokenRenewal(operation, forward);
               }
               case 'NOT_FOUND':
               case 'BAD_USER_INPUT':

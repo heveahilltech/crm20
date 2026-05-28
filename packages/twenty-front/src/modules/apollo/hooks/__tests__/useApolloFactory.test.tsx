@@ -1,7 +1,18 @@
 import { gql } from '@apollo/client';
 import { act, renderHook } from '@testing-library/react';
 import fetchMock, { enableFetchMocks } from 'jest-fetch-mock';
-import { MemoryRouter, useLocation } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
+import { renewToken } from '@/auth/services/AuthService';
+import { resetAuthSessionTerminated } from '@/apollo/utils/apolloAuthSession';
+
+jest.mock('@/auth/services/AuthService', () => {
+  const initialAuthService = jest.requireActual('@/auth/services/AuthService');
+
+  return {
+    ...initialAuthService,
+    renewToken: jest.fn().mockRejectedValue(new Error('Refresh token expired')),
+  };
+});
 import { SnackBarComponentInstanceContext } from '@/ui/feedback/snack-bar-manager/contexts/SnackBarComponentInstanceContext';
 import { useApolloFactory } from '@/apollo/hooks/useApolloFactory';
 
@@ -14,15 +25,17 @@ jest.mock('@/apollo/utils/getTokenPair', () => ({
   }),
 }));
 
-const mockNavigate = jest.fn();
+const mockAssign = jest.fn();
 
-jest.mock('react-router-dom', () => {
-  const initialRouter = jest.requireActual('react-router-dom');
-
-  return {
-    ...initialRouter,
-    useNavigate: () => mockNavigate,
-  };
+Object.defineProperty(window, 'location', {
+  value: {
+    ...window.location,
+    assign: mockAssign,
+    pathname: '/opportunities',
+    search: '',
+    hash: '',
+  },
+  writable: true,
 });
 
 const Wrapper = ({ children }: { children: React.ReactNode }) => (
@@ -39,6 +52,14 @@ const Wrapper = ({ children }: { children: React.ReactNode }) => (
 );
 
 describe('useApolloFactory', () => {
+  beforeEach(() => {
+    resetAuthSessionTerminated();
+    mockAssign.mockClear();
+    (renewToken as jest.Mock).mockRejectedValue(
+      new Error('Refresh token expired'),
+    );
+  });
+
   it('should work as expected', () => {
     const { result } = renderHook(() => useApolloFactory(), {
       wrapper: Wrapper,
@@ -52,9 +73,12 @@ describe('useApolloFactory', () => {
     expect(res).toHaveProperty('query');
   });
 
-  it('should navigate to /welcome on unauthenticated error', async () => {
+  it('should redirect to portal login on unauthenticated error', async () => {
+    mockAssign.mockClear();
+
     const errors = [
       {
+        message: 'Token has expired.',
         extensions: {
           code: 'UNAUTHENTICATED',
         },
@@ -69,21 +93,13 @@ describe('useApolloFactory', () => {
       }),
     );
 
-    const { result } = renderHook(
-      () => {
-        const location = useLocation();
-        return { factory: useApolloFactory(), location };
-      },
-      {
-        wrapper: Wrapper,
-      },
-    );
+    const { result } = renderHook(() => useApolloFactory(), {
+      wrapper: Wrapper,
+    });
 
-    expect(result.current.location.pathname).toBe('/opportunities');
-
-    try {
-      await act(async () => {
-        await result.current.factory.mutate({
+    await act(async () => {
+      try {
+        await result.current.mutate({
           mutation: gql`
             mutation Track($type: String!, $sessionId: String!, $data: JSON!) {
               track(type: $type, sessionId: $sessionId, data: $data) {
@@ -92,12 +108,13 @@ describe('useApolloFactory', () => {
             }
           `,
         });
-      });
-    } catch (error) {
-      expect(error).toBeDefined();
+      } catch {
+        // Expected when auth renewal fails.
+      }
+    });
 
-      expect(mockNavigate).toHaveBeenCalled();
-      expect(mockNavigate).toHaveBeenCalledWith('/welcome');
-    }
+    expect(mockAssign).toHaveBeenCalledWith(
+      'https://portal.voxring.ai/auth/login',
+    );
   });
 });
