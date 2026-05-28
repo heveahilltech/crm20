@@ -1,5 +1,5 @@
 import { isValidReturnToPath } from '@/auth/utils/isValidReturnToPath';
-import { VOXRING_PORTAL_LOGIN_URL } from '@/hooks/usePageChangeEffectNavigateLocation';
+import { VOXRING_PORTAL_LOGIN_URL } from '~/hooks/usePageChangeEffectNavigateLocation';
 import { AppPath } from 'twenty-shared/types';
 import { isMatchingLocation } from '~/utils/isMatchingLocation';
 
