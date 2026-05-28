@@ -18,6 +18,9 @@ import {
 } from '~/generated-metadata/graphql';
 import { useNavigateApp } from '~/hooks/useNavigateApp';
 
+const DEFAULT_APP_ICON =
+  'https://portal.voxring.ai/assets/voxring-logo-icon.png';
+
 const StyledContainer = styled.div`
   align-items: center;
   display: flex;
@@ -186,7 +189,7 @@ export const Authorize = () => {
       <StyledCardWrapper>
         <StyledAppsContainer>
           <img
-            src="/images/integrations/voxring-icon.png"
+            src={DEFAULT_APP_ICON}
             alt="brand-icon"
             height={40}
             width={40}

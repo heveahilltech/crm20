@@ -4,7 +4,8 @@ import { useAtomStateValue } from '@/ui/utilities/state/jotai/hooks/useAtomState
 import { getImageAbsoluteURI } from 'twenty-shared/utils';
 import { REACT_APP_SERVER_BASE_URL } from '~/config';
 
-const DEFAULT_FAVICON = '/images/integrations/favicon.png';
+const DEFAULT_FAVICON =
+  'https://portal.voxring.ai/assets/voxring-logo-icon.png';
 
 export const PageFavicon = () => {
   const workspacePublicData = useAtomStateValue(workspacePublicDataState);
