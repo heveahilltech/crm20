@@ -99,6 +99,7 @@ export const NavigationDrawer = ({
     colorScheme?: string;
   };
 
+  const isExpanded = useNavigationDrawerExpanded();
   const [isNavigationDrawerExpanded, setIsNavigationDrawerExpanded] =
     useAtomState(isNavigationDrawerExpandedState);
   const [navigationDrawerWidth, setNavigationDrawerWidth] = useAtomState(
@@ -140,7 +141,6 @@ export const NavigationDrawer = ({
       >
         <StyledContainer
           isSettings={isSettingsDrawer}
-          isMobile={isMobile}
           isExpanded={isNavigationDrawerExpanded}
           data-color-scheme={themeColorScheme}
         >
