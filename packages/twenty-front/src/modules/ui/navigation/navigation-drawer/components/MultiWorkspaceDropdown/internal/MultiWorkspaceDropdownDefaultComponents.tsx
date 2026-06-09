@@ -5,7 +5,6 @@ import { currentWorkspaceState } from '@/auth/states/currentWorkspaceState';
 import { supportChatState } from '@/client-config/states/supportChatState';
 import { useRedirectToWorkspaceDomain } from '@/domain-manager/hooks/useRedirectToWorkspaceDomain';
 import { useSnackBar } from '@/ui/feedback/snack-bar-manager/hooks/useSnackBar';
-import { Dropdown } from '@/ui/layout/dropdown/components/Dropdown';
 import { DropdownContent } from '@/ui/layout/dropdown/components/DropdownContent';
 import { DropdownMenuHeader } from '@/ui/layout/dropdown/components/DropdownMenuHeader/DropdownMenuHeader';
 import { DropdownMenuHeaderLeftComponent } from '@/ui/layout/dropdown/components/DropdownMenuHeader/internal/DropdownMenuHeaderLeftComponent';
@@ -26,14 +25,10 @@ import { AppPath, SettingsPath } from 'twenty-shared/types';
 import { getSettingsPath } from 'twenty-shared/utils';
 import {
   Avatar,
-  IconDotsVertical,
-  IconLogout,
   IconMessage,
-  IconPlus,
   IconSettings,
   IconUserPlus,
 } from 'twenty-ui/display';
-import { LightIconButton } from 'twenty-ui/input';
 import { MenuItem, UndecoratedLink } from 'twenty-ui/navigation';
 import { useMutation } from '@apollo/client/react';
 import { SignUpInNewWorkspaceDocument } from '~/generated-metadata/graphql';
@@ -101,22 +96,6 @@ export const MultiWorkspaceDropdownDefaultComponents = () => {
                 placeholder={currentWorkspace?.displayName || ''}
                 avatarUrl={currentWorkspace?.logo ?? DEFAULT_WORKSPACE_LOGO}
               />
-            }
-          />
-        }
-        EndComponent={
-          <Dropdown
-            clickableComponent={
-              <LightIconButton
-                Icon={IconDotsVertical}
-                size="small"
-                accent="tertiary"
-              />
-            }
-            dropdownId="multi-workspace-dropdown-context-menu"
-            dropdownComponents={
-              <DropdownContent>
-              </DropdownContent>
             }
           />
         }
