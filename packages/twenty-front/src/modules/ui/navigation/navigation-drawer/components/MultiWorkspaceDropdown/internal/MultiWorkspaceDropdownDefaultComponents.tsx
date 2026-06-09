@@ -116,13 +116,6 @@ export const MultiWorkspaceDropdownDefaultComponents = () => {
             dropdownId="multi-workspace-dropdown-context-menu"
             dropdownComponents={
               <DropdownContent>
-                <DropdownMenuItemsContainer>
-                  <MenuItem
-                    LeftIcon={IconPlus}
-                    text={t`Create Workspace`}
-                    onClick={createWorkspace}
-                  />
-                </DropdownMenuItemsContainer>
               </DropdownContent>
             }
           />
