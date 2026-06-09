@@ -12,6 +12,7 @@ import { useContext } from 'react';
 import { Avatar, IconMoon, IconSun } from 'twenty-ui/display';
 import { IconButton } from 'twenty-ui/input';
 import { ThemeContext, themeCssVariables } from 'twenty-ui/theme-constants';
+import { VOXRING_PORTAL_DASHBOARD_URL } from '~/config/voxring';
 
 const StyledUserProfileHeader = styled.div<{ isMobile: boolean }>`
   align-items: center;
@@ -175,7 +176,7 @@ export const UserProfileHeader = () => {
   const workspaceName = currentWorkspace?.displayName || 'Your Workspace';
 
   const handleReturnToPortal = () => {
-    window.location.assign('https://portal.voxring.ai/portal/dashboard');
+    window.location.assign(VOXRING_PORTAL_DASHBOARD_URL);
   };
 
   // Determine effective theme (if System, use system preference)

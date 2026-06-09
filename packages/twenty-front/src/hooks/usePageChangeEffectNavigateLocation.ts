@@ -22,10 +22,10 @@ import {
   OnboardingStatus,
   PageLayoutType,
 } from '~/generated-metadata/graphql';
+import { VOXRING_PORTAL_LOGIN_URL } from '~/config/voxring';
 import { isMatchingLocation } from '~/utils/isMatchingLocation';
 
-export const VOXRING_PORTAL_LOGIN_URL =
-  'https://portal.voxring.ai/auth/login';
+export { VOXRING_PORTAL_LOGIN_URL };
 
 const readReturnToPathFromUrlSearchParams = (): string | null => {
   const value = new URLSearchParams(window.location.search).get('returnToPath');

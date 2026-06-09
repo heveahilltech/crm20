@@ -3,6 +3,7 @@ import { useCallback } from 'react';
 import { AppPath } from 'twenty-shared/types';
 
 import { REACT_APP_SERVER_BASE_URL } from '~/config';
+import { VOXRING_PORTAL_LOGIN_URL } from '~/config/voxring';
 import {
   type AuthToken,
   type AuthTokenPair,
@@ -111,7 +112,7 @@ export const useAuth = () => {
     clearSessionLocalStorageKeys();
     store.set(tokenPairState.atom, null);
     setLastAuthenticateWorkspaceDomain(null);
-    window.location.assign('https://portal.voxring.ai/auth/login');
+    window.location.assign(VOXRING_PORTAL_LOGIN_URL);
   }, [store, setLastAuthenticateWorkspaceDomain]);
 
   const handleSetAuthTokens = useCallback(

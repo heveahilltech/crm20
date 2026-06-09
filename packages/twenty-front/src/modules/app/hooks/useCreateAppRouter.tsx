@@ -8,6 +8,10 @@ import indexAppPath from '@/navigation/utils/indexAppPath';
 import { BlankLayout } from '@/ui/layout/page/components/BlankLayout';
 import { DefaultLayout } from '@/ui/layout/page/components/DefaultLayout';
 import { AppPath } from 'twenty-shared/types';
+import {
+  USE_VOXRING_PORTAL_AUTH,
+  VOXRING_PORTAL_LOGIN_URL,
+} from '~/config/voxring';
 
 import { lazy, useEffect } from 'react';
 import {
@@ -36,7 +40,7 @@ const SignInUp = lazy(() =>
 
 const RedirectToVoxringPortal = () => {
   useEffect(() => {
-    window.location.assign('https://portal.voxring.ai/auth/login');
+    window.location.assign(VOXRING_PORTAL_LOGIN_URL);
   }, []);
 
   return null;
@@ -129,7 +133,18 @@ export const useCreateAppRouter = (
         <Route element={<DefaultLayout />}>
           <Route path={AppPath.Verify} element={<VerifyLoginTokenEffect />} />
           <Route path={AppPath.VerifyEmail} element={<VerifyEmailEffect />} />
-          <Route path={AppPath.SignInUp} element={<RedirectToVoxringPortal />} />
+          <Route
+            path={AppPath.SignInUp}
+            element={
+              USE_VOXRING_PORTAL_AUTH ? (
+                <RedirectToVoxringPortal />
+              ) : (
+                <LazyRoute fallback={null}>
+                  <SignInUp />
+                </LazyRoute>
+              )
+            }
+          />
           <Route
             path={AppPath.Invite}
             element={
