@@ -18,6 +18,11 @@ import { useSetAtomState } from '@/ui/utilities/state/jotai/hooks/useSetAtomStat
 import { isDefined } from 'twenty-shared/utils';
 import { REACT_APP_SERVER_BASE_URL } from '~/config';
 import { useUpdateEffect } from '~/hooks/useUpdateEffect';
+import {
+  beforePersistTokenPairCookie,
+  clearVoxringTokenPairCookies,
+  prepareTokenPairForCookieStorage,
+} from '~/utils/voxring-auth-cookie';
 
 export const useApolloFactory = (options: Partial<Options> = {}) => {
   // oxlint-disable-next-line twenty/no-state-useref
@@ -45,6 +50,7 @@ export const useApolloFactory = (options: Partial<Options> = {}) => {
     }
 
     isRedirectingToPortalLoginRef.current = true;
+    clearVoxringTokenPairCookies();
     setTokenPair(null);
     setCurrentUser(null);
     setCurrentWorkspaceMember(null);
@@ -83,7 +89,8 @@ export const useApolloFactory = (options: Partial<Options> = {}) => {
       onTokenPairChange: (tokenPair) => {
         resetAuthSessionTerminated();
         isRedirectingToPortalLoginRef.current = false;
-        setTokenPair(tokenPair);
+        beforePersistTokenPairCookie(tokenPair);
+        setTokenPair(prepareTokenPairForCookieStorage(tokenPair));
       },
       onUnauthenticatedError: handleUnauthenticatedError,
       onAppVersionMismatch: (message) => {

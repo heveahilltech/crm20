@@ -1,9 +1,14 @@
 import { useCallback } from 'react';
 import { useStore } from 'jotai';
 
+import { getTokenPair } from '@/apollo/utils/getTokenPair';
 import { useAuth } from '@/auth/hooks/useAuth';
 import { tokenPairState } from '@/auth/states/tokenPairState';
 import { type AuthTokenPair } from '~/generated-metadata/graphql';
+import {
+  beforePersistTokenPairCookie,
+  prepareTokenPairForCookieStorage,
+} from '~/utils/voxring-auth-cookie';
 
 const IMPERSONATION_SESSION_KEY = 'impersonation_original_session';
 
@@ -26,7 +31,8 @@ export const useImpersonationSession = () => {
 
   const startImpersonating = useCallback(
     async (loginToken: string, returnPath?: string) => {
-      const currentTokenPair = store.get(tokenPairState.atom);
+      const currentTokenPair =
+        getTokenPair() ?? store.get(tokenPairState.atom) ?? null;
       const targetPath = returnPath ?? window.location.pathname;
 
       if (currentTokenPair) {
@@ -68,7 +74,11 @@ export const useImpersonationSession = () => {
     }
 
     sessionStorage.removeItem(IMPERSONATION_SESSION_KEY);
-    store.set(tokenPairState.atom, session.tokenPair);
+    beforePersistTokenPairCookie(session.tokenPair);
+    store.set(
+      tokenPairState.atom,
+      prepareTokenPairForCookieStorage(session.tokenPair),
+    );
     reloadWithSession(session.returnPath);
   }, [store, signOut]);
 

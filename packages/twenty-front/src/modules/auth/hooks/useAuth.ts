@@ -53,6 +53,10 @@ import { SOURCE_LOCALE } from 'twenty-shared/translations';
 import { isDefined } from 'twenty-shared/utils';
 import { getWorkspaceUrl } from '~/utils/getWorkspaceUrl';
 import { isGraphqlErrorOfType } from '~/utils/is-graphql-error-of-type.util';
+import {
+  beforePersistTokenPairCookie,
+  prepareTokenPairForCookieStorage,
+} from '~/utils/voxring-auth-cookie';
 import { useStore } from 'jotai';
 
 export const useAuth = () => {
@@ -110,6 +114,7 @@ export const useAuth = () => {
   const clearSession = useCallback(() => {
     sessionStorage.clear();
     clearSessionLocalStorageKeys();
+    beforePersistTokenPairCookie(null);
     store.set(tokenPairState.atom, null);
     setLastAuthenticateWorkspaceDomain(null);
     window.location.assign(VOXRING_PORTAL_LOGIN_URL);
@@ -117,7 +122,8 @@ export const useAuth = () => {
 
   const handleSetAuthTokens = useCallback(
     (tokens: AuthTokenPair) => {
-      setTokenPair(tokens);
+      beforePersistTokenPairCookie(tokens);
+      setTokenPair(prepareTokenPairForCookieStorage(tokens));
     },
     [setTokenPair],
   );
@@ -273,6 +279,7 @@ export const useAuth = () => {
           handleSetLoginToken(loginToken);
           navigate(AppPath.SignInUp);
           setSignInUpStep(SignInUpStep.TwoFactorAuthenticationProvision);
+          return;
         }
 
         if (
@@ -284,7 +291,10 @@ export const useAuth = () => {
           handleSetLoginToken(loginToken);
           navigate(AppPath.SignInUp);
           setSignInUpStep(SignInUpStep.TwoFactorAuthenticationVerification);
+          return;
         }
+
+        throw error;
       }
     },
     [
