@@ -13,9 +13,6 @@ export const SettingsNavigationDrawer = ({
   className?: string;
 }) => {
   const { t } = useLingui();
-  const [isAdvancedModeEnabled, setIsAdvancedModeEnabled] = useAtomState(
-    isAdvancedModeEnabledState,
-  );
 
   return (
     <NavigationDrawer className={className} title={t`Exit Settings`}>
@@ -23,13 +20,6 @@ export const SettingsNavigationDrawer = ({
         <SettingsNavigationDrawerItems />
       </NavigationDrawerScrollableContent>
 
-      <NavigationDrawerFixedContent>
-        <AdvancedSettingsToggle
-          isAdvancedModeEnabled={isAdvancedModeEnabled}
-          setIsAdvancedModeEnabled={setIsAdvancedModeEnabled}
-          label={t`Advanced:`}
-        />
-      </NavigationDrawerFixedContent>
     </NavigationDrawer>
   );
 };
