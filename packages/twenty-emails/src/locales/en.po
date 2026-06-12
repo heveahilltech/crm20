@@ -70,8 +70,8 @@ msgstr "Test email"
 
 #. js-lingui-explicit-id
 #: src/emails/send-invite-link.email.tsx
-msgid "Join your team on Twenty"
-msgstr "Join your team on Twenty"
+msgid "Join your team on Voxring"
+msgstr "Join your team on Voxring"
 
 #. js-lingui-explicit-id
 #: src/emails/send-invite-link.email.tsx
