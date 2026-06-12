@@ -28,7 +28,7 @@ export const Footer = ({ i18n }: FooterProps) => {
           <ShadowText>
             <Link
               href="https://voxring.ai/privacy-policy/"
-              value={i18n._('Github')}
+              value={i18n._('Privacy Policy')}
               aria-label={i18n._("Visit VoxRing's privacy policy")}
             />
           </ShadowText>
@@ -37,26 +37,15 @@ export const Footer = ({ i18n }: FooterProps) => {
           <ShadowText>
             <Link
               href="https://voxring.ai/termsofservice/"
-              value={i18n._('User guide')}
+              value={i18n._('Terms of Service')}
               aria-label={i18n._("Read VoxRing's terms of service")}
-            />
-          </ShadowText>
-        </Column>
-        <Column>
-          <ShadowText>
-            <Link
-              href="https://voxring.ai/"
-              value={i18n._('Developers')}
-              aria-label={i18n._("Visit VoxRing's website")}
             />
           </ShadowText>
         </Column>
       </Row>
       <ShadowText>
         <>
-          {i18n._('VoxRing')}
-          <br />
-          {i18n._('India')}
+          {i18n._('VoxRing.ai')}
         </>
       </ShadowText>
     </Container>

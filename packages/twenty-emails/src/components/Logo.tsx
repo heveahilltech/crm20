@@ -7,7 +7,7 @@ const logoStyle = {
 export const Logo = () => {
   return (
     <Img
-      src="https://voxring.ai/favicon.ico"
+      src="https://portal.voxring.ai/assets/voxring-logo-icon.png"
       alt="VoxRing logo"
       width="40"
       height="40"
