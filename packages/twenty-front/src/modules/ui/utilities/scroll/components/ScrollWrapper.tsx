@@ -6,6 +6,7 @@ import { scrollWrapperScrollBottomComponentState } from '@/ui/utilities/scroll/s
 import { scrollWrapperScrollLeftComponentState } from '@/ui/utilities/scroll/states/scrollWrapperScrollLeftComponentState';
 import { scrollWrapperScrollTopComponentState } from '@/ui/utilities/scroll/states/scrollWrapperScrollTopComponentState';
 import { useSetAtomComponentState } from '@/ui/utilities/state/jotai/hooks/useSetAtomComponentState';
+import { themeCssVariables } from 'twenty-ui/theme-constants';
 
 const StyledScrollWrapper = styled.div<{ autoHeight?: boolean }>`
   &.scroll-wrapper-x-enabled {
@@ -19,7 +20,19 @@ const StyledScrollWrapper = styled.div<{ autoHeight?: boolean }>`
   min-height: 0;
   overflow-x: hidden;
   overflow-y: hidden;
+  scrollbar-color: ${themeCssVariables.border.color.medium} transparent;
+  scrollbar-width: 4px;
   width: 100%;
+
+  &::-webkit-scrollbar {
+    height: 4px;
+    width: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: ${themeCssVariables.border.color.medium};
+    border-radius: ${themeCssVariables.border.radius.sm};
+  }
 `;
 
 export type ScrollWrapperProps = {

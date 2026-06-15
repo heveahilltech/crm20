@@ -227,7 +227,7 @@ export const ObjectSortDropdownButton = () => {
             {shouldShowVisibleFields && (
               <>
                 <DropdownMenuSectionLabel label={t`Visible fields`} />
-                <DropdownMenuItemsContainer>
+                <DropdownMenuItemsContainer hasMaxHeight>
                   {visibleFieldMetadataItems.map(
                     (visibleFieldMetadataItem, index) => (
                       <SelectableListItem
@@ -256,7 +256,7 @@ export const ObjectSortDropdownButton = () => {
             {shouldShowHiddenFields && (
               <>
                 <DropdownMenuSectionLabel label={t`Hidden fields`} />
-                <DropdownMenuItemsContainer>
+                <DropdownMenuItemsContainer hasMaxHeight>
                   {hiddenFieldMetadataItemsSorted.map(
                     (hiddenFieldMetadataItem, index) => (
                       <SelectableListItem
